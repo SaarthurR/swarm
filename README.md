@@ -41,76 +41,21 @@ re-doing finished work.
 
 **The orchestrator holds paths, not payloads.**
 
-```mermaid
-flowchart LR
-    G(["one broad goal"]) --> O
-
-    O{{"orchestrator<br/><i>coordinates · never reads code</i>"}}
-
-    O ==> A["recon<br/><i>maps the territory</i>"]
-    O ==> B["investigator<br/><i>root cause + evidence</i>"]
-    O ==> C["fixer<br/><i>own git worktree</i>"]
-    O ==> D["reviewer<br/><i>reads the diff</i>"]
-    O ==> E["verifier<br/><i>runs the real commands</i>"]
-
-    A & B & C & D & E -.->|"file path + 3-line finding"| O
-
-    classDef orch fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
-    classDef agent fill:#0EA5E9,stroke:#38BDF8,color:#FFFFFF;
-    classDef goal fill:#059669,stroke:#34D399,color:#FFFFFF;
-    class O orch;
-    class A,B,C,D,E agent;
-    class G goal;
-```
-
-Bulk material — file contents, logs, diffs, maps — never crosses back into the
-orchestrator's context. Only the distilled finding and the path to the evidence does.
+<p align="center">
+  <img src="assets/context.svg" alt="The orchestrator sends briefs made of file paths and gets back distilled findings; all bulk material stays inside the sub-agents" width="100%">
+</p>
 
 **No claim survives on one agent's word.**
 
-```mermaid
-flowchart LR
-    H["claim<br/><i>root cause · fix · assumption</i>"] --> V{{"independent agent<br/>fresh context<br/><i>try to disprove this</i>"}}
-    V -->|"confirmed"| G["graduates to action"]
-    V -->|"refuted"| R["back to diagnosis"]
-    V -->|"disagreement"| T["third agent adjudicates"]
-    T --> V
-
-    classDef claim fill:#D97706,stroke:#FBBF24,color:#FFFFFF;
-    classDef check fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
-    classDef ok fill:#059669,stroke:#34D399,color:#FFFFFF;
-    classDef bad fill:#DC2626,stroke:#F87171,color:#FFFFFF;
-    class H,T claim;
-    class V check;
-    class G ok;
-    class R bad;
-```
+<p align="center">
+  <img src="assets/verification.svg" alt="Every claim goes to an independent agent with fresh context to disprove; confirmed claims graduate to action, refuted ones go back to diagnosis" width="100%">
+</p>
 
 ## What it actually does
 
-```mermaid
-flowchart LR
-    P0["<b>0</b><br/>ingest<br/>context"]
-    P1["<b>1</b><br/>recon<br/>+ DAG"]
-    P2["<b>2</b><br/>diagnose<br/>+ verify"]
-    P25["<b>2.5</b><br/>deliberate<br/>the fix"]
-    P3["<b>3</b><br/>fix in<br/>worktrees"]
-    P4["<b>4</b><br/>review<br/>gate"]
-    P5{"<b>5</b><br/>verify<br/>+ sweep"}
-    P6["<b>6</b><br/>cross-check<br/>+ ship"]
-    OUT(["verified PR<br/>+ handoff"])
-
-    P0 --> P1 --> P2 --> P25 --> P3 --> P4 --> P5
-    P5 -->|"all green,<br/>sweep empty"| P6 --> OUT
-    P5 -->|"anything found"| P2
-
-    classDef phase fill:#1E293B,stroke:#7C3AED,color:#E2E8F0,stroke-width:1.5px;
-    classDef gate fill:#D97706,stroke:#FBBF24,color:#FFFFFF,stroke-width:2px;
-    classDef done fill:#059669,stroke:#34D399,color:#FFFFFF;
-    class P0,P1,P2,P25,P3,P4,P6 phase;
-    class P5 gate;
-    class OUT done;
-```
+<p align="center">
+  <img src="assets/pipeline.svg" alt="The run: phases 0 to 6, with phase 5 looping back to diagnosis until verification and a fresh sweep both come back empty" width="100%">
+</p>
 
 | Phase | What happens |
 |---|---|
@@ -125,28 +70,9 @@ flowchart LR
 
 ### Parallel work, isolated — and stacked on the way out
 
-```mermaid
-flowchart LR
-    DAG{{"Phase 1<br/>dependency map"}}
-    DAG -->|independent| WA["worktree A<br/><i>branchA</i>"]
-    DAG -->|independent| WB["worktree B<br/><i>branchB</i>"]
-    DAG -->|depends on A| WC["worktree C<br/><i>branchC</i>"]
-    WA --> PRA["PR #1<br/>branchA → main"]
-    WB --> PRB["PR #2<br/>branchB → main"]
-    WC --> PRC["PR #3<br/>branchC → branchA<br/><i>stacked</i>"]
-    PRA -.->|"merge first"| PRC
-
-    classDef map fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
-    classDef tree fill:#1E293B,stroke:#38BDF8,color:#E2E8F0;
-    classDef pr fill:#059669,stroke:#34D399,color:#FFFFFF;
-    class DAG map;
-    class WA,WB,WC tree;
-    class PRA,PRB,PRC pr;
-```
-
-Concurrent fixers never share a working tree — "different files, same index" still collides.
-Independent changes each get their own PR to `main`; ordered chains are opened as a stack, so
-every PR's diff shows only its own change.
+<p align="center">
+  <img src="assets/branches.svg" alt="Parallel fixers in isolated git worktrees; independent branches open their own PR to main, dependent ones open a stacked PR" width="100%">
+</p>
 
 Every response ends with a **"What I need from you"** handoff: the secrets it couldn't
 supply, actions only a human can take, cost/destructive approvals, the PR links with merge
@@ -175,6 +101,7 @@ swarm/
 │   ├── state-and-memory.md           # .swarm/ledger.md and .swarm/learnings.md schemas
 │   ├── safety.md                     # standing orders for every writing/shell/git agent
 │   └── observability.md              # .swarm/events.jsonl semantic event stream
+├── assets/                           # README diagrams
 └── DASHBOARD_PRD.md                  # PRD for Swarm Mission Control (companion dashboard)
 ```
 
