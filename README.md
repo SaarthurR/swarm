@@ -1,3 +1,14 @@
+<p align="center">
+  <img src="assets/banner.svg" alt="swarm — autonomous multi-agent orchestration for serious codebase work" width="100%">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Cursor-supported-A78BFA?style=flat-square&labelColor=0D1017" alt="Cursor">
+  <img src="https://img.shields.io/badge/Claude_Code-supported-22D3EE?style=flat-square&labelColor=0D1017" alt="Claude Code">
+  <img src="https://img.shields.io/badge/phases-0→6-34D399?style=flat-square&labelColor=0D1017" alt="Phases 0 to 6">
+  <img src="https://img.shields.io/badge/license-MIT-8B94A7?style=flat-square&labelColor=0D1017" alt="MIT license">
+</p>
+
 # swarm
 
 An agent skill that turns a single broad instruction — *"fix the bugs"*, *"figure out why X
@@ -28,7 +39,78 @@ Two problems kill long autonomous runs:
 On top of that it keeps a durable ledger, so a run survives compaction and restarts without
 re-doing finished work.
 
+**The orchestrator holds paths, not payloads.**
+
+```mermaid
+flowchart LR
+    G(["one broad goal"]) --> O
+
+    O{{"orchestrator<br/><i>coordinates · never reads code</i>"}}
+
+    O ==> A["recon<br/><i>maps the territory</i>"]
+    O ==> B["investigator<br/><i>root cause + evidence</i>"]
+    O ==> C["fixer<br/><i>own git worktree</i>"]
+    O ==> D["reviewer<br/><i>reads the diff</i>"]
+    O ==> E["verifier<br/><i>runs the real commands</i>"]
+
+    A & B & C & D & E -.->|"file path + 3-line finding"| O
+
+    classDef orch fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
+    classDef agent fill:#0EA5E9,stroke:#38BDF8,color:#FFFFFF;
+    classDef goal fill:#059669,stroke:#34D399,color:#FFFFFF;
+    class O orch;
+    class A,B,C,D,E agent;
+    class G goal;
+```
+
+Bulk material — file contents, logs, diffs, maps — never crosses back into the
+orchestrator's context. Only the distilled finding and the path to the evidence does.
+
+**No claim survives on one agent's word.**
+
+```mermaid
+flowchart LR
+    H["claim<br/><i>root cause · fix · assumption</i>"] --> V{{"independent agent<br/>fresh context<br/><i>try to disprove this</i>"}}
+    V -->|"confirmed"| G["graduates to action"]
+    V -->|"refuted"| R["back to diagnosis"]
+    V -->|"disagreement"| T["third agent adjudicates"]
+    T --> V
+
+    classDef claim fill:#D97706,stroke:#FBBF24,color:#FFFFFF;
+    classDef check fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
+    classDef ok fill:#059669,stroke:#34D399,color:#FFFFFF;
+    classDef bad fill:#DC2626,stroke:#F87171,color:#FFFFFF;
+    class H,T claim;
+    class V check;
+    class G ok;
+    class R bad;
+```
+
 ## What it actually does
+
+```mermaid
+flowchart LR
+    P0["<b>0</b><br/>ingest<br/>context"]
+    P1["<b>1</b><br/>recon<br/>+ DAG"]
+    P2["<b>2</b><br/>diagnose<br/>+ verify"]
+    P25["<b>2.5</b><br/>deliberate<br/>the fix"]
+    P3["<b>3</b><br/>fix in<br/>worktrees"]
+    P4["<b>4</b><br/>review<br/>gate"]
+    P5{"<b>5</b><br/>verify<br/>+ sweep"}
+    P6["<b>6</b><br/>cross-check<br/>+ ship"]
+    OUT(["verified PR<br/>+ handoff"])
+
+    P0 --> P1 --> P2 --> P25 --> P3 --> P4 --> P5
+    P5 -->|"all green,<br/>sweep empty"| P6 --> OUT
+    P5 -->|"anything found"| P2
+
+    classDef phase fill:#1E293B,stroke:#7C3AED,color:#E2E8F0,stroke-width:1.5px;
+    classDef gate fill:#D97706,stroke:#FBBF24,color:#FFFFFF,stroke-width:2px;
+    classDef done fill:#059669,stroke:#34D399,color:#FFFFFF;
+    class P0,P1,P2,P25,P3,P4,P6 phase;
+    class P5 gate;
+    class OUT done;
+```
 
 | Phase | What happens |
 |---|---|
@@ -40,6 +122,31 @@ re-doing finished work.
 | **4 — Review gate** | No fix is accepted on the fixer's word. An independent reviewer checks **the diff itself**, not the status line — correctness, root-cause vs symptom, dead/debug code, regressions in siblings. Loops until clean, then one whole-branch review for cross-cutting issues. |
 | **5 — Verify, then sweep again** | Real command output only — fresh build, tests, types, lint, plus the task-specific check. Then a *fresh* recon pass hunts what's still broken or newly exposed. The run exits only when verification and a clean sweep both come back empty **in the same round**. A convergence cap stops a flapping fix from burning unbounded cycles. |
 | **6 — Cross-check & ship** | Diffs against latest `main` for merge *and semantic* conflicts, enumerates open PRs for collisions, runs a pre-flight safety scan, then opens the PR — **stacking dependent PRs** (`branchB → branchA → main`) instead of pointing a pile of branches at `main`. Durable learnings are appended for the next run. |
+
+### Parallel work, isolated — and stacked on the way out
+
+```mermaid
+flowchart LR
+    DAG{{"Phase 1<br/>dependency map"}}
+    DAG -->|independent| WA["worktree A<br/><i>branchA</i>"]
+    DAG -->|independent| WB["worktree B<br/><i>branchB</i>"]
+    DAG -->|depends on A| WC["worktree C<br/><i>branchC</i>"]
+    WA --> PRA["PR #1<br/>branchA → main"]
+    WB --> PRB["PR #2<br/>branchB → main"]
+    WC --> PRC["PR #3<br/>branchC → branchA<br/><i>stacked</i>"]
+    PRA -.->|"merge first"| PRC
+
+    classDef map fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
+    classDef tree fill:#1E293B,stroke:#38BDF8,color:#E2E8F0;
+    classDef pr fill:#059669,stroke:#34D399,color:#FFFFFF;
+    class DAG map;
+    class WA,WB,WC tree;
+    class PRA,PRB,PRC pr;
+```
+
+Concurrent fixers never share a working tree — "different files, same index" still collides.
+Independent changes each get their own PR to `main`; ordered chains are opened as a stack, so
+every PR's diff shows only its own change.
 
 Every response ends with a **"What I need from you"** handoff: the secrets it couldn't
 supply, actions only a human can take, cost/destructive approvals, the PR links with merge
