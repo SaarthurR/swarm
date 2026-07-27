@@ -10,10 +10,13 @@
 </p>
 
 <p align="center">
-  <a href="https://saarthurr.github.io/swarm-skill/"><b>saarthurr.github.io/swarm-skill</b></a>
+  <a href="https://saarthurr.github.io/swarm/"><b>saarthurr.github.io/swarm</b></a>
 </p>
 
 # swarm
+
+> **The strongest thing you can do is give an agent a way to review its work.**
+> That is what swarm is.
 
 An agent skill that turns a single broad instruction — *"fix the bugs"*, *"figure out why X
 isn't working"*, *"make this production-ready"*, *"audit and harden this"* — into an
@@ -139,16 +142,16 @@ Clone into your skills directory:
 
 ```bash
 # Cursor
-git clone https://github.com/SaarthurR/swarm-skill.git ~/.cursor/skills/swarm
+git clone https://github.com/SaarthurR/swarm.git ~/.cursor/skills/swarm
 
 # Claude Code
-git clone https://github.com/SaarthurR/swarm-skill.git ~/.claude/skills/swarm
+git clone https://github.com/SaarthurR/swarm.git ~/.claude/skills/swarm
 ```
 
 Or clone once and symlink both:
 
 ```bash
-git clone https://github.com/SaarthurR/swarm-skill.git ~/skills/swarm
+git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm
 ln -s ~/skills/swarm ~/.cursor/skills/swarm
 ln -s ~/skills/swarm ~/.claude/skills/swarm
 ```

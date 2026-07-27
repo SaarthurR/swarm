@@ -97,27 +97,75 @@
     revealables.forEach(function (el) { revealer.observe(el); });
   }
 
-  /* ── the journey: a camera flying down a corridor of phases ──
-     Panels sit at translateZ(-i * SPACING). The lane moves toward the viewer,
-     so each panel arrives, holds the frame, then passes behind the camera. */
+  /* ── the run: a camera flying down a corridor of stations ──
+     Stations, gate rings and agent motes all sit at a fixed translateZ inside
+     .lane. Moving the lane moves the whole world, so every layer parallaxes off
+     a single transform and the per-frame work stays down to opacity writes. */
 
   var journey = document.getElementById('journey');
   var lane = document.getElementById('lane');
-  var floor = journey.querySelector('.grid-floor');
-  var hudFill = document.getElementById('hudFill');
+  var hudTicks = Array.prototype.slice.call(document.getElementById('hudRail').children);
   var hudNow = document.getElementById('hudNow');
-  var panels = Array.prototype.slice.call(journey.querySelectorAll('.panel'));
+  var stations = Array.prototype.slice.call(journey.querySelectorAll('.station'));
+  var rings = Array.prototype.slice.call(journey.querySelectorAll('.ring'));
 
-  var SPACING = 780;
-  var START = -520;
-  var TRAVEL = (panels.length - 1) * SPACING + 980;
+  stations.forEach(function (station) {
+    station.surface = station.querySelector('.station-inner');
+  });
+
+  var SPAN = 820;          // z gap between stations, mirrored as --span in the css
+  var START = -860;
+  var TRAVEL = (stations.length - 1) * SPAN + 880;
   var shownPhase = '';
 
+  /* Agent motes fill the space between stations, so the corridor has volume
+     instead of being eight cards on an empty track. Positions are written once;
+     per frame they only get hidden as they pass the camera, because an element
+     at positive z relative to the viewer blows up to fill the screen. */
+  var motes = [];
+  (function seedMotes() {
+    var host = document.getElementById('motes');
+    if (!host || reduced) return;
+
+    var depth = stations.length * SPAN;
+    var frag = document.createDocumentFragment();
+
+    for (var i = 0; i < 64; i++) {
+      var el = document.createElement('i');
+      var mz = -(Math.random() * depth + 140);
+      var angle = Math.random() * Math.PI * 2;
+      var spread = 320 + Math.random() * 520;
+
+      el.style.setProperty('--mx', Math.round(Math.cos(angle) * spread) + 'px');
+      el.style.setProperty('--my', Math.round(Math.sin(angle) * spread * 0.5) + 'px');
+      el.style.setProperty('--mz', Math.round(mz) + 'px');
+      el.style.opacity = (0.12 + Math.random() * 0.3).toFixed(2);
+
+      motes.push({ el: el, z: mz, hidden: false });
+      frag.appendChild(el);
+    }
+    host.appendChild(frag);
+  })();
+
+  /* One station carries the frame at a time, and the window is sized so a
+     fading station is fully gone before the next one is worth seeing.
+     A part-faded card is a translucent white card: let two overlap and the far
+     one reads straight through the near one's surface. Depth of field would not
+     help, since blur is a grouping property and drops the station out of the
+     corridor's preserve-3d context. Distance is carried by the tunnel, the gate
+     rings and the motes instead, which are all thin enough to overlap safely. */
   function alphaFor(z) {
-    if (z < -1750 || z > 430) return 0;
-    if (z < -720) return (z + 1750) / 1030;
-    if (z <= 130) return 1;
-    return 1 - (z - 130) / 300;
+    if (z < -820 || z > 20) return 0;
+    if (z < -300) return (z + 820) / 520;   // arrives
+    if (z <= -200) return 1;                // owns the frame
+    return 1 - (z + 200) / 220;             // clears before it swamps the copy
+  }
+
+  function ringAlpha(z) {
+    if (z < -1700 || z > 60) return 0;
+    if (z < -940) return 0.75 * (z + 1700) / 760;
+    if (z <= -260) return 0.75;
+    return 0.75 * (1 - (z + 260) / 320);
   }
 
   function flyThrough() {
@@ -129,20 +177,44 @@
     var cam = START + p * TRAVEL;
 
     lane.style.setProperty('--cam', cam.toFixed(1));
-    floor.style.setProperty('--floor', (cam * 0.14).toFixed(1));
-    hudFill.style.setProperty('--p', p.toFixed(4));
+    // a slow bank, so the camera reads as flown rather than railed
+    lane.style.setProperty('--roll', (Math.sin(p * Math.PI * 2.4) * 1.15).toFixed(3));
 
     var best = 0;
     var bestAlpha = -1;
 
-    panels.forEach(function (panel, i) {
-      var a = alphaFor(cam - i * SPACING);
-      panel.style.opacity = a.toFixed(3);
-      panel.style.filter = a > 0.985 ? 'none' : 'blur(' + ((1 - a) * 6).toFixed(2) + 'px)';
+    stations.forEach(function (station, i) {
+      var a = alphaFor(cam - i * SPAN);
+      // Fade the inner surface, never the station itself: see the note on
+      // .station in styles.css. No depth-of-field blur either, since `filter`
+      // breaks the depth sort the same way. Perspective scale plus opacity
+      // carries the distance on its own.
+      station.surface.style.opacity = a.toFixed(3);
+      // is-live drives that station's diagram. It arms early so the diagram is
+      // already drawing as the station resolves, and holds until the station is
+      // nearly gone: without the gap between the two thresholds the diagram
+      // would blank out again while the card is still plainly on screen.
+      // Dropping it rewinds the draw, so scrolling back up replays each phase.
+      if (a > 0.6) station.classList.add('is-live');
+      else if (a < 0.22) station.classList.remove('is-live');
       if (a > bestAlpha) { bestAlpha = a; best = i; }
     });
 
-    var label = panels[best].querySelector('.panel-n').textContent;
+    rings.forEach(function (ring, i) {
+      ring.style.opacity = ringAlpha(cam - i * SPAN + 410).toFixed(3);
+    });
+
+    motes.forEach(function (mote) {
+      var gone = cam + mote.z > -90;
+      if (gone !== mote.hidden) {
+        mote.hidden = gone;
+        mote.el.style.visibility = gone ? 'hidden' : 'visible';
+      }
+    });
+
+    hudTicks.forEach(function (tick, i) { tick.classList.toggle('on', i <= best); });
+
+    var label = stations[best].querySelector('.station-n').textContent;
     if (label !== shownPhase) {
       shownPhase = label;
       hudNow.textContent = label;
@@ -150,8 +222,73 @@
   }
 
   function syncJourney() {
-    if (reduced || stacked.matches) return;
+    // Stacked mode uses the same station elements, so hand them back whatever
+    // the corridor left on them: clear the inline fade and mark every diagram
+    // live, since nothing is going to fly past to trigger them.
+    if (reduced || stacked.matches) {
+      stations.forEach(function (station) {
+        station.surface.style.opacity = '';
+        station.classList.add('is-live');
+      });
+      return;
+    }
     flyThrough();
+  }
+
+  /* ── the page itself as a flight path ──────────────────────
+     Every section is a waypoint. While a section sits in the reading band its
+     transform is cleared outright, so settled type composites crisply; outside
+     that band it banks off to the side and back into depth. The corridor is
+     deliberately not a waypoint: transforming it would make it the containing
+     block for its own sticky stage and kill the pin. */
+
+  var waypoints = Array.prototype.slice.call(document.querySelectorAll('[data-waypoint]'));
+  var worldPlanes = Array.prototype.slice.call(document.querySelectorAll('.world .grid-plane'));
+
+  var SHIFT = 15;   // vw of lateral travel at full departure
+  var TURN = 7;     // degrees of bank
+  var PUSH = 300;   // px pushed back into depth
+
+  function flyPage() {
+    var vh = window.innerHeight;
+
+    worldPlanes.forEach(function (plane) {
+      plane.style.setProperty('--floor', (window.scrollY * 0.22).toFixed(1));
+    });
+
+    waypoints.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      // Measured against the reading band rather than centre to centre: a
+      // section taller than the viewport has to stay square the whole time it
+      // is being read, and its centre is nowhere near the middle of the screen.
+      var ahead = Math.min(1, Math.max(0, (r.top - vh * 0.16) / vh));
+      var behind = Math.min(1, Math.max(0, (vh * 0.84 - r.bottom) / vh));
+      var d = ahead - behind;
+
+      if (d === 0) {
+        el.style.transform = '';
+        return;
+      }
+
+      // Linear on purpose. An eased curve flattens the travel across exactly
+      // the range that is still on screen, so the motion only really happens
+      // once the section has already left. The band above is what keeps the
+      // settle calm, so the ramp does not need to do that job twice.
+      // The bank turns each section back toward the centre of the frame, the
+      // way a panel on a corridor wall stays facing you as you pass it. Turning
+      // the other way reads as the page peeling away from the reader.
+      el.style.transform =
+        'perspective(1400px) translate3d(' + (d * SHIFT).toFixed(2) + 'vw, 0, ' +
+        (-Math.abs(d) * PUSH).toFixed(1) + 'px) rotateY(' + (d * TURN).toFixed(2) + 'deg)';
+    });
+  }
+
+  function syncPage() {
+    if (reduced || stacked.matches) {
+      waypoints.forEach(function (el) { el.style.transform = ''; });
+      return;
+    }
+    flyPage();
   }
 
   /* ── pointer tilt on cards ─────────────────────────────── */
@@ -184,7 +321,7 @@
     var ctx = canvas.getContext('2d');
     var agents = [];
     var COUNT = 108;
-    var RADIUS = 250;
+    var RADIUS = 215;
     var FOCAL = 560;
     var DEPTH = 780;
     var spin = 0;
@@ -218,8 +355,10 @@
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cx = w < 900 ? w * 0.5 : w * 0.68;
-      cy = h * 0.5;
+      // narrow screens have no room beside the copy, so the field moves into
+      // the empty band above the headline instead of sitting behind it
+      cx = w < 900 ? w * 0.5 : w * 0.75;
+      cy = w < 900 ? h * 0.24 : h * 0.5;
     }
 
     function project(a, t) {
@@ -243,49 +382,44 @@
 
       var pts = agents.map(function (a) { return project(a, t); });
 
+      var coreX = cx + pointerX * 26;
+      var coreY = cy + pointerY * 18;
+
       // edges from the core to the agents nearest the camera
       ctx.lineWidth = 1;
       pts.forEach(function (p, i) {
         if (p.z > -60 || i % 3 !== 0) return;
-        var a = 0.1 * (1 - (p.z + RADIUS) / (RADIUS * 2));
-        ctx.strokeStyle = 'rgba(61, 155, 255, ' + a.toFixed(3) + ')';
+        var a = 0.09 * (1 - (p.z + RADIUS) / (RADIUS * 2));
+        ctx.strokeStyle = 'rgba(27, 68, 232, ' + a.toFixed(3) + ')';
         ctx.beginPath();
-        ctx.moveTo(cx + pointerX * 26, cy + pointerY * 18);
+        ctx.moveTo(coreX, coreY);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
       });
 
+      // aerial perspective: near agents sit dark and solid, far ones wash out
+      // toward the paper, which is what reads as depth on a light ground.
       pts.forEach(function (p, i) {
         var depth = 1 - (p.z + RADIUS) / (RADIUS * 2);
         var radius = Math.max(0.6, agents[i].s * p.scale * 1.5);
         ctx.fillStyle = i % 5 === 0
-          ? 'rgba(209, 232, 255, ' + (0.25 + depth * 0.6).toFixed(3) + ')'
-          : 'rgba(61, 155, 255, ' + (0.16 + depth * 0.62).toFixed(3) + ')';
+          ? 'rgba(18, 22, 34, ' + (0.06 + depth * 0.34).toFixed(3) + ')'
+          : 'rgba(27, 68, 232, ' + (0.08 + depth * 0.6).toFixed(3) + ')';
         ctx.beginPath();
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         ctx.fill();
       });
 
-      // the core
-      var coreX = cx + pointerX * 26;
-      var coreY = cy + pointerY * 18;
-      var glow = ctx.createRadialGradient(coreX, coreY, 0, coreX, coreY, 90);
-      glow.addColorStop(0, 'rgba(61, 155, 255, 0.32)');
-      glow.addColorStop(1, 'rgba(61, 155, 255, 0)');
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(coreX, coreY, 90, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = '#0A0D12';
-      ctx.strokeStyle = 'rgba(61, 155, 255, 0.9)';
-      ctx.lineWidth = 2;
+      // the core, a clean ring rather than a glow
+      ctx.fillStyle = '#FFFFFF';
+      ctx.strokeStyle = 'rgba(27, 68, 232, 0.95)';
+      ctx.lineWidth = 2.2;
       ctx.beginPath();
       ctx.arc(coreX, coreY, 22, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = '#DCEBFF';
+      ctx.fillStyle = '#1B44E8';
       ctx.beginPath();
       ctx.arc(coreX, coreY, 5, 0, Math.PI * 2);
       ctx.fill();
@@ -341,8 +475,19 @@
 
   /* ── wire the scroll-driven parts ──────────────────────── */
 
-  if (lenis) lenis.on('scroll', syncJourney);
-  window.addEventListener('resize', syncJourney, { passive: true });
-  stacked.addEventListener('change', syncJourney);
-  syncJourney();
+  function sync() {
+    syncPage();
+    syncJourney();
+  }
+
+  if (lenis) {
+    lenis.on('scroll', sync);
+  } else {
+    // Lenis comes off a CDN. If it did not load, the scroll-driven work still
+    // needs a source of scroll events or the whole page freezes flat.
+    window.addEventListener('scroll', sync, { passive: true });
+  }
+  window.addEventListener('resize', sync, { passive: true });
+  stacked.addEventListener('change', sync);
+  sync();
 })();
