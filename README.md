@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="swarm — autonomous multi-agent orchestration for serious codebase work" width="100%">
+  <img src="docs/assets/banner.svg" alt="swarm — autonomous multi-agent orchestration for serious codebase work" width="100%">
 </p>
 
 <p align="center">
@@ -7,6 +7,10 @@
   <img src="https://img.shields.io/badge/Claude_Code-supported-22D3EE?style=flat-square&labelColor=0D1017" alt="Claude Code">
   <img src="https://img.shields.io/badge/phases-0→6-34D399?style=flat-square&labelColor=0D1017" alt="Phases 0 to 6">
   <img src="https://img.shields.io/badge/license-MIT-8B94A7?style=flat-square&labelColor=0D1017" alt="MIT license">
+</p>
+
+<p align="center">
+  <a href="https://saarthurr.github.io/swarm-skill/"><b>saarthurr.github.io/swarm-skill</b></a>
 </p>
 
 # swarm
@@ -42,19 +46,19 @@ re-doing finished work.
 **The orchestrator holds paths, not payloads.**
 
 <p align="center">
-  <img src="assets/context.svg" alt="The orchestrator sends briefs made of file paths and gets back distilled findings; all bulk material stays inside the sub-agents" width="100%">
+  <img src="docs/assets/context.svg" alt="The orchestrator sends briefs made of file paths and gets back distilled findings; all bulk material stays inside the sub-agents" width="100%">
 </p>
 
 **No claim survives on one agent's word.**
 
 <p align="center">
-  <img src="assets/verification.svg" alt="Every claim goes to an independent agent with fresh context to disprove; confirmed claims graduate to action, refuted ones go back to diagnosis" width="100%">
+  <img src="docs/assets/verification.svg" alt="Every claim goes to an independent agent with fresh context to disprove; confirmed claims graduate to action, refuted ones go back to diagnosis" width="100%">
 </p>
 
 ## What it actually does
 
 <p align="center">
-  <img src="assets/pipeline.svg" alt="The run: phases 0 to 6, with phase 5 looping back to diagnosis until verification and a fresh sweep both come back empty" width="100%">
+  <img src="docs/assets/pipeline.svg" alt="The run: phases 0 to 6, with phase 5 looping back to diagnosis until verification and a fresh sweep both come back empty" width="100%">
 </p>
 
 | Phase | What happens |
@@ -71,7 +75,7 @@ re-doing finished work.
 ### Parallel work, isolated — and stacked on the way out
 
 <p align="center">
-  <img src="assets/branches.svg" alt="Parallel fixers in isolated git worktrees; independent branches open their own PR to main, dependent ones open a stacked PR" width="100%">
+  <img src="docs/assets/branches.svg" alt="Parallel fixers in isolated git worktrees; independent branches open their own PR to main, dependent ones open a stacked PR" width="100%">
 </p>
 
 Every response ends with a **"What I need from you"** handoff: the secrets it couldn't
@@ -101,7 +105,7 @@ swarm/
 │   ├── state-and-memory.md           # .swarm/ledger.md and .swarm/learnings.md schemas
 │   ├── safety.md                     # standing orders for every writing/shell/git agent
 │   └── observability.md              # .swarm/events.jsonl semantic event stream
-├── assets/                           # README diagrams
+├── docs/                             # landing page (GitHub Pages) + diagrams
 └── DASHBOARD_PRD.md                  # PRD for Swarm Mission Control (companion dashboard)
 ```
 

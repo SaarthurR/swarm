@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>swarm · autonomous multi-agent orchestration</title>
+<meta name="description" content="An agent skill that runs a fleet of sub-agents across your codebase: explore, diagnose, fix, review, verify. It does not stop until the work is proven.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="swarm · autonomous multi-agent orchestration">
+<meta property="og:description" content="One goal in. A verified, production-ready result out.">
+<meta property="og:image" content="assets/banner.svg">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='9' fill='none' stroke='%23A78BFA' stroke-width='3'/><circle cx='16' cy='16' r='2.5' fill='%23E9E4FF'/></svg>">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip" href="#run">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="swarm, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <circle cx="16" cy="16" r="2.6" fill="currentColor"/>
+      </svg>
+      <span>swarm</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#principles">Principles</a>
+      <a href="#run">The run</a>
+      <a href="#craft">Craft</a>
+      <a href="#install">Install</a>
+    </nav>
+    <a class="btn btn-ghost nav-cta" href="https://github.com/SaarthurR/swarm-skill">GitHub</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ── hero ───────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1 class="display">One goal in.<br>A verified result out.</h1>
+        <p class="lede">A skill that runs a fleet of sub-agents across your codebase and does not stop until the work is proven.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#install">Install the skill</a>
+          <a class="btn btn-ghost" href="https://github.com/SaarthurR/swarm-skill">GitHub <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <svg class="fan" viewBox="0 0 460 440" role="presentation">
+          <defs>
+            <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#A78BFA" stop-opacity=".8"/>
+              <stop offset="100%" stop-color="#22D3EE" stop-opacity=".08"/>
+            </linearGradient>
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#A78BFA" stop-opacity=".30"/>
+              <stop offset="100%" stop-color="#A78BFA" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="120" cy="220" r="190" fill="url(#glow)"/>
+          <circle cx="120" cy="220" r="120" fill="none" stroke="#fff" stroke-opacity=".05"/>
+          <circle cx="120" cy="220" r="172" fill="none" stroke="#fff" stroke-opacity=".04"/>
+
+          <g class="edges" fill="none" stroke="url(#edge)" stroke-width="1.4">
+            <path d="M120 220 C 210 80, 250 70, 284 75"/>
+            <path d="M120 220 C 210 120, 260 110, 296 116"/>
+            <path d="M120 220 C 215 165, 265 158, 302 162"/>
+            <path d="M120 220 C 220 206, 270 202, 308 204"/>
+            <path d="M120 220 C 220 240, 270 246, 308 244"/>
+            <path d="M120 220 C 215 282, 265 290, 302 286"/>
+            <path d="M120 220 C 210 328, 260 338, 296 332"/>
+            <path d="M120 220 C 200 365, 245 376, 278 372"/>
+          </g>
+
+          <g class="nodes" stroke="#0A0C11" stroke-width="3">
+            <circle cx="284" cy="75"  r="9" fill="#22D3EE" style="--i:0"/>
+            <circle cx="296" cy="116" r="9" fill="#22D3EE" style="--i:1"/>
+            <circle cx="302" cy="162" r="9" fill="#A78BFA" style="--i:2"/>
+            <circle cx="308" cy="204" r="9" fill="#A78BFA" style="--i:3"/>
+            <circle cx="308" cy="244" r="9" fill="#FBBF24" style="--i:4"/>
+            <circle cx="302" cy="286" r="9" fill="#FBBF24" style="--i:5"/>
+            <circle cx="296" cy="332" r="9" fill="#34D399" style="--i:6"/>
+            <circle cx="278" cy="372" r="9" fill="#34D399" style="--i:7"/>
+          </g>
+
+          <g class="core">
+            <circle cx="120" cy="220" r="30" fill="#A78BFA" opacity=".22"/>
+            <circle cx="120" cy="220" r="26" fill="#0F1219" stroke="#A78BFA" stroke-width="2"/>
+            <circle cx="120" cy="220" r="7" fill="#E9E4FF"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── principles ─────────────────────────────────────────── -->
+  <section class="section" id="principles">
+    <div class="wrap">
+      <h2 class="h2 reveal">Two things kill a long autonomous run.<br class="br-lg">Both are designed out.</h2>
+
+      <div class="pair">
+        <article class="card reveal" style="--i:0">
+          <div class="card-body">
+            <h3>The orchestrator holds paths, not payloads</h3>
+            <p>Reading a codebase into the coordinator burns the budget it needs to coordinate. Sub-agents do the reading and hand back a finding plus a path to the evidence.</p>
+          </div>
+          <figure class="card-figure">
+            <img src="assets/context.svg" alt="Diagram: the orchestrator sends briefs made of file paths across a context boundary and receives distilled findings, while bulk material stays inside the sub-agents" loading="lazy" decoding="async">
+          </figure>
+        </article>
+
+        <article class="card reveal" style="--i:1">
+          <div class="card-body">
+            <h3>No claim survives on one agent's word</h3>
+            <p>An agent that checks its own conclusion has checked nothing. Every root cause, fix and assumption goes to a second agent with fresh context, framed as something to disprove.</p>
+          </div>
+          <figure class="card-figure">
+            <img src="assets/verification.svg" alt="Diagram: a claim goes to an independent agent with fresh context to disprove; confirmed claims graduate to action, refuted ones return to diagnosis, disagreements are adjudicated by a third agent" loading="lazy" decoding="async">
+          </figure>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── the run (scroll-scrubbed) ──────────────────────────── -->
+  <section class="run" id="run">
+    <div class="run-stage">
+      <div class="wrap run-grid">
+
+        <div class="run-head">
+          <p class="eyebrow">The run</p>
+          <h2 class="h2">Phases zero to six.<br>One exit condition.</h2>
+          <p class="run-note">It leaves when a verification pass is all green and a fresh sweep finds nothing, in the same round.</p>
+        </div>
+
+        <div class="run-rail" aria-hidden="true">
+          <div class="rail-line"><span class="rail-fill"></span></div>
+          <ol class="rail-ticks">
+            <li><span>0</span></li><li><span>1</span></li><li><span>2</span></li>
+            <li><span>2.5</span></li><li><span>3</span></li><li><span>4</span></li>
+            <li><span>5</span></li><li><span>6</span></li>
+          </ol>
+        </div>
+
+        <ol class="steps">
+          <li class="step" data-accent="cyan">
+            <p class="step-n">Phase 0</p>
+            <h3>Ingest the world this code lives in</h3>
+            <p>Prior learnings for this repo, then live state pulled through every connected tool: database schema and advisors, deploy config, logs, the threads where the problem was reported.</p>
+          </li>
+          <li class="step" data-accent="cyan">
+            <p class="step-n">Phase 1</p>
+            <h3>Map the territory before touching it</h3>
+            <p>One agent per independent area writes a structured map. A synthesis agent ranks the problems and returns a dependency graph of the work: what can run in parallel, what has to wait.</p>
+          </li>
+          <li class="step" data-accent="violet">
+            <p class="step-n">Phase 2</p>
+            <h3>Find the cause, then try to break it</h3>
+            <p>An investigator returns the exact code path and failing condition. A separate agent gets that conclusion as a hypothesis to disprove. Disagreement sends it to a third.</p>
+          </li>
+          <li class="step" data-accent="violet">
+            <p class="step-n">Phase 2.5</p>
+            <h3>Argue about the fix before writing it</h3>
+            <p>The proposed change goes to two independent critics: is there a smaller fix, which sibling callers break, is this patching a symptom. The best version wins, not the first one.</p>
+          </li>
+          <li class="step" data-accent="amber">
+            <p class="step-n">Phase 3</p>
+            <h3>Fix in parallel, isolated</h3>
+            <p>Independent units run at the same time, each in its own git worktree and branch. Code is written lazy by discipline: the smallest change that actually holds, with a runnable check behind it.</p>
+          </li>
+          <li class="step" data-accent="green">
+            <p class="step-n">Phase 4</p>
+            <h3>Review the diff, not the status line</h3>
+            <p>Nothing is accepted on the author's word. A reviewer that did not write the code reads the diff for correctness, root cause versus symptom, dead code and broken siblings.</p>
+          </li>
+          <li class="step" data-accent="amber">
+            <p class="step-n">Phase 5</p>
+            <h3>Prove it, then go looking again</h3>
+            <p>Fresh build, tests, types, lint, and the task's own check, judged on real output. Then a new sweep with new agents hunts what the fixes exposed. Anything it finds reopens diagnosis.</p>
+          </li>
+          <li class="step" data-accent="green">
+            <p class="step-n">Phase 6</p>
+            <h3>Check the world moved, then ship</h3>
+            <p>Diff against latest main for merge and semantic conflicts, compare against every open PR for collisions, run the safety scan, open the pull request with the real evidence attached.</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── craft (bento) ──────────────────────────────────────── -->
+  <section class="section" id="craft">
+    <div class="wrap">
+      <h2 class="h2 reveal">Built for runs that last hours.</h2>
+
+      <div class="bento">
+        <article class="tile tile-wide reveal" style="--i:0">
+          <div class="tile-copy">
+            <h3>Isolated while working. Stacked when shipping.</h3>
+            <p>Concurrent fixers never share a working tree. Ordered chains open as a stack, so every pull request shows only its own change.</p>
+          </div>
+          <img src="assets/branches.svg" alt="Diagram: parallel fixers in isolated git worktrees, independent branches opening their own pull request to main, and a dependent branch opening a stacked pull request against the branch below it" loading="lazy" decoding="async">
+        </article>
+
+        <article class="tile tile-accent reveal" style="--i:1">
+          <h3>Standing safety orders</h3>
+          <ul class="ticks">
+            <li>Never force-push, never push to main, never merge</li>
+            <li>No destructive shell without a human gate</li>
+            <li>No secrets in commits, logs or returns</li>
+            <li>Anything that could cost money stops and asks</li>
+          </ul>
+        </article>
+
+        <article class="tile reveal" style="--i:2">
+          <h3>Survives compaction</h3>
+          <p>Durable state at the repo root, so a restart resumes instead of redoing finished work.</p>
+          <ul class="chips">
+            <li>ledger.md</li>
+            <li>learnings.md</li>
+            <li>events.jsonl</li>
+          </ul>
+        </article>
+
+        <article class="tile reveal" style="--i:3">
+          <h3>Right model, right job</h3>
+          <dl class="tiers">
+            <div><dt>Mechanical lookups</dt><dd>cheapest tier</dd></div>
+            <div><dt>Implementation</dt><dd>fast tier</dd></div>
+            <div><dt>Design, review, verification</dt><dd>highest thinking</dd></div>
+          </dl>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── install ────────────────────────────────────────────── -->
+  <section class="section section-install" id="install">
+    <div class="wrap install-wrap">
+      <p class="eyebrow reveal">Install</p>
+      <h2 class="h2 reveal" style="--i:1">Clone it into your skills directory.</h2>
+
+      <div class="code reveal" style="--i:2">
+        <div class="code-head">
+          <span>Cursor or Claude Code</span>
+          <button class="copy" type="button" data-copy="git clone https://github.com/SaarthurR/swarm-skill.git ~/skills/swarm&#10;ln -s ~/skills/swarm ~/.cursor/skills/swarm&#10;ln -s ~/skills/swarm ~/.claude/skills/swarm">Copy</button>
+        </div>
+        <pre><code><span class="c"># clone once, symlink to both hosts</span>
+git clone https://github.com/SaarthurR/swarm-skill.git ~/skills/swarm
+ln -s ~/skills/swarm ~/.cursor/skills/swarm
+ln -s ~/skills/swarm ~/.claude/skills/swarm</code></pre>
+      </div>
+
+      <p class="install-note reveal" style="--i:3">Then hand over the goal:</p>
+      <ul class="prompts reveal" style="--i:4">
+        <li>swarm, checkout drops orders under load. Find out why and fix it properly.</li>
+        <li>swarm this repo: make it production ready before Friday.</li>
+        <li>swarm, audit the auth layer. Use the Supabase MCP for schema and advisors.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>swarm</span>
+    <span>MIT licensed</span>
+    <a href="https://github.com/SaarthurR/swarm-skill">github.com/SaarthurR/swarm-skill</a>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lenis@1/dist/lenis.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
