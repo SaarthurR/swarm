@@ -139,7 +139,8 @@
       el.style.setProperty('--mx', Math.round(Math.cos(angle) * spread) + 'px');
       el.style.setProperty('--my', Math.round(Math.sin(angle) * spread * 0.5) + 'px');
       el.style.setProperty('--mz', Math.round(mz) + 'px');
-      el.style.opacity = (0.12 + Math.random() * 0.3).toFixed(2);
+      // brighter than they were on paper: a violet dot on void needs the lift
+      el.style.opacity = (0.25 + Math.random() * 0.5).toFixed(2);
 
       motes.push({ el: el, z: mz, hidden: false });
       frag.appendChild(el);
@@ -389,37 +390,50 @@
       ctx.lineWidth = 1;
       pts.forEach(function (p, i) {
         if (p.z > -60 || i % 3 !== 0) return;
-        var a = 0.09 * (1 - (p.z + RADIUS) / (RADIUS * 2));
-        ctx.strokeStyle = 'rgba(27, 68, 232, ' + a.toFixed(3) + ')';
+        var a = 0.11 * (1 - (p.z + RADIUS) / (RADIUS * 2));
+        ctx.strokeStyle = 'rgba(140, 147, 216, ' + a.toFixed(3) + ')';
         ctx.beginPath();
         ctx.moveTo(coreX, coreY);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
       });
 
-      // aerial perspective: near agents sit dark and solid, far ones wash out
-      // toward the paper, which is what reads as depth on a light ground.
+      // aerial perspective, inverted for the void: near agents burn bright,
+      // far ones sink back toward black, which is what reads as depth here.
       pts.forEach(function (p, i) {
         var depth = 1 - (p.z + RADIUS) / (RADIUS * 2);
         var radius = Math.max(0.6, agents[i].s * p.scale * 1.5);
         ctx.fillStyle = i % 5 === 0
-          ? 'rgba(18, 22, 34, ' + (0.06 + depth * 0.34).toFixed(3) + ')'
-          : 'rgba(27, 68, 232, ' + (0.08 + depth * 0.6).toFixed(3) + ')';
+          ? 'rgba(255, 255, 255, ' + (0.05 + depth * 0.55).toFixed(3) + ')'
+          : 'rgba(140, 147, 216, ' + (0.06 + depth * 0.72).toFixed(3) + ')';
         ctx.beginPath();
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         ctx.fill();
       });
 
-      // the core, a clean ring rather than a glow
-      ctx.fillStyle = '#FFFFFF';
-      ctx.strokeStyle = 'rgba(27, 68, 232, 0.95)';
-      ctx.lineWidth = 2.2;
+      // The core is the brand mark and the only place chroma is allowed: the
+      // page chrome stays achromatic so the rendered scene carries all of it.
+      // Two offset rim arcs give the cyan-to-magenta edge without a blur glow.
+      ctx.lineWidth = 2.6;
+      ctx.strokeStyle = 'rgba(96, 214, 226, 0.55)';
+      ctx.beginPath();
+      ctx.arc(coreX - 1.5, coreY - 1.5, 22, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(198, 112, 210, 0.45)';
+      ctx.beginPath();
+      ctx.arc(coreX + 1.5, coreY + 1.5, 22, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#000000';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(coreX, coreY, 22, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = '#1B44E8';
+      ctx.fillStyle = '#8C93D8';
       ctx.beginPath();
       ctx.arc(coreX, coreY, 5, 0, Math.PI * 2);
       ctx.fill();
