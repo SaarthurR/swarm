@@ -1,51 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="336" viewBox="0 0 1200 336" role="img" aria-label="Parallel fixers work in isolated git worktrees; independent branches each open their own PR to main, while a dependent branch opens a stacked PR targeting the branch below it">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0A0C11"/><stop offset="55%" stop-color="#0D1017"/><stop offset="100%" stop-color="#12161F"/>
-    </linearGradient>
-    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#FFFFFF" stroke-opacity="0.028" stroke-width="1"/>
-    </pattern>
-  </defs>
+  <rect width="1200" height="336" rx="40" fill="#F6F3F1"/>
+  <rect x="0.5" y="0.5" width="1199" height="335" rx="40" fill="none" stroke="#CECAC8"/>
 
-  <rect width="1200" height="336" rx="18" fill="url(#bg)"/>
-  <rect width="1200" height="336" rx="18" fill="url(#grid)"/>
-  <rect x="0.5" y="0.5" width="1199" height="335" rx="18" fill="none" stroke="#FFFFFF" stroke-opacity="0.07"/>
-
-  <g font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
-    <text x="40" y="46" fill="#6B7488" font-size="12" font-weight="700" letter-spacing="2.4">ISOLATED WHILE WORKING · STACKED WHEN SHIPPING</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <text x="56" y="52" fill="#797776" font-size="11" letter-spacing="1.2">ISOLATED WHILE WORKING · STACKED WHEN SHIPPING</text>
 
     <!-- main -->
-    <line x1="72" y1="272" x2="1150" y2="272" stroke="#6B7488" stroke-opacity="0.55" stroke-width="2"/>
-    <text x="72" y="296" fill="#79839A" font-size="12.5" font-weight="600">main</text>
+    <line x1="72" y1="258" x2="1144" y2="258" stroke="#CECAC8" stroke-width="1.6"/>
+    <text x="72" y="280" fill="#797776" font-size="11.5" letter-spacing="-0.23">MAIN</text>
 
-    <!-- branch B — independent -->
-    <path d="M140 272 C 176 272, 176 84, 212 84 L 852 84" fill="none" stroke="#22D3EE" stroke-opacity="0.7" stroke-width="2"/>
-    <text x="212" y="66" fill="#7DD3FC" font-size="12.5" font-weight="600">worktree B · branchB</text>
-    <circle cx="360" cy="84" r="5.5" fill="#0D1017" stroke="#22D3EE" stroke-width="2"/>
-    <circle cx="500" cy="84" r="5.5" fill="#0D1017" stroke="#22D3EE" stroke-width="2"/>
-    <circle cx="640" cy="84" r="5.5" fill="#0D1017" stroke="#22D3EE" stroke-width="2"/>
-    <rect x="864" y="64" width="286" height="40" rx="12" fill="#062A33" stroke="#22D3EE" stroke-opacity="0.45"/>
-    <text x="884" y="89" fill="#7DD3FC" font-size="12.5" font-weight="600">PR #2 · branchB → main</text>
+    <!-- branch B — independent, and deliberately the quiet one -->
+    <path d="M140 258 C 176 258, 176 96, 212 96 L 848 96" fill="none" stroke="#CECAC8" stroke-width="1.6"/>
+    <text x="212" y="78" fill="#797776" font-size="11.5" letter-spacing="-0.23">WORKTREE B · BRANCHB</text>
+    <circle cx="360" cy="96" r="5" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+    <circle cx="500" cy="96" r="5" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+    <circle cx="640" cy="96" r="5" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+    <rect x="860" y="74" width="284" height="44" rx="22" fill="#F6F3F1" stroke="#CECAC8"/>
+    <text x="884" y="102" fill="#242424" font-size="12" letter-spacing="-0.24">PR #2 · BRANCHB → MAIN</text>
 
-    <!-- branch C — stacked on A -->
-    <path d="M540 194 C 576 194, 576 160, 612 160 L 852 160" fill="none" stroke="#34D399" stroke-opacity="0.7" stroke-width="2"/>
-    <text x="612" y="142" fill="#6EE7B7" font-size="12.5" font-weight="600">worktree C · branchC — builds on A</text>
-    <circle cx="712" cy="160" r="5.5" fill="#0D1017" stroke="#34D399" stroke-width="2"/>
-    <circle cx="792" cy="160" r="5.5" fill="#0D1017" stroke="#34D399" stroke-width="2"/>
-    <rect x="864" y="134" width="286" height="52" rx="12" fill="#062B20" stroke="#34D399" stroke-opacity="0.5"/>
-    <text x="884" y="156" fill="#6EE7B7" font-size="12.5" font-weight="600">PR #3 · branchC → branchA</text>
-    <text x="884" y="175" fill="#4E8874" font-size="11.5">stacked — lands after #1</text>
+    <!-- branch C — stacked on A, so it carries the coloured PR surface -->
+    <path d="M540 192 C 576 192, 576 158, 612 158 L 848 158" fill="none" stroke="#A0B5EB" stroke-width="1.6"/>
+    <text x="612" y="140" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23">WORKTREE C · BRANCHC — BUILDS ON A</text>
+    <circle cx="712" cy="158" r="5" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
+    <circle cx="792" cy="158" r="5" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
+    <rect x="860" y="130" width="284" height="56" rx="28" fill="#CFDAF5" stroke="#A0B5EB"/>
+    <text x="884" y="154" fill="#242424" font-size="12" letter-spacing="-0.24">PR #3 · BRANCHC → BRANCHA</text>
+    <text x="884" y="172" fill="#4E4D4D" font-size="11" letter-spacing="-0.22">STACKED — LANDS AFTER #1</text>
 
     <!-- branch A — independent -->
-    <path d="M232 272 C 268 272, 268 194, 304 194 L 852 194" fill="none" stroke="#A78BFA" stroke-opacity="0.7" stroke-width="2"/>
-    <text x="304" y="230" fill="#C4B5FD" font-size="12.5" font-weight="600">worktree A · branchA</text>
-    <circle cx="400" cy="194" r="5.5" fill="#0D1017" stroke="#A78BFA" stroke-width="2"/>
-    <circle cx="540" cy="194" r="6.5" fill="#0D1017" stroke="#A78BFA" stroke-width="2.5"/>
-    <circle cx="700" cy="194" r="5.5" fill="#0D1017" stroke="#A78BFA" stroke-width="2"/>
-    <rect x="864" y="200" width="286" height="40" rx="12" fill="#1A1330" stroke="#A78BFA" stroke-opacity="0.5"/>
-    <text x="884" y="225" fill="#C4B5FD" font-size="12.5" font-weight="600">PR #1 · branchA → main</text>
+    <path d="M232 258 C 268 258, 268 192, 304 192 L 848 192" fill="none" stroke="#A0B5EB" stroke-width="1.6"/>
+    <text x="304" y="226" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23">WORKTREE A · BRANCHA</text>
+    <circle cx="400" cy="192" r="5" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
+    <circle cx="540" cy="192" r="6" fill="#A0B5EB" stroke="#A0B5EB" stroke-width="1.6"/>
+    <circle cx="700" cy="192" r="5" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
+    <rect x="860" y="198" width="284" height="44" rx="22" fill="#F6F3F1" stroke="#CECAC8"/>
+    <text x="884" y="226" fill="#242424" font-size="12" letter-spacing="-0.24">PR #1 · BRANCHA → MAIN</text>
 
-    <text x="140" y="296" fill="#5C6679" font-size="12">Concurrent fixers never share a working tree — “different files, same index” still collides. Ordered chains ship as a stack, so every PR’s diff shows only its own change.</text>
+    <text x="72" y="302" fill="#797776" font-size="12" letter-spacing="-0.24">Concurrent fixers never share a working tree — “different files, same index” still collides.</text>
+    <text x="72" y="320" fill="#797776" font-size="12" letter-spacing="-0.24">Ordered chains ship as a stack, so every PR’s diff shows only its own change.</text>
   </g>
 </svg>

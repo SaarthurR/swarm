@@ -139,8 +139,7 @@
       el.style.setProperty('--mx', Math.round(Math.cos(angle) * spread) + 'px');
       el.style.setProperty('--my', Math.round(Math.sin(angle) * spread * 0.5) + 'px');
       el.style.setProperty('--mz', Math.round(mz) + 'px');
-      // brighter than they were on paper: a violet dot on void needs the lift
-      el.style.opacity = (0.25 + Math.random() * 0.5).toFixed(2);
+      el.style.opacity = (0.3 + Math.random() * 0.5).toFixed(2);
 
       motes.push({ el: el, z: mz, hidden: false });
       frag.appendChild(el);
@@ -386,54 +385,52 @@
       var coreX = cx + pointerX * 26;
       var coreY = cy + pointerY * 18;
 
-      // edges from the core to the agents nearest the camera
+      // edges from the core to the agents nearest the camera, in the same ash
+      // hairline the pipeline diagrams use
       ctx.lineWidth = 1;
       pts.forEach(function (p, i) {
         if (p.z > -60 || i % 3 !== 0) return;
-        var a = 0.11 * (1 - (p.z + RADIUS) / (RADIUS * 2));
-        ctx.strokeStyle = 'rgba(140, 147, 216, ' + a.toFixed(3) + ')';
+        var a = 0.16 * (1 - (p.z + RADIUS) / (RADIUS * 2));
+        ctx.strokeStyle = 'rgba(160, 181, 235, ' + a.toFixed(3) + ')';
         ctx.beginPath();
         ctx.moveTo(coreX, coreY);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
       });
 
-      // aerial perspective, inverted for the void: near agents burn bright,
-      // far ones sink back toward black, which is what reads as depth here.
+      // aerial perspective: near agents sit dark and solid, far ones wash out
+      // toward the parchment, which is what reads as depth on a warm ground.
       pts.forEach(function (p, i) {
         var depth = 1 - (p.z + RADIUS) / (RADIUS * 2);
         var radius = Math.max(0.6, agents[i].s * p.scale * 1.5);
-        ctx.fillStyle = i % 5 === 0
-          ? 'rgba(255, 255, 255, ' + (0.05 + depth * 0.55).toFixed(3) + ')'
-          : 'rgba(140, 147, 216, ' + (0.06 + depth * 0.72).toFixed(3) + ')';
+        ctx.fillStyle = i % 4 === 0
+          ? 'rgba(160, 181, 235, ' + (0.14 + depth * 0.66).toFixed(3) + ')'
+          : 'rgba(36, 36, 36, ' + (0.05 + depth * 0.42).toFixed(3) + ')';
         ctx.beginPath();
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         ctx.fill();
       });
 
-      // The core is the brand mark and the only place chroma is allowed: the
-      // page chrome stays achromatic so the rendered scene carries all of it.
-      // Two offset rim arcs give the cyan-to-magenta edge without a blur glow.
-      ctx.lineWidth = 2.6;
-      ctx.strokeStyle = 'rgba(96, 214, 226, 0.55)';
+      // The hub, drawn the way the pipeline diagram draws its normalisation
+      // node: a soft mint glow behind a parchment pill with an ash hairline.
+      // No saturated fill — that colour is spent on the one primary action.
+      var glow = ctx.createRadialGradient(coreX, coreY, 4, coreX, coreY, 62);
+      glow.addColorStop(0, 'rgba(167, 252, 205, 0.55)');
+      glow.addColorStop(1, 'rgba(167, 252, 205, 0)');
+      ctx.fillStyle = glow;
       ctx.beginPath();
-      ctx.arc(coreX - 1.5, coreY - 1.5, 22, 0, Math.PI * 2);
-      ctx.stroke();
+      ctx.arc(coreX, coreY, 62, 0, Math.PI * 2);
+      ctx.fill();
 
-      ctx.strokeStyle = 'rgba(198, 112, 210, 0.45)';
-      ctx.beginPath();
-      ctx.arc(coreX + 1.5, coreY + 1.5, 22, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.fillStyle = '#000000';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.lineWidth = 2;
+      ctx.fillStyle = '#F6F3F1';
+      ctx.strokeStyle = '#242424';
+      ctx.lineWidth = 1.6;
       ctx.beginPath();
       ctx.arc(coreX, coreY, 22, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = '#8C93D8';
+      ctx.fillStyle = '#242424';
       ctx.beginPath();
       ctx.arc(coreX, coreY, 5, 0, Math.PI * 2);
       ctx.fill();

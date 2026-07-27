@@ -1,94 +1,84 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="336" viewBox="0 0 1200 336" role="img" aria-label="The swarm run: phases 0 through 6, with phase 5 looping back to diagnosis until verification and a fresh sweep both come back empty">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0A0C11"/><stop offset="55%" stop-color="#0D1017"/><stop offset="100%" stop-color="#12161F"/>
-    </linearGradient>
-    <linearGradient id="track" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.55"/>
-      <stop offset="45%" stop-color="#A78BFA" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#34D399" stop-opacity="0.55"/>
-    </linearGradient>
-    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#FFFFFF" stroke-opacity="0.028" stroke-width="1"/>
-    </pattern>
-    <marker id="amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-      <path d="M0 0 L10 5 L0 10 z" fill="#FBBF24" fill-opacity="0.85"/>
+    <marker id="loop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#FF9473"/>
     </marker>
   </defs>
 
-  <rect width="1200" height="336" rx="18" fill="url(#bg)"/>
-  <rect width="1200" height="336" rx="18" fill="url(#grid)"/>
-  <rect x="0.5" y="0.5" width="1199" height="335" rx="18" fill="none" stroke="#FFFFFF" stroke-opacity="0.07"/>
+  <rect width="1200" height="336" rx="40" fill="#F6F3F1"/>
+  <rect x="0.5" y="0.5" width="1199" height="335" rx="40" fill="none" stroke="#CECAC8"/>
 
-  <g font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
-    <text x="40" y="46" fill="#6B7488" font-size="12" font-weight="700" letter-spacing="2.4">THE RUN · PHASES 0 → 6</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <text x="56" y="52" fill="#797776" font-size="11" letter-spacing="1.2">THE RUN · PHASES 0 → 6</text>
 
-    <line x1="100" y1="178" x2="1100" y2="178" stroke="url(#track)" stroke-width="2"/>
+    <line x1="106" y1="182" x2="1094" y2="182" stroke="#CECAC8" stroke-width="1.6"/>
 
     <!-- phase 0 -->
     <g text-anchor="middle">
-      <text x="100" y="128" fill="#E3E8F2" font-size="13.5" font-weight="600">Ingest</text>
-      <text x="100" y="147" fill="#79839A" font-size="11.5">docs · MCPs · memory</text>
-      <circle cx="100" cy="178" r="21" fill="#0F1219" stroke="#22D3EE" stroke-width="2"/>
-      <text x="100" y="183" fill="#22D3EE" font-size="13" font-weight="700">0</text>
+      <text x="106" y="130" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">Ingest</text>
+      <text x="106" y="152" fill="#797776" font-size="11" letter-spacing="-0.22">docs · MCPs · memory</text>
+      <circle cx="106" cy="182" r="21" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+      <text x="106" y="187" fill="#242424" font-size="13">0</text>
     </g>
     <!-- phase 1 -->
     <g text-anchor="middle">
-      <text x="243" y="128" fill="#E3E8F2" font-size="13.5" font-weight="600">Recon</text>
-      <text x="243" y="147" fill="#79839A" font-size="11.5">map + dependency DAG</text>
-      <circle cx="243" cy="178" r="21" fill="#0F1219" stroke="#22D3EE" stroke-width="2"/>
-      <text x="243" y="183" fill="#22D3EE" font-size="13" font-weight="700">1</text>
+      <text x="247" y="130" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">Recon</text>
+      <text x="247" y="152" fill="#797776" font-size="11" letter-spacing="-0.22">map + dependency DAG</text>
+      <circle cx="247" cy="182" r="21" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+      <text x="247" y="187" fill="#242424" font-size="13">1</text>
     </g>
     <!-- phase 2 -->
     <g text-anchor="middle">
-      <text x="386" y="128" fill="#E3E8F2" font-size="13.5" font-weight="600">Diagnose</text>
-      <text x="386" y="147" fill="#79839A" font-size="11.5">cause + challenger</text>
-      <circle cx="386" cy="178" r="21" fill="#0F1219" stroke="#A78BFA" stroke-width="2"/>
-      <text x="386" y="183" fill="#A78BFA" font-size="13" font-weight="700">2</text>
+      <text x="388" y="130" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">Diagnose</text>
+      <text x="388" y="152" fill="#797776" font-size="11" letter-spacing="-0.22">cause + challenger</text>
+      <circle cx="388" cy="182" r="21" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.8"/>
+      <text x="388" y="187" fill="#242424" font-size="13">2</text>
     </g>
     <!-- phase 2.5 -->
     <g text-anchor="middle">
-      <text x="529" y="128" fill="#E3E8F2" font-size="13.5" font-weight="600">Deliberate</text>
-      <text x="529" y="147" fill="#79839A" font-size="11.5">critique before code</text>
-      <circle cx="529" cy="178" r="21" fill="#0F1219" stroke="#A78BFA" stroke-width="2"/>
-      <text x="529" y="183" fill="#A78BFA" font-size="12" font-weight="700">2.5</text>
+      <text x="529" y="130" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">Deliberate</text>
+      <text x="529" y="152" fill="#797776" font-size="11" letter-spacing="-0.22">critique before code</text>
+      <circle cx="529" cy="182" r="21" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.8"/>
+      <text x="529" y="187" fill="#242424" font-size="12">2.5</text>
     </g>
     <!-- phase 3 -->
     <g text-anchor="middle">
-      <text x="672" y="128" fill="#E3E8F2" font-size="13.5" font-weight="600">Fix</text>
-      <text x="672" y="147" fill="#79839A" font-size="11.5">isolated worktrees</text>
-      <circle cx="672" cy="178" r="21" fill="#0F1219" stroke="#FBBF24" stroke-width="2"/>
-      <text x="672" y="183" fill="#FBBF24" font-size="13" font-weight="700">3</text>
+      <text x="670" y="130" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">Fix</text>
+      <text x="670" y="152" fill="#797776" font-size="11" letter-spacing="-0.22">isolated worktrees</text>
+      <circle cx="670" cy="182" r="21" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+      <text x="670" y="187" fill="#242424" font-size="13">3</text>
     </g>
     <!-- phase 4 -->
     <g text-anchor="middle">
-      <text x="815" y="128" fill="#E3E8F2" font-size="13.5" font-weight="600">Review</text>
-      <text x="815" y="147" fill="#79839A" font-size="11.5">against the diff</text>
-      <circle cx="815" cy="178" r="21" fill="#0F1219" stroke="#34D399" stroke-width="2"/>
-      <text x="815" y="183" fill="#34D399" font-size="13" font-weight="700">4</text>
+      <text x="811" y="130" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">Review</text>
+      <text x="811" y="152" fill="#797776" font-size="11" letter-spacing="-0.22">against the diff</text>
+      <circle cx="811" cy="182" r="21" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+      <text x="811" y="187" fill="#242424" font-size="13">4</text>
     </g>
-    <!-- phase 5 — the gate -->
+    <!-- phase 5 — the gate. The one saturated fill in the diagram. -->
     <g text-anchor="middle">
-      <text x="958" y="128" fill="#F3E3BD" font-size="13.5" font-weight="600">Verify + sweep</text>
-      <text x="958" y="147" fill="#A98F52" font-size="11.5">real command output</text>
-      <circle cx="958" cy="178" r="27" fill="none" stroke="#FBBF24" stroke-opacity="0.28" stroke-width="1"/>
-      <circle cx="958" cy="178" r="21" fill="#1B1509" stroke="#FBBF24" stroke-width="2"/>
-      <text x="958" y="183" fill="#FBBF24" font-size="13" font-weight="700">5</text>
+      <text x="952" y="130" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">Verify + sweep</text>
+      <text x="952" y="152" fill="#4E4D4D" font-size="11" letter-spacing="-0.22">real command output</text>
+      <circle cx="952" cy="182" r="28" fill="none" stroke="#A0B5EB"/>
+      <circle cx="952" cy="182" r="21" fill="#2B59D1"/>
+      <text x="952" y="187" fill="#FFFFFF" font-size="13">5</text>
     </g>
     <!-- phase 6 -->
     <g text-anchor="middle">
-      <text x="1101" y="128" fill="#E3E8F2" font-size="13.5" font-weight="600">Ship</text>
-      <text x="1101" y="147" fill="#79839A" font-size="11.5">cross-check + PR</text>
-      <circle cx="1101" cy="178" r="21" fill="#0F1219" stroke="#34D399" stroke-width="2"/>
-      <text x="1101" y="183" fill="#34D399" font-size="13" font-weight="700">6</text>
+      <text x="1093" y="130" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">Ship</text>
+      <text x="1093" y="152" fill="#797776" font-size="11" letter-spacing="-0.22">cross-check + PR</text>
+      <circle cx="1093" cy="182" r="21" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+      <text x="1093" y="187" fill="#242424" font-size="13">6</text>
     </g>
 
     <!-- the loop back -->
-    <path d="M958 205 C 958 258, 386 258, 386 202" fill="none" stroke="#FBBF24" stroke-opacity="0.55"
-          stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#amber)"/>
-    <rect x="524" y="235" width="296" height="24" rx="12" fill="#0D1017"/>
-    <text x="672" y="252" fill="#D9A93C" font-size="12" font-weight="600" text-anchor="middle">the sweep found something → back to diagnosis</text>
+    <path d="M952 212 C 952 266, 388 266, 388 206" fill="none" stroke="#FF9473"
+          stroke-width="1.4" stroke-dasharray="6 5" marker-end="url(#loop)"/>
+    <g transform="translate(504 240)">
+      <rect width="332" height="34" rx="17" fill="#F6F3F1" stroke="#CECAC8"/>
+      <text x="166" y="22" fill="#242424" font-size="11.5" letter-spacing="-0.23" text-anchor="middle">THE SWEEP FOUND SOMETHING → BACK TO DIAGNOSIS</text>
+    </g>
 
-    <text x="600" y="300" fill="#5C6679" font-size="12" text-anchor="middle">Exit only when verification is all-green <tspan fill="#79839A" font-weight="600">and</tspan> a fresh sweep comes back empty — in the same round.</text>
+    <text x="600" y="304" fill="#797776" font-size="12" letter-spacing="-0.24" text-anchor="middle">Exit only when verification is all-green and a fresh sweep comes back empty — in the same round.</text>
   </g>
 </svg>

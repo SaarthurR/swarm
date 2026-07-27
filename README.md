@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Cursor-supported-A78BFA?style=flat-square&labelColor=0D1017" alt="Cursor">
-  <img src="https://img.shields.io/badge/Claude_Code-supported-22D3EE?style=flat-square&labelColor=0D1017" alt="Claude Code">
-  <img src="https://img.shields.io/badge/phases-0→6-34D399?style=flat-square&labelColor=0D1017" alt="Phases 0 to 6">
-  <img src="https://img.shields.io/badge/license-MIT-8B94A7?style=flat-square&labelColor=0D1017" alt="MIT license">
+  <img src="https://img.shields.io/badge/Cursor-supported-4E4D4D?style=flat-square&labelColor=242424" alt="Cursor">
+  <img src="https://img.shields.io/badge/Claude_Code-supported-4E4D4D?style=flat-square&labelColor=242424" alt="Claude Code">
+  <img src="https://img.shields.io/badge/phases-0→6-2B59D1?style=flat-square&labelColor=242424" alt="Phases 0 to 6">
+  <img src="https://img.shields.io/badge/license-MIT-797776?style=flat-square&labelColor=242424" alt="MIT license">
 </p>
 
 <p align="center">

@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>swarm · autonomous multi-agent orchestration</title>
 <meta name="description" content="An agent skill that runs a fleet of sub-agents across your codebase: explore, diagnose, fix, review, verify. It does not stop until the work is proven.">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F6F3F1">
 <meta property="og:title" content="swarm · autonomous multi-agent orchestration">
 <meta property="og:description" content="One goal in. A verified, production-ready result out.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23000000'/><circle cx='16' cy='16' r='9' fill='none' stroke='%238C93D8' stroke-width='3'/><circle cx='16' cy='16' r='2.5' fill='%238C93D8'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23F6F3F1'/><circle cx='16' cy='16' r='9' fill='none' stroke='%23242424' stroke-width='2.4'/><circle cx='16' cy='16' r='2.5' fill='%23242424'/></svg>">
 <link rel="preload" href="fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -429,33 +429,33 @@
 
           <svg class="branch-art" viewBox="0 0 580 232" aria-hidden="true"
                font-family="'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace">
-            <line x1="14" y1="200" x2="566" y2="200" stroke="#4D4D4D" stroke-width="2"/>
-            <text x="14" y="222" fill="#999999" font-size="11.5">main</text>
+            <line x1="14" y1="200" x2="566" y2="200" stroke="#CECAC8" stroke-width="1.6"/>
+            <text x="14" y="222" fill="#797776" font-size="11">MAIN</text>
 
             <!-- branchB, independent -->
-            <path d="M56 200 C 84 200, 84 52, 112 52 L 352 52" fill="none" stroke="#5B6091" stroke-width="2"/>
-            <text x="112" y="38" fill="#8C93D8" font-size="11.5">worktree B</text>
-            <circle cx="212" cy="52" r="4.5" fill="#000000" stroke="#5B6091" stroke-width="2"/>
-            <circle cx="292" cy="52" r="4.5" fill="#000000" stroke="#5B6091" stroke-width="2"/>
-            <rect x="366" y="34" width="200" height="36" rx="10" fill="rgba(52,55,85,.28)" stroke="rgba(140,147,216,.3)"/>
-            <text x="384" y="57" fill="#8C93D8" font-size="12" font-weight="600">PR 2 to main</text>
+            <path d="M56 200 C 84 200, 84 52, 112 52 L 352 52" fill="none" stroke="#CECAC8" stroke-width="1.6"/>
+            <text x="112" y="38" fill="#797776" font-size="11">WORKTREE B</text>
+            <circle cx="212" cy="52" r="4" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+            <circle cx="292" cy="52" r="4" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
+            <rect x="366" y="32" width="200" height="40" rx="20" fill="#F6F3F1" stroke="#CECAC8"/>
+            <text x="386" y="57" fill="#242424" font-size="11.5">PR 2 TO MAIN</text>
 
             <!-- branchC, stacked on A -->
-            <path d="M244 148 C 272 148, 272 100, 300 100 L 352 100" fill="none" stroke="#8C93D8" stroke-width="2"/>
-            <text x="258" y="86" fill="#B4B9E8" font-size="11.5">worktree C</text>
-            <circle cx="330" cy="100" r="4.5" fill="#000000" stroke="#8C93D8" stroke-width="2"/>
-            <rect x="366" y="82" width="200" height="46" rx="10" fill="rgba(52,55,85,.6)" stroke="rgba(140,147,216,.5)"/>
-            <text x="384" y="102" fill="#B4B9E8" font-size="12" font-weight="600">PR 3 to branchA</text>
-            <text x="384" y="119" fill="#999999" font-size="11">stacked, lands after PR 1</text>
+            <path d="M244 148 C 272 148, 272 100, 300 100 L 352 100" fill="none" stroke="#A0B5EB" stroke-width="1.6"/>
+            <text x="258" y="86" fill="#4E4D4D" font-size="11">WORKTREE C</text>
+            <circle cx="330" cy="100" r="4" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
+            <rect x="366" y="80" width="200" height="46" rx="23" fill="#CFDAF5" stroke="#A0B5EB"/>
+            <text x="386" y="100" fill="#242424" font-size="11.5">PR 3 TO BRANCHA</text>
+            <text x="386" y="116" fill="#4E4D4D" font-size="10">STACKED, LANDS AFTER PR 1</text>
 
             <!-- branchA, independent -->
-            <path d="M104 200 C 132 200, 132 148, 160 148 L 352 148" fill="none" stroke="#8C93D8" stroke-width="2"/>
-            <text x="160" y="176" fill="#B4B9E8" font-size="11.5">worktree A</text>
-            <circle cx="196" cy="148" r="4.5" fill="#000000" stroke="#8C93D8" stroke-width="2"/>
-            <circle cx="244" cy="148" r="6" fill="#000000" stroke="#8C93D8" stroke-width="2.6"/>
-            <circle cx="312" cy="148" r="4.5" fill="#000000" stroke="#8C93D8" stroke-width="2"/>
-            <rect x="366" y="130" width="200" height="36" rx="10" fill="rgba(52,55,85,.28)" stroke="rgba(140,147,216,.3)"/>
-            <text x="384" y="153" fill="#B4B9E8" font-size="12" font-weight="600">PR 1 to main</text>
+            <path d="M104 200 C 132 200, 132 148, 160 148 L 352 148" fill="none" stroke="#A0B5EB" stroke-width="1.6"/>
+            <text x="160" y="176" fill="#4E4D4D" font-size="11">WORKTREE A</text>
+            <circle cx="196" cy="148" r="4" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
+            <circle cx="244" cy="148" r="5.5" fill="#A0B5EB" stroke="#A0B5EB" stroke-width="1.6"/>
+            <circle cx="312" cy="148" r="4" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
+            <rect x="366" y="128" width="200" height="40" rx="20" fill="#F6F3F1" stroke="#CECAC8"/>
+            <text x="386" y="153" fill="#242424" font-size="11.5">PR 1 TO MAIN</text>
           </svg>
         </article>
 

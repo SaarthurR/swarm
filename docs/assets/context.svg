@@ -1,72 +1,66 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="356" viewBox="0 0 1200 356" role="img" aria-label="Context economy: the orchestrator sends briefs containing only file paths and receives distilled findings, while all bulk material stays inside the sub-agents">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0A0C11"/><stop offset="55%" stop-color="#0D1017"/><stop offset="100%" stop-color="#12161F"/>
-    </linearGradient>
-    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#FFFFFF" stroke-opacity="0.028" stroke-width="1"/>
-    </pattern>
-    <marker id="mc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-      <path d="M0 0 L10 5 L0 10 z" fill="#22D3EE" fill-opacity="0.9"/>
+    <marker id="out" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#A0B5EB"/>
     </marker>
-    <marker id="mv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-      <path d="M0 0 L10 5 L0 10 z" fill="#A78BFA" fill-opacity="0.9"/>
+    <marker id="back" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#242424"/>
     </marker>
   </defs>
 
-  <rect width="1200" height="356" rx="18" fill="url(#bg)"/>
-  <rect width="1200" height="356" rx="18" fill="url(#grid)"/>
-  <rect x="0.5" y="0.5" width="1199" height="355" rx="18" fill="none" stroke="#FFFFFF" stroke-opacity="0.07"/>
+  <rect width="1200" height="356" rx="40" fill="#F6F3F1"/>
+  <rect x="0.5" y="0.5" width="1199" height="355" rx="40" fill="none" stroke="#CECAC8"/>
 
-  <g font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
-    <text x="40" y="46" fill="#6B7488" font-size="12" font-weight="700" letter-spacing="2.4">CONTEXT ECONOMY · PATHS IN, FINDINGS OUT</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <text x="56" y="52" fill="#797776" font-size="11" letter-spacing="1.2">CONTEXT ECONOMY · PATHS IN, FINDINGS OUT</text>
 
     <!-- boundary -->
-    <line x1="612" y1="82" x2="612" y2="330" stroke="#FFFFFF" stroke-opacity="0.13" stroke-width="1.5" stroke-dasharray="4 6"/>
-    <text x="612" y="74" fill="#5C6679" font-size="11" letter-spacing="1.4" text-anchor="middle">CONTEXT BOUNDARY</text>
+    <line x1="612" y1="92" x2="612" y2="316" stroke="#CECAC8" stroke-width="1.4" stroke-dasharray="4 6"/>
+    <text x="612" y="84" fill="#797776" font-size="10.5" letter-spacing="1.2" text-anchor="middle">CONTEXT BOUNDARY</text>
 
     <!-- orchestrator -->
-    <rect x="56" y="132" width="300" height="128" rx="14" fill="#0F1219" stroke="#A78BFA" stroke-opacity="0.45"/>
-    <circle cx="86" cy="164" r="9" fill="#0F1219" stroke="#A78BFA" stroke-width="2"/>
-    <circle cx="86" cy="164" r="3" fill="#E9E4FF"/>
-    <text x="106" y="169" fill="#EDF1F8" font-size="18" font-weight="600">orchestrator</text>
-    <text x="76" y="196" fill="#79839A" font-size="12">coordinates · routes · decides · never reads code</text>
-    <rect x="76" y="212" width="260" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.07"/>
-    <rect x="76" y="212" width="46" height="8" rx="4" fill="#A78BFA"/>
-    <text x="76" y="240" fill="#5C6679" font-size="11.5">its context stays lean for the whole run</text>
+    <rect x="56" y="128" width="304" height="140" rx="28" fill="#F6F3F1" stroke="#CECAC8"/>
+    <circle cx="88" cy="164" r="9" fill="#F6F3F1" stroke="#242424" stroke-width="1.6"/>
+    <circle cx="88" cy="164" r="3" fill="#242424"/>
+    <text x="110" y="171" fill="#242424" font-size="22" font-family="Georgia, 'Times New Roman', Times, serif">orchestrator</text>
+    <text x="80" y="200" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23">coordinates · routes · decides · never reads code</text>
+    <rect x="80" y="216" width="256" height="6" rx="3" fill="#DED9D6"/>
+    <rect x="80" y="216" width="44" height="6" rx="3" fill="#2B59D1"/>
+    <text x="80" y="246" fill="#797776" font-size="11" letter-spacing="-0.22">ITS CONTEXT STAYS LEAN FOR THE WHOLE RUN</text>
 
     <!-- exchange -->
-    <line x1="372" y1="168" x2="700" y2="168" stroke="#22D3EE" stroke-opacity="0.45" stroke-width="1.5" marker-end="url(#mc)"/>
-    <text x="536" y="158" fill="#7DD3FC" font-size="12" font-weight="600" text-anchor="middle">brief · role, scope, file paths</text>
+    <line x1="376" y1="166" x2="700" y2="166" stroke="#A0B5EB" stroke-width="1.4" marker-end="url(#out)"/>
+    <text x="538" y="156" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23" text-anchor="middle">BRIEF · ROLE, SCOPE, FILE PATHS</text>
 
-    <line x1="700" y1="228" x2="372" y2="228" stroke="#A78BFA" stroke-opacity="0.45" stroke-width="1.5" marker-end="url(#mv)"/>
-    <text x="536" y="248" fill="#C4B5FD" font-size="12" font-weight="600" text-anchor="middle">return · a 3-line finding + a path</text>
+    <line x1="700" y1="230" x2="376" y2="230" stroke="#242424" stroke-width="1.4" marker-end="url(#back)"/>
+    <text x="538" y="250" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23" text-anchor="middle">RETURN · A 3-LINE FINDING + A PATH</text>
 
-    <!-- sub-agents holding the bulk -->
+    <!-- sub-agents, holding the bulk -->
     <g>
-      <rect x="716" y="106" width="428" height="58" rx="12" fill="#FFFFFF" fill-opacity="0.035" stroke="#FFFFFF" stroke-opacity="0.09"/>
-      <circle cx="746" cy="135" r="6" fill="#22D3EE"/>
-      <text x="768" y="140" fill="#DCE3EF" font-size="14" font-weight="600">recon agent</text>
-      <text x="1124" y="140" fill="#6B7488" font-size="12" text-anchor="end">reads 380 files</text>
+      <rect x="716" y="104" width="428" height="62" rx="31" fill="#F6F3F1" stroke="#CECAC8"/>
+      <circle cx="752" cy="135" r="5" fill="#A0B5EB"/>
+      <text x="774" y="142" fill="#242424" font-size="18" font-family="Georgia, 'Times New Roman', Times, serif">recon agent</text>
+      <text x="1112" y="140" fill="#797776" font-size="11.5" letter-spacing="-0.23" text-anchor="end">READS 380 FILES</text>
 
-      <rect x="716" y="178" width="428" height="58" rx="12" fill="#FFFFFF" fill-opacity="0.035" stroke="#FFFFFF" stroke-opacity="0.09"/>
-      <circle cx="746" cy="207" r="6" fill="#A78BFA"/>
-      <text x="768" y="212" fill="#DCE3EF" font-size="14" font-weight="600">investigator</text>
-      <text x="1124" y="212" fill="#6B7488" font-size="12" text-anchor="end">reads 18k lines + logs</text>
+      <rect x="716" y="178" width="428" height="62" rx="31" fill="#F6F3F1" stroke="#CECAC8"/>
+      <circle cx="752" cy="209" r="5" fill="#A0B5EB"/>
+      <text x="774" y="216" fill="#242424" font-size="18" font-family="Georgia, 'Times New Roman', Times, serif">investigator</text>
+      <text x="1112" y="214" fill="#797776" font-size="11.5" letter-spacing="-0.23" text-anchor="end">READS 18K LINES + LOGS</text>
 
-      <rect x="716" y="250" width="428" height="58" rx="12" fill="#FFFFFF" fill-opacity="0.035" stroke="#FFFFFF" stroke-opacity="0.09"/>
-      <circle cx="746" cy="279" r="6" fill="#34D399"/>
-      <text x="768" y="284" fill="#DCE3EF" font-size="14" font-weight="600">reviewer</text>
-      <text x="1124" y="284" fill="#6B7488" font-size="12" text-anchor="end">reads the whole diff</text>
+      <rect x="716" y="252" width="428" height="62" rx="31" fill="#F6F3F1" stroke="#CECAC8"/>
+      <circle cx="752" cy="283" r="5" fill="#A0B5EB"/>
+      <text x="774" y="290" fill="#242424" font-size="18" font-family="Georgia, 'Times New Roman', Times, serif">reviewer</text>
+      <text x="1112" y="288" fill="#797776" font-size="11.5" letter-spacing="-0.23" text-anchor="end">READS THE WHOLE DIFF</text>
     </g>
 
     <!-- hub fan -->
-    <g stroke="#FFFFFF" stroke-opacity="0.16" fill="none">
+    <g stroke="#CECAC8" fill="none">
       <path d="M700 198 C 708 198, 708 135, 716 135"/>
-      <path d="M700 198 L 716 207"/>
-      <path d="M700 198 C 708 198, 708 279, 716 279"/>
+      <path d="M700 198 L 716 209"/>
+      <path d="M700 198 C 708 198, 708 283, 716 283"/>
     </g>
 
-    <text x="930" y="336" fill="#5C6679" font-size="12" text-anchor="middle">Bulk never crosses the line — files, logs, maps and diffs are handed over as paths on disk.</text>
+    <text x="56" y="300" fill="#797776" font-size="12" letter-spacing="-0.24">Bulk never crosses the line — files, logs,</text>
+    <text x="56" y="318" fill="#797776" font-size="12" letter-spacing="-0.24">maps and diffs are handed over as paths on disk.</text>
   </g>
 </svg>

@@ -1,71 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="356" viewBox="0 0 1200 356" role="img" aria-label="Every claim is handed to an independent agent with fresh context to disprove: confirmed claims graduate to action, refuted ones go back to diagnosis, disagreements are adjudicated by a third agent">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0A0C11"/><stop offset="55%" stop-color="#0D1017"/><stop offset="100%" stop-color="#12161F"/>
-    </linearGradient>
-    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#FFFFFF" stroke-opacity="0.028" stroke-width="1"/>
-    </pattern>
-    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.22"/><stop offset="100%" stop-color="#A78BFA" stop-opacity="0"/>
-    </radialGradient>
     <marker id="ma" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-      <path d="M0 0 L10 5 L0 10 z" fill="#FBBF24" fill-opacity="0.9"/>
+      <path d="M0 0 L10 5 L0 10 z" fill="#242424"/>
     </marker>
     <marker id="mg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-      <path d="M0 0 L10 5 L0 10 z" fill="#34D399" fill-opacity="0.9"/>
+      <path d="M0 0 L10 5 L0 10 z" fill="#5FBE8E"/>
     </marker>
     <marker id="mr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-      <path d="M0 0 L10 5 L0 10 z" fill="#F87171" fill-opacity="0.9"/>
+      <path d="M0 0 L10 5 L0 10 z" fill="#FF9473"/>
     </marker>
     <marker id="mw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-      <path d="M0 0 L10 5 L0 10 z" fill="#FFFFFF" fill-opacity="0.35"/>
+      <path d="M0 0 L10 5 L0 10 z" fill="#CECAC8"/>
     </marker>
   </defs>
 
-  <rect width="1200" height="356" rx="18" fill="url(#bg)"/>
-  <rect width="1200" height="356" rx="18" fill="url(#grid)"/>
-  <rect x="0.5" y="0.5" width="1199" height="355" rx="18" fill="none" stroke="#FFFFFF" stroke-opacity="0.07"/>
-  <ellipse cx="560" cy="160" rx="230" ry="150" fill="url(#halo)"/>
+  <rect width="1200" height="356" rx="40" fill="#F6F3F1"/>
+  <rect x="0.5" y="0.5" width="1199" height="355" rx="40" fill="none" stroke="#CECAC8"/>
 
-  <g font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
-    <text x="40" y="46" fill="#6B7488" font-size="12" font-weight="700" letter-spacing="2.4">NO CLAIM SURVIVES ON ONE AGENT&#39;S WORD</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <text x="56" y="52" fill="#797776" font-size="11" letter-spacing="1.2">NO CLAIM SURVIVES ON ONE AGENT&#39;S WORD</text>
 
     <!-- the claim -->
-    <rect x="48" y="106" width="292" height="122" rx="14" fill="#1B1509" stroke="#FBBF24" stroke-opacity="0.4"/>
-    <text x="72" y="146" fill="#FBD57A" font-size="17" font-weight="600">a claim</text>
-    <text x="72" y="174" fill="#9A8B62" font-size="12">“this is the root cause”</text>
-    <text x="72" y="194" fill="#9A8B62" font-size="12">“this fix is the right one”</text>
-    <text x="72" y="214" fill="#9A8B62" font-size="12">“nothing else calls this”</text>
+    <rect x="56" y="102" width="292" height="132" rx="28" fill="#F6F3F1" stroke="#CECAC8"/>
+    <text x="82" y="144" fill="#242424" font-size="22" font-family="Georgia, 'Times New Roman', Times, serif">a claim</text>
+    <text x="82" y="174" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23">“this is the root cause”</text>
+    <text x="82" y="194" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23">“this fix is the right one”</text>
+    <text x="82" y="214" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23">“nothing else calls this”</text>
 
-    <line x1="352" y1="167" x2="428" y2="167" stroke="#FBBF24" stroke-opacity="0.5" stroke-width="1.5" marker-end="url(#ma)"/>
+    <line x1="360" y1="168" x2="428" y2="168" stroke="#242424" stroke-width="1.4" marker-end="url(#ma)"/>
 
-    <!-- the challenger -->
-    <rect x="440" y="92" width="248" height="150" rx="16" fill="#0F1219" stroke="#A78BFA" stroke-width="1.5"/>
-    <text x="564" y="134" fill="#EDF1F8" font-size="17" font-weight="600" text-anchor="middle">independent agent</text>
-    <text x="564" y="158" fill="#79839A" font-size="12" text-anchor="middle">fresh context · never the author</text>
-    <rect x="474" y="176" width="180" height="30" rx="15" fill="#A78BFA" fill-opacity="0.12" stroke="#A78BFA" stroke-opacity="0.4"/>
-    <text x="564" y="196" fill="#C4B5FD" font-size="12.5" font-weight="600" text-anchor="middle">try to disprove this</text>
+    <!-- the challenger: the one coloured surface in the diagram -->
+    <rect x="440" y="92" width="252" height="152" rx="32" fill="#CFDAF5" stroke="#A0B5EB"/>
+    <text x="566" y="140" fill="#242424" font-size="22" font-family="Georgia, 'Times New Roman', Times, serif" text-anchor="middle">independent agent</text>
+    <text x="566" y="164" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23" text-anchor="middle">FRESH CONTEXT · NEVER THE AUTHOR</text>
+    <rect x="478" y="182" width="176" height="34" rx="17" fill="#F6F3F1" stroke="#A0B5EB"/>
+    <text x="566" y="204" fill="#242424" font-size="11.5" letter-spacing="-0.23" text-anchor="middle">TRY TO DISPROVE THIS</text>
 
     <!-- outcomes -->
-    <path d="M700 140 C 748 140, 748 122, 792 122" fill="none" stroke="#34D399" stroke-opacity="0.5" stroke-width="1.5" marker-end="url(#mg)"/>
-    <rect x="804" y="92" width="348" height="62" rx="12" fill="#062B20" stroke="#34D399" stroke-opacity="0.45"/>
-    <text x="828" y="120" fill="#6EE7B7" font-size="14.5" font-weight="600">confirmed</text>
-    <text x="828" y="140" fill="#5F8B7C" font-size="12">only now does it graduate to action</text>
+    <path d="M704 142 C 750 142, 750 124, 794 124" fill="none" stroke="#5FBE8E" stroke-width="1.4" marker-end="url(#mg)"/>
+    <rect x="806" y="94" width="338" height="66" rx="33" fill="#EAFBF2" stroke="#A7FCCD"/>
+    <text x="838" y="124" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">confirmed</text>
+    <text x="838" y="144" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23">only now does it graduate to action</text>
 
-    <path d="M700 196 C 748 196, 748 214, 792 214" fill="none" stroke="#F87171" stroke-opacity="0.5" stroke-width="1.5" marker-end="url(#mr)"/>
-    <rect x="804" y="184" width="348" height="62" rx="12" fill="#2B0D0D" stroke="#F87171" stroke-opacity="0.4"/>
-    <text x="828" y="212" fill="#FCA5A5" font-size="14.5" font-weight="600">refuted</text>
-    <text x="828" y="232" fill="#8B6060" font-size="12">back to diagnosis with what it learned</text>
+    <path d="M704 196 C 750 196, 750 216, 794 216" fill="none" stroke="#FF9473" stroke-width="1.4" marker-end="url(#mr)"/>
+    <rect x="806" y="186" width="338" height="66" rx="33" fill="#FDEEE8" stroke="#FF9473"/>
+    <text x="838" y="216" fill="#242424" font-size="19" font-family="Georgia, 'Times New Roman', Times, serif">refuted</text>
+    <text x="838" y="236" fill="#4E4D4D" font-size="11.5" letter-spacing="-0.23">back to diagnosis with what it learned</text>
 
     <!-- adjudication loop -->
-    <path d="M520 250 L 520 274" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#mw)"/>
-    <rect x="440" y="282" width="248" height="44" rx="12" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.12"/>
-    <text x="564" y="309" fill="#AEB7C7" font-size="12.5" font-weight="600" text-anchor="middle">a third agent adjudicates</text>
-    <path d="M608 282 L 608 250" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#mw)"/>
-    <text x="418" y="272" fill="#6B7488" font-size="11.5" text-anchor="end">they disagree</text>
+    <path d="M520 252 L 520 276" fill="none" stroke="#CECAC8" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#mw)"/>
+    <rect x="440" y="284" width="252" height="44" rx="22" fill="#F6F3F1" stroke="#CECAC8"/>
+    <text x="566" y="311" fill="#242424" font-size="11.5" letter-spacing="-0.23" text-anchor="middle">A THIRD AGENT ADJUDICATES</text>
+    <path d="M612 284 L 612 252" fill="none" stroke="#CECAC8" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#mw)"/>
+    <text x="424" y="276" fill="#797776" font-size="11" letter-spacing="-0.22" text-anchor="end">THEY DISAGREE</text>
 
-    <text x="828" y="300" fill="#5C6679" font-size="12">The same gate runs on assumptions: “that API exists”,</text>
-    <text x="828" y="320" fill="#5C6679" font-size="12">“should work”, “nothing else depends on it”.</text>
+    <text x="806" y="296" fill="#797776" font-size="12" letter-spacing="-0.24">The same gate runs on assumptions: “that API</text>
+    <text x="806" y="316" fill="#797776" font-size="12" letter-spacing="-0.24">exists”, “should work”, “nothing else needs it”.</text>
   </g>
 </svg>
