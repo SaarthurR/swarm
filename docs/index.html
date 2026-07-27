@@ -8,14 +8,13 @@
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="swarm · autonomous multi-agent orchestration">
 <meta property="og:description" content="One goal in. A verified, production-ready result out.">
-<meta property="og:image" content="assets/banner.svg">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='9' fill='none' stroke='%23A78BFA' stroke-width='3'/><circle cx='16' cy='16' r='2.5' fill='%23E9E4FF'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='9' fill='none' stroke='%233D9BFF' stroke-width='3'/><circle cx='16' cy='16' r='2.5' fill='%23DCEBFF'/></svg>">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<a class="skip" href="#run">Skip to content</a>
+<a class="skip" href="#journey">Skip to content</a>
 
 <header class="nav" id="nav">
   <div class="nav-inner">
@@ -27,12 +26,12 @@
       <span>swarm</span>
     </a>
     <nav class="nav-links" aria-label="Primary">
+      <a href="#journey">The run</a>
       <a href="#principles">Principles</a>
-      <a href="#run">The run</a>
       <a href="#craft">Craft</a>
-      <a href="#install">Install</a>
+      <a href="https://github.com/SaarthurR/swarm-skill">GitHub</a>
     </nav>
-    <a class="btn btn-ghost nav-cta" href="https://github.com/SaarthurR/swarm-skill">GitHub</a>
+    <a class="btn btn-primary nav-cta" href="#install">Install</a>
   </div>
 </header>
 
@@ -40,62 +39,86 @@
 
   <!-- ── hero ───────────────────────────────────────────────── -->
   <section class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <h1 class="display">One goal in.<br>A verified result out.</h1>
-        <p class="lede">A skill that runs a fleet of sub-agents across your codebase and does not stop until the work is proven.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="#install">Install the skill</a>
-          <a class="btn btn-ghost" href="https://github.com/SaarthurR/swarm-skill">GitHub <span aria-hidden="true">→</span></a>
+    <canvas class="swarm-canvas" id="swarm" aria-hidden="true"></canvas>
+    <div class="hero-veil" aria-hidden="true"></div>
+
+    <div class="wrap hero-inner">
+      <h1 class="display">One goal in.<br>A verified result out.</h1>
+      <p class="lede">A skill that runs a fleet of sub-agents across your codebase and does not stop until the work is proven.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#install">Install the skill</a>
+        <a class="btn btn-ghost" href="https://github.com/SaarthurR/swarm-skill">GitHub <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── the journey: 3d corridor ───────────────────────────── -->
+  <section class="journey" id="journey">
+    <div class="journey-stage">
+      <div class="corridor" aria-hidden="true">
+        <div class="grid-floor"></div>
+        <div class="lane" id="lane">
+          <article class="panel" style="--i:0; --x:-160px; --y:-40px">
+            <span class="panel-n">Phase 0</span>
+            <h3>Ingest the world this code lives in</h3>
+            <p>Prior learnings for this repo, then live state from every connected tool: schema, advisors, deploys, logs, the thread where it was reported.</p>
+          </article>
+          <article class="panel" style="--i:1; --x:150px; --y:30px">
+            <span class="panel-n">Phase 1</span>
+            <h3>Map the territory before touching it</h3>
+            <p>One agent per area writes a structured map. A synthesis agent ranks the problems and returns the dependency graph of the work.</p>
+          </article>
+          <article class="panel" style="--i:2; --x:-130px; --y:44px">
+            <span class="panel-n">Phase 2</span>
+            <h3>Find the cause, then try to break it</h3>
+            <p>An investigator returns the exact failing path. A separate agent gets that conclusion as a hypothesis to disprove.</p>
+          </article>
+          <article class="panel" style="--i:3; --x:170px; --y:-46px">
+            <span class="panel-n">Phase 2.5</span>
+            <h3>Argue about the fix before writing it</h3>
+            <p>Two independent critics look for the smaller fix, the sibling caller it breaks, the symptom it only papers over.</p>
+          </article>
+          <article class="panel" style="--i:4; --x:-150px; --y:-24px">
+            <span class="panel-n">Phase 3</span>
+            <h3>Fix in parallel, isolated</h3>
+            <p>Each unit runs in its own git worktree and branch. The smallest change that actually holds, with a runnable check behind it.</p>
+          </article>
+          <article class="panel" style="--i:5; --x:140px; --y:40px">
+            <span class="panel-n">Phase 4</span>
+            <h3>Review the diff, not the status line</h3>
+            <p>A reviewer that did not write the code reads the diff for correctness, root cause versus symptom, and broken siblings.</p>
+          </article>
+          <article class="panel" style="--i:6; --x:-165px; --y:34px">
+            <span class="panel-n">Phase 5</span>
+            <h3>Prove it, then go looking again</h3>
+            <p>Fresh build, tests, types, lint. Then new agents sweep for what the fixes exposed. Anything found reopens diagnosis.</p>
+          </article>
+          <article class="panel" style="--i:7; --x:120px; --y:-38px">
+            <span class="panel-n">Phase 6</span>
+            <h3>Check the world moved, then ship</h3>
+            <p>Diff against latest main, compare against every open PR for collisions, run the safety scan, open the pull request with the evidence.</p>
+          </article>
         </div>
       </div>
+      <div class="fog" aria-hidden="true"></div>
 
-      <div class="hero-visual" aria-hidden="true">
-        <svg class="fan" viewBox="0 0 460 440" role="presentation">
-          <defs>
-            <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="#A78BFA" stop-opacity=".8"/>
-              <stop offset="100%" stop-color="#22D3EE" stop-opacity=".08"/>
-            </linearGradient>
-            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#A78BFA" stop-opacity=".30"/>
-              <stop offset="100%" stop-color="#A78BFA" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-
-          <circle cx="120" cy="220" r="190" fill="url(#glow)"/>
-          <circle cx="120" cy="220" r="120" fill="none" stroke="#fff" stroke-opacity=".05"/>
-          <circle cx="120" cy="220" r="172" fill="none" stroke="#fff" stroke-opacity=".04"/>
-
-          <g class="edges" fill="none" stroke="url(#edge)" stroke-width="1.4">
-            <path d="M120 220 C 210 80, 250 70, 284 75"/>
-            <path d="M120 220 C 210 120, 260 110, 296 116"/>
-            <path d="M120 220 C 215 165, 265 158, 302 162"/>
-            <path d="M120 220 C 220 206, 270 202, 308 204"/>
-            <path d="M120 220 C 220 240, 270 246, 308 244"/>
-            <path d="M120 220 C 215 282, 265 290, 302 286"/>
-            <path d="M120 220 C 210 328, 260 338, 296 332"/>
-            <path d="M120 220 C 200 365, 245 376, 278 372"/>
-          </g>
-
-          <g class="nodes" stroke="#0A0C11" stroke-width="3">
-            <circle cx="284" cy="75"  r="9" fill="#22D3EE" style="--i:0"/>
-            <circle cx="296" cy="116" r="9" fill="#22D3EE" style="--i:1"/>
-            <circle cx="302" cy="162" r="9" fill="#A78BFA" style="--i:2"/>
-            <circle cx="308" cy="204" r="9" fill="#A78BFA" style="--i:3"/>
-            <circle cx="308" cy="244" r="9" fill="#FBBF24" style="--i:4"/>
-            <circle cx="302" cy="286" r="9" fill="#FBBF24" style="--i:5"/>
-            <circle cx="296" cy="332" r="9" fill="#34D399" style="--i:6"/>
-            <circle cx="278" cy="372" r="9" fill="#34D399" style="--i:7"/>
-          </g>
-
-          <g class="core">
-            <circle cx="120" cy="220" r="30" fill="#A78BFA" opacity=".22"/>
-            <circle cx="120" cy="220" r="26" fill="#0F1219" stroke="#A78BFA" stroke-width="2"/>
-            <circle cx="120" cy="220" r="7" fill="#E9E4FF"/>
-          </g>
-        </svg>
+      <div class="journey-hud">
+        <p class="hud-title">The run</p>
+        <p class="hud-note">It leaves when a verification pass is all green and a fresh sweep finds nothing, in the same round.</p>
+        <div class="hud-bar"><span id="hudFill"></span></div>
+        <p class="hud-step" id="hudNow">Phase 0</p>
       </div>
+
+      <ol class="journey-fallback">
+        <li><span>Phase 0</span><h3>Ingest the world this code lives in</h3><p>Prior learnings for this repo, then live state from every connected tool: schema, advisors, deploys, logs, the thread where it was reported.</p></li>
+        <li><span>Phase 1</span><h3>Map the territory before touching it</h3><p>One agent per area writes a structured map. A synthesis agent ranks the problems and returns the dependency graph of the work.</p></li>
+        <li><span>Phase 2</span><h3>Find the cause, then try to break it</h3><p>An investigator returns the exact failing path. A separate agent gets that conclusion as a hypothesis to disprove.</p></li>
+        <li><span>Phase 2.5</span><h3>Argue about the fix before writing it</h3><p>Two independent critics look for the smaller fix, the sibling caller it breaks, the symptom it only papers over.</p></li>
+        <li><span>Phase 3</span><h3>Fix in parallel, isolated</h3><p>Each unit runs in its own git worktree and branch. The smallest change that actually holds, with a runnable check behind it.</p></li>
+        <li><span>Phase 4</span><h3>Review the diff, not the status line</h3><p>A reviewer that did not write the code reads the diff for correctness, root cause versus symptom, and broken siblings.</p></li>
+        <li><span>Phase 5</span><h3>Prove it, then go looking again</h3><p>Fresh build, tests, types, lint. Then new agents sweep for what the fixes exposed. Anything found reopens diagnosis.</p></li>
+        <li><span>Phase 6</span><h3>Check the world moved, then ship</h3><p>Diff against latest main, compare against every open PR for collisions, run the safety scan, open the pull request with the evidence.</p></li>
+      </ol>
     </div>
   </section>
 
@@ -105,110 +128,100 @@
       <h2 class="h2 reveal">Two things kill a long autonomous run.<br class="br-lg">Both are designed out.</h2>
 
       <div class="pair">
-        <article class="card reveal" style="--i:0">
+        <article class="card tilt reveal" style="--i:0">
           <div class="card-body">
             <h3>The orchestrator holds paths, not payloads</h3>
-            <p>Reading a codebase into the coordinator burns the budget it needs to coordinate. Sub-agents do the reading and hand back a finding plus a path to the evidence.</p>
+            <p>Sub-agents do the reading and hand back a finding plus a path to the evidence. Bulk never crosses back.</p>
           </div>
-          <figure class="card-figure">
-            <img src="assets/context.svg" alt="Diagram: the orchestrator sends briefs made of file paths across a context boundary and receives distilled findings, while bulk material stays inside the sub-agents" loading="lazy" decoding="async">
-          </figure>
+
+          <div class="meter" aria-hidden="true">
+            <div class="meter-row">
+              <span class="meter-label">Orchestrator context</span>
+              <span class="meter-value" data-count="12" data-suffix="%">0%</span>
+            </div>
+            <div class="meter-track"><span class="meter-fill" style="--to:12%"></span></div>
+
+            <div class="meter-row meter-row-sub">
+              <span class="meter-label">Read by its sub-agents</span>
+              <span class="meter-value" data-count="18400" data-suffix=" lines">0</span>
+            </div>
+            <div class="meter-track"><span class="meter-fill meter-fill-full" style="--to:100%"></span></div>
+
+            <p class="meter-foot">Sample recon round. What crosses back: three lines and a file path.</p>
+          </div>
         </article>
 
-        <article class="card reveal" style="--i:1">
+        <article class="card tilt reveal" style="--i:1">
           <div class="card-body">
             <h3>No claim survives on one agent's word</h3>
-            <p>An agent that checks its own conclusion has checked nothing. Every root cause, fix and assumption goes to a second agent with fresh context, framed as something to disprove.</p>
+            <p>Every root cause, fix and assumption goes to a second agent with fresh context, framed as something to disprove.</p>
           </div>
-          <figure class="card-figure">
-            <img src="assets/verification.svg" alt="Diagram: a claim goes to an independent agent with fresh context to disprove; confirmed claims graduate to action, refuted ones return to diagnosis, disagreements are adjudicated by a third agent" loading="lazy" decoding="async">
-          </figure>
+
+          <div class="gate" aria-hidden="true">
+            <div class="gate-claim">
+              <span class="gate-tag">claim</span>
+              <p>“nothing else calls this”</p>
+            </div>
+            <div class="gate-beam"><i></i></div>
+            <div class="gate-check">
+              <span class="gate-tag">independent agent</span>
+              <p>try to disprove this</p>
+            </div>
+            <div class="gate-verdicts">
+              <span class="verdict verdict-yes">confirmed</span>
+              <span class="verdict verdict-no">refuted</span>
+            </div>
+          </div>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- ── the run (scroll-scrubbed) ──────────────────────────── -->
-  <section class="run" id="run">
-    <div class="run-stage">
-      <div class="wrap run-grid">
-
-        <div class="run-head">
-          <p class="eyebrow">The run</p>
-          <h2 class="h2">Phases zero to six.<br>One exit condition.</h2>
-          <p class="run-note">It leaves when a verification pass is all green and a fresh sweep finds nothing, in the same round.</p>
-        </div>
-
-        <div class="run-rail" aria-hidden="true">
-          <div class="rail-line"><span class="rail-fill"></span></div>
-          <ol class="rail-ticks">
-            <li><span>0</span></li><li><span>1</span></li><li><span>2</span></li>
-            <li><span>2.5</span></li><li><span>3</span></li><li><span>4</span></li>
-            <li><span>5</span></li><li><span>6</span></li>
-          </ol>
-        </div>
-
-        <ol class="steps">
-          <li class="step" data-accent="cyan">
-            <p class="step-n">Phase 0</p>
-            <h3>Ingest the world this code lives in</h3>
-            <p>Prior learnings for this repo, then live state pulled through every connected tool: database schema and advisors, deploy config, logs, the threads where the problem was reported.</p>
-          </li>
-          <li class="step" data-accent="cyan">
-            <p class="step-n">Phase 1</p>
-            <h3>Map the territory before touching it</h3>
-            <p>One agent per independent area writes a structured map. A synthesis agent ranks the problems and returns a dependency graph of the work: what can run in parallel, what has to wait.</p>
-          </li>
-          <li class="step" data-accent="violet">
-            <p class="step-n">Phase 2</p>
-            <h3>Find the cause, then try to break it</h3>
-            <p>An investigator returns the exact code path and failing condition. A separate agent gets that conclusion as a hypothesis to disprove. Disagreement sends it to a third.</p>
-          </li>
-          <li class="step" data-accent="violet">
-            <p class="step-n">Phase 2.5</p>
-            <h3>Argue about the fix before writing it</h3>
-            <p>The proposed change goes to two independent critics: is there a smaller fix, which sibling callers break, is this patching a symptom. The best version wins, not the first one.</p>
-          </li>
-          <li class="step" data-accent="amber">
-            <p class="step-n">Phase 3</p>
-            <h3>Fix in parallel, isolated</h3>
-            <p>Independent units run at the same time, each in its own git worktree and branch. Code is written lazy by discipline: the smallest change that actually holds, with a runnable check behind it.</p>
-          </li>
-          <li class="step" data-accent="green">
-            <p class="step-n">Phase 4</p>
-            <h3>Review the diff, not the status line</h3>
-            <p>Nothing is accepted on the author's word. A reviewer that did not write the code reads the diff for correctness, root cause versus symptom, dead code and broken siblings.</p>
-          </li>
-          <li class="step" data-accent="amber">
-            <p class="step-n">Phase 5</p>
-            <h3>Prove it, then go looking again</h3>
-            <p>Fresh build, tests, types, lint, and the task's own check, judged on real output. Then a new sweep with new agents hunts what the fixes exposed. Anything it finds reopens diagnosis.</p>
-          </li>
-          <li class="step" data-accent="green">
-            <p class="step-n">Phase 6</p>
-            <h3>Check the world moved, then ship</h3>
-            <p>Diff against latest main for merge and semantic conflicts, compare against every open PR for collisions, run the safety scan, open the pull request with the real evidence attached.</p>
-          </li>
-        </ol>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── craft (bento) ──────────────────────────────────────── -->
+  <!-- ── craft ──────────────────────────────────────────────── -->
   <section class="section" id="craft">
     <div class="wrap">
       <h2 class="h2 reveal">Built for runs that last hours.</h2>
 
       <div class="bento">
-        <article class="tile tile-wide reveal" style="--i:0">
+        <article class="tile tile-wide tilt reveal" style="--i:0">
           <div class="tile-copy">
             <h3>Isolated while working. Stacked when shipping.</h3>
             <p>Concurrent fixers never share a working tree. Ordered chains open as a stack, so every pull request shows only its own change.</p>
           </div>
-          <img src="assets/branches.svg" alt="Diagram: parallel fixers in isolated git worktrees, independent branches opening their own pull request to main, and a dependent branch opening a stacked pull request against the branch below it" loading="lazy" decoding="async">
+
+          <svg class="branch-art" viewBox="0 0 580 232" aria-hidden="true"
+               font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+            <line x1="14" y1="200" x2="566" y2="200" stroke="#39414F" stroke-width="2"/>
+            <text x="14" y="222" fill="#68727F" font-size="11.5">main</text>
+
+            <!-- branchB, independent -->
+            <path d="M56 200 C 84 200, 84 52, 112 52 L 352 52" fill="none" stroke="#8FCBFF" stroke-width="2" opacity=".8"/>
+            <text x="112" y="38" fill="#9FD2FF" font-size="11.5">worktree B</text>
+            <circle cx="212" cy="52" r="4.5" fill="#07080A" stroke="#8FCBFF" stroke-width="2"/>
+            <circle cx="292" cy="52" r="4.5" fill="#07080A" stroke="#8FCBFF" stroke-width="2"/>
+            <rect x="366" y="34" width="200" height="36" rx="10" fill="rgba(143,203,255,.07)" stroke="rgba(143,203,255,.32)"/>
+            <text x="384" y="57" fill="#9FD2FF" font-size="12" font-weight="600">PR 2 to main</text>
+
+            <!-- branchC, stacked on A -->
+            <path d="M244 148 C 272 148, 272 100, 300 100 L 352 100" fill="none" stroke="#3D9BFF" stroke-width="2"/>
+            <text x="258" y="86" fill="#8FC2FF" font-size="11.5">worktree C</text>
+            <circle cx="330" cy="100" r="4.5" fill="#07080A" stroke="#3D9BFF" stroke-width="2"/>
+            <rect x="366" y="82" width="200" height="46" rx="10" fill="rgba(61,155,255,.13)" stroke="rgba(61,155,255,.45)"/>
+            <text x="384" y="102" fill="#A8CEFF" font-size="12" font-weight="600">PR 3 to branchA</text>
+            <text x="384" y="119" fill="#68727F" font-size="11">stacked, lands after PR 1</text>
+
+            <!-- branchA, independent -->
+            <path d="M104 200 C 132 200, 132 148, 160 148 L 352 148" fill="none" stroke="#3D9BFF" stroke-width="2" opacity=".8"/>
+            <text x="160" y="176" fill="#8FC2FF" font-size="11.5">worktree A</text>
+            <circle cx="196" cy="148" r="4.5" fill="#07080A" stroke="#3D9BFF" stroke-width="2"/>
+            <circle cx="244" cy="148" r="6" fill="#07080A" stroke="#3D9BFF" stroke-width="2.6"/>
+            <circle cx="312" cy="148" r="4.5" fill="#07080A" stroke="#3D9BFF" stroke-width="2"/>
+            <rect x="366" y="130" width="200" height="36" rx="10" fill="rgba(61,155,255,.08)" stroke="rgba(61,155,255,.32)"/>
+            <text x="384" y="153" fill="#8FC2FF" font-size="12" font-weight="600">PR 1 to main</text>
+          </svg>
         </article>
 
-        <article class="tile tile-accent reveal" style="--i:1">
+        <article class="tile tile-tinted tilt reveal" style="--i:1">
           <h3>Standing safety orders</h3>
           <ul class="ticks">
             <li>Never force-push, never push to main, never merge</li>
@@ -218,7 +231,7 @@
           </ul>
         </article>
 
-        <article class="tile reveal" style="--i:2">
+        <article class="tile tilt reveal" style="--i:2">
           <h3>Survives compaction</h3>
           <p>Durable state at the repo root, so a restart resumes instead of redoing finished work.</p>
           <ul class="chips">
@@ -228,7 +241,7 @@
           </ul>
         </article>
 
-        <article class="tile reveal" style="--i:3">
+        <article class="tile tile-last tilt reveal" style="--i:3">
           <h3>Right model, right job</h3>
           <dl class="tiers">
             <div><dt>Mechanical lookups</dt><dd>cheapest tier</dd></div>
