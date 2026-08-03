@@ -47,8 +47,24 @@ You should be reading one-paragraph answers and file paths, not walls of text.
 
 ## Fixer (implementer)
 
+**Two-step dispatch — declare before you write.** A parallel fixer's *first*
+turn is a read-and-plan pass only: it returns the exact set of files it intends
+to create/edit (its **touch set**) and makes no edits. The orchestrator refuses
+to let two parallel fixers proceed with overlapping touch sets — it serializes
+them or reassigns the shared file to a single owner — and only then tells the
+fixer to proceed. This is how a shared hub (types file, barrel, router, DI
+container, migration index) gets caught up front instead of as a silent lost
+write after both report success.
+
 Standing orders in every fixer dispatch:
 
+- **Declare your touch set first; don't write until told to proceed.** If, while
+  implementing, you discover you must touch a file outside your declared set,
+  stop and return `NEEDS_CONTEXT` with the new file — do not silently expand.
+- **Read-hash-verify on write.** Before editing a file, confirm it still matches
+  what you read (its content/hash hasn't changed underneath you). If it changed,
+  stop and return `NEEDS_CONTEXT` rather than clobber — another agent may have
+  touched a shared file the split didn't anticipate.
 - Load the `ponytail` skill by name and keep it active at full intensity —
   laziest solution that actually works, reuse what exists, stdlib/native before
   dependencies, shortest correct diff, root cause not symptom.

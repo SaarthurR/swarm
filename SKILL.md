@@ -167,16 +167,52 @@ better/smaller fix, take it. If they disagree, run another round. Choose the
 ## Phase 3 — Parallel fixing (isolated, ponytail-enforced)
 
 Group confirmed fixes into units using the Phase 1 dependency map. Independent
-units run in parallel; dependent ones are ordered. Never two fixers on the same
-files.
+units run in parallel; dependent ones are ordered.
+
+**"Independent" is a claim to verify at dispatch, not a partition you trust.**
+The split is a partition you draw up front; it is not enforced while the fixers
+run. Splitting by file isolates *files*, not *intent*, and two failure modes
+survive a clean-looking split — both silent, both found days later:
+
+- **Shared-hub clobber.** Two units on genuinely distinct features both
+  legitimately need one shared thing — a types file, an index barrel, a router
+  table, the DI container, a migration list. Neither task description mentions
+  it, so the split looked clean when you drew it. Both edit it; the second write
+  discards the first. Nothing errors, both fixers report success, each diff
+  reads fine on its own.
+- **Duplicated intent.** Two units independently conclude the *same* refactor is
+  the next thing to do, and both do it. Zero merge conflict — there is nothing
+  to conflict *on*. No file-level partition catches this one.
+
+Three guards, cheapest first:
+
+1. **Declare-then-dispatch.** Before any fixer is allowed to write, it returns
+   the set of files it intends to touch (a read-and-plan pass, no edits).
+   **Refuse to dispatch two fixers whose declared sets overlap** — serialize
+   them, or carve the shared file out to a single dedicated owner the others
+   depend on. This turns an invisible late collision into a visible refusal at
+   dispatch, for the cost of one round trip.
+2. **Pre-assign the hubs.** In Phase 1 synthesis, name the shared hub files that
+   features tend to converge on (barrels, type roots, routers, DI/registration,
+   migration indexes). A hub edit gets one owner or is serialized — never handed
+   to two parallel fixers, even if their headline tasks look unrelated.
+3. **Read-hash-verify on write.** A fixer confirms each file still hashes to what
+   it read before writing; if it changed underneath, stop and re-plan rather than
+   clobber. Most write tools overwrite without looking — never assume the file
+   you read is the file you're writing. This is the backstop for anything that
+   couldn't be isolated to its own worktree.
 
 **Isolate every parallel fixer in its own git worktree** (`git worktree add`) on
 its own branch, so concurrent fixers can't corrupt each other's index or build
-state — "different files, same working tree" still collides. Serialize instead
-only when a fix genuinely can't be isolated. After a unit passes review (Phase 4),
-integrate its branch back into the main working branch and move on; record the
-worktree/branch/commits in the ledger (and emit the corresponding `fix.*` event
-— `references/observability.md`).
+state — "different files, same working tree" still collides. Worktrees make a
+line-level same-file edit surface as a real git conflict at integration instead
+of a silent loss — but that only catches *overlapping* lines; different-region
+edits to a shared hub auto-merge into something semantically broken, and
+duplicated intent produces no conflict at all. The three guards above are what
+catch what git can't see. Serialize only when a fix genuinely can't be isolated.
+After a unit passes review (Phase 4), integrate its branch back into the main
+working branch and move on; record the worktree/branch/commits in the ledger
+(and emit the corresponding `fix.*` event — `references/observability.md`).
 
 Each fixer dispatch uses the **fixer contract** (`references/subagent-contracts.md`)
 and the **standing safety orders** (`references/safety.md`): ponytail at full
@@ -312,10 +348,15 @@ silently inherits your expensive session model. Match model to task type:
 - **Design, deliberation, adjudication, and every review/verification gate** →
   highest-thinking tier.
 
+**Never dispatch a GPT model.** No sub-agent runs on any GPT/OpenAI model, in any
+role, for any task. If a task seems to call for one, pick from the allowlist below
+instead.
+
 Current allowlist (update as models change — dispatch *only* from this set):
-**gpt 5.6, gpt 5.5, opus 4.8, sonnet 5, composer 2.5.** Use composer 2.5 for
-implementation; a high-thinking model (opus 4.8 / sonnet 5 / gpt 5.6) for
-brainstorming, review, and verification; gpt 5.5 for cheap mechanical lookups.
+**grok 4.5 high fast, opus 4.8, sonnet 5.** Use grok 4.5 high fast for
+implementation (fixers, code edits); a high-thinking model (opus 4.8 / sonnet 5)
+for design, deliberation, adjudication, review and verification; sonnet 5 for
+cheap mechanical lookups.
 
 ## Red flags — stop if you catch yourself
 
@@ -323,12 +364,17 @@ brainstorming, review, and verification; gpt 5.5 for cheap mechanical lookups.
 - Going from "found the cause" straight to code without deliberating (Phase 2.5).
 - Trusting a fixer's status line instead of verifying the diff.
 - Running parallel fixers in one working tree instead of isolated worktrees.
+- Dispatching two parallel fixers before confirming their declared file sets
+  don't overlap, or handing a shared hub file to more than one of them.
+- Trusting a clean-looking file split without checking for a shared hub or two
+  units carrying the same refactor intent.
 - Stopping after the reported issue is fixed without a fresh sweep.
 - Looping a non-converging fix past the Phase 5 cap instead of escalating.
 - Acting on an assumption instead of confirming it via a sub-agent.
 - Presenting a workaround or "TODO: fix properly" when the real fix is reachable.
 - Leaving a dangling thread because closing it takes a few more minutes.
 - Asking the human something a sub-agent could answer.
+- Dispatching a sub-agent on a GPT model, or leaving its model unset.
 - Reading a huge file/log into your own context.
 - Provisioning something that might cost money without asking.
 - Letting a sub-agent run a destructive/force command or commit a secret.
