@@ -115,7 +115,10 @@
   <!-- 3 · the quiet line · flow -->
   <section class="statement" data-sc-act="flow">
     <div class="wrap">
-      <p class="say" data-sc-in>Most agents stop when they <em>think</em> they are done.</p>
+      <div data-sc-in data-sc-stagger="90">
+        <p class="say">The strongest thing you can do is give an agent a way to <em>review its work</em>.</p>
+        <p class="say-tail">That is what swarm is.</p>
+      </div>
     </div>
   </section>
 
@@ -204,6 +207,7 @@ ln -s ~/skills/swarm ~/.claude/skills/swarm</code></pre>
 
 </main>
 
+<script src="https://unpkg.com/lenis@1/dist/lenis.min.js"></script>
 <script src="scrollcraft.js"></script>
 <script src="main.js"></script>
 </body>

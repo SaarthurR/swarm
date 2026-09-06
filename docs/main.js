@@ -7,6 +7,31 @@
   ScrollCraft.mount(document.body);
 
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Smooth scroll. Lenis writes real window scroll, so the engine's own rAF
+     reads it without any bridging. Off entirely under reduced motion. */
+  var lenis = null;
+  if (!reduce && typeof Lenis === 'function') {
+    lenis = new Lenis({
+      duration: 1.15,
+      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+      smoothWheel: true,
+      touchMultiplier: 1.6
+    });
+    (function raf(time) { lenis.raf(time); requestAnimationFrame(raf); })();
+  }
+
+  [].forEach.call(document.querySelectorAll('a[href^="#"]'), function (link) {
+    link.addEventListener('click', function (e) {
+      var id = link.getAttribute('href');
+      if (id.length < 2) return;
+      var target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(target, { offset: -72 });
+      else target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
   var acts = [].slice.call(document.querySelectorAll('[data-sc-act]'));
   var check = document.getElementById('check');
   var replaying = false, manual = false;

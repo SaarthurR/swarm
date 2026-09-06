@@ -43,6 +43,10 @@
 }
 
 html { color-scheme: light; }
+/* Lenis owns scroll position, so the native smoothing stands down. */
+html.lenis, html.lenis body { height: auto; }
+html.lenis, .lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
 body {
   background: var(--paper); color: var(--ink);
   font-family: var(--mono); font-size: 15px; line-height: 1.65;
@@ -161,7 +165,12 @@ body {
 .say {
   font-family: var(--display); font-weight: 400;
   font-size: clamp(1.8rem, 1.1rem + 2.9vw, 3.6rem); line-height: 1.12; letter-spacing: -0.02em;
-  color: var(--ink); margin: 0; max-width: 22ch; text-wrap: balance;
+  color: var(--ink); margin: 0; max-width: 20ch; text-wrap: balance;
+}
+.say-tail {
+  font-family: var(--display); font-weight: 400; font-style: italic;
+  font-size: clamp(1.1rem, 0.9rem + 0.9vw, 1.7rem); line-height: 1.2; letter-spacing: -0.02em;
+  color: var(--muted); margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
 }
 
 /* ── 4 · the cross-check ──────────────────────────────────────────── */
