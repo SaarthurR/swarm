@@ -1,819 +1,476 @@
-/* swarm landing page
-   Theme: locked light, on warm parchment — never pure white.
-   Type is the whole identity: an editorial serif at weight 400 announces, and a
-   monospace instructs. Every functional string — nav, buttons, body, labels,
-   chips, code — is mono. Headings never go bold; tracking does that work.
-   One saturated fill in the page (Lake Blue) marks the single primary action.
-   The pastels are decorative only: they live in the hero wash and the diagrams.
-   Radius: buttons and tags = pill · cards, panels and code = 40px.
-   No shadows anywhere — elevation is a 1px ash hairline and a surface change.
-   Motion: Lenis smooth scroll, a scroll-driven 3D corridor of stations, a canvas
-   swarm field, pointer tilt on cards. All of it collapses under prefers-reduced-motion. */
+/* swarm · the run console.
+   Live-surface grammar: this page is the instrument, so everything below is a
+   readout, a label, a row or a slot. The engine (scrollcraft.css) is the
+   mechanism and is never restyled here. */
 
 @font-face {
-  font-family: "Geist";
-  src: url("fonts/geist-latin.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-/* the body voice, not an afterthought for code */
-@font-face {
-  font-family: "Geist Mono";
-  src: url("fonts/geist-mono-latin.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-/* every heading in the page, always at 400. Emphasis inside a headline uses
-   this same family's italic, never a second family and never a heavier cut. */
-@font-face {
-  font-family: "Playfair Display";
-  src: url("fonts/playfair-latin.woff2") format("woff2");
-  font-weight: 400 900;
-  font-style: normal;
-  font-display: swap;
+  font-family: "Geist"; src: url("fonts/geist-latin.woff2") format("woff2");
+  font-weight: 100 900; font-display: swap;
 }
 @font-face {
-  font-family: "Playfair Display";
-  src: url("fonts/playfair-italic-latin.woff2") format("woff2");
-  font-weight: 400 900;
-  font-style: italic;
-  font-display: swap;
+  font-family: "Geist Mono"; src: url("fonts/geist-mono-latin.woff2") format("woff2");
+  font-weight: 100 900; font-display: swap;
 }
 
 :root {
-  --paper: #F6F3F1;      /* parchment: the signature surface */
-  --paper-2: #EFEAE7;
-  --surface: #FBF9F8;    /* a hair above the canvas, so a card reads without a shadow */
+  --sc-canvas:     #0B0C0B;
+  --sc-surface:    #141614;
+  --sc-ink:        #E9EDE8;
+  --sc-ink-soft:   #8E9A8F;
+  --sc-accent:     #F5A524;
+  --sc-accent-ink: #17120A;
+  --sc-font-display: "Geist", system-ui, sans-serif;
+  --sc-font-text:    "Geist", system-ui, sans-serif;
+  --sc-font-mono:    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sc-shadow-color: 120 12% 2%;
 
-  --ink: #242424;
-  --body: #4E4D4D;
-  --muted: #797776;
-
-  --line: #CECAC8;       /* ash: every border and divider in the page is this */
-  --line-2: #CECAC8;
-
-  /* the single saturated fill, spent on one action per screen */
-  --accent: #2B59D1;
-  --accent-deep: #2247AC;
-
-  /* decorative only — hero wash and diagram illustration, never a UI fill */
-  --periwinkle: #CFDAF5;
-  --sky: #A0B5EB;
-  --mint: #A7FCCD;
-  --coral: #FF9473;
-  --gold: #ECDA98;
-
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --wrap: 1432px;
-  --mono: "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
-  --sans: "Geist", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  --display-font: "Playfair Display", "Iowan Old Style", Georgia, Cambria, "Times New Roman", serif;
-
-  --span: 820px; /* z distance between stations, mirrored in main.js */
+  --bar-h: 44px;
+  --rail-w: 248px;
+  --line: color-mix(in oklab, var(--sc-ink) 13%, transparent);
+  --line-2: color-mix(in oklab, var(--sc-ink) 24%, transparent);
+  --pane-bg: color-mix(in oklab, var(--sc-surface) 88%, var(--sc-canvas));
 }
 
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; color-scheme: light; }
-
-/* Lenis drives scroll position, so native smoothing stands down. */
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-stopped { overflow: hidden; }
-
-/* the mono is the default voice. Headings opt into the serif, nothing else does. */
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--mono);
-  font-size: 16px;
-  line-height: 1.35;
-  letter-spacing: -0.025em;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-img { max-width: 100%; height: auto; display: block; }
-a { color: inherit; text-decoration: none; }
-::selection { background: rgba(43, 89, 209, 0.16); }
-
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+body { font-family: var(--sc-font-mono); font-size: 13px; line-height: 1.55; }
+::selection { background: var(--sc-accent); color: var(--sc-accent-ink); }
 
 .skip {
-  position: absolute; left: -9999px; top: 12px; z-index: 100;
-  padding: 12px 24px; background: var(--accent); color: #fff;
-  border-radius: 100px; font-size: 14px; text-transform: uppercase;
+  position: fixed; top: 8px; left: 8px; z-index: 200;
+  transform: translateY(-200%);
+  background: var(--sc-accent); color: var(--sc-accent-ink);
+  padding: 10px 14px; border-radius: 6px; text-decoration: none; font-weight: 600;
 }
-.skip:focus { left: 16px; }
+.skip:focus { transform: none; }
 
-.wrap {
-  width: 100%;
-  max-width: var(--wrap);
-  margin-inline: auto;
-  padding-inline: clamp(24px, 5vw, 64px);
-}
+/* ── chrome ───────────────────────────────────────────────────────── */
 
-/* the meta voice: mono, small, uppercase, tightly tracked */
-.eyebrow, .station-n, .hud-step, .code-head, .footer-inner, .figure dt, .proof-link span {
-  font-size: 12px; line-height: 1.2; letter-spacing: -0.033em;
-  text-transform: uppercase;
+.bar {
+  position: fixed; inset: 0 0 auto 0; z-index: var(--sc-z-chrome);
+  height: var(--bar-h);
+  display: flex; align-items: center; gap: var(--sc-5);
+  padding-inline: 14px;
+  background: var(--sc-canvas);
+  border-bottom: 1px solid var(--line);
 }
+.bar-id { display: flex; align-items: center; gap: 8px; flex: none; }
+.bar-mark { width: 18px; height: 18px; color: var(--sc-accent); }
+.bar-name { font-weight: 650; letter-spacing: -0.01em; }
+.bar-demo {
+  font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--sc-ink-soft);
+  border: 1px solid var(--line); border-radius: 3px; padding: 2px 6px;
+}
+.bar-fields { display: flex; gap: var(--sc-5); margin: 0; flex: 1 1 auto; overflow: hidden; }
+.bar-fields > div { display: flex; align-items: baseline; gap: 7px; white-space: nowrap; }
+.bar-fields dt {
+  font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--sc-ink-soft);
+}
+.bar-fields dd { margin: 0; font-variant-numeric: tabular-nums; }
+#fPhase { color: var(--sc-accent); }
+.bar-repo { flex: none; color: var(--sc-ink-soft); text-decoration: none; text-underline-offset: 3px; }
+.bar-repo:hover { color: var(--sc-ink); text-decoration: underline; }
 
-/* ── nav ─────────────────────────────────────────────────── */
-
-.nav {
-  position: fixed; inset: 0 0 auto 0; height: 80px; z-index: 50;
-  border-bottom: 1px solid transparent;
-  transition: background 0.4s var(--ease), border-color 0.4s var(--ease);
-}
-.nav.is-stuck {
-  background: rgba(246, 243, 241, 0.86);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom-color: var(--line);
-}
-.nav-inner {
-  height: 100%; max-width: var(--wrap); margin-inline: auto;
-  padding-inline: clamp(24px, 5vw, 64px);
-  display: flex; align-items: center; gap: 32px;
-}
-/* wordmark plus the circular dot mark */
-.brand {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-size: 20px; letter-spacing: -0.02em;
-}
-.brand-mark { width: 20px; height: 20px; color: var(--ink); }
-.nav-links {
-  display: flex; gap: 32px; margin-left: auto;
-  font-size: 14px; letter-spacing: -0.02em; text-transform: uppercase;
-  color: var(--ink);
-}
-.nav-links a { white-space: nowrap; transition: color 0.25s var(--ease); }
-.nav-links a:hover { color: var(--muted); }
-
-/* ── buttons ─────────────────────────────────────────────── */
-
-/* Pills, always. No shadow, no gradient — a fill or a hairline and nothing else. */
-.btn {
-  display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
-  border-radius: 100px; padding: 16px 32px;
-  font-family: var(--mono);
-  font-size: 14px; line-height: 1; letter-spacing: -0.02em; text-transform: uppercase;
-  border: 1px solid transparent;
-  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
-}
-
-/* Lake Blue is spent here and nowhere else on the page: one primary action. */
-.btn-primary {
-  background: var(--accent);
-  color: #FFFFFF;
-  border-color: var(--accent);
-}
-.btn-primary:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
-
-.btn-ghost {
-  background: transparent;
-  color: var(--ink);
-  border-color: var(--ink);
-}
-.btn-ghost:hover { background: var(--ink); color: var(--paper); }
-
-/* the nav action is the off-black pill, so the blue stays singular */
-.nav-cta {
-  padding: 12px 24px;
-  background: var(--ink); color: var(--paper); border-color: var(--ink);
-}
-.nav-cta:hover { background: #000000; border-color: #000000; }
-
-/* the arrow leads the eye out on hover */
-.btn span[aria-hidden] {
-  display: inline-block;
-  transition: transform 0.28s var(--ease);
-}
-.btn:hover span[aria-hidden] { transform: translateX(3px); }
-
-/* ── type ────────────────────────────────────────────────── */
-
-/* every heading below stays at 400. The serif's stroke contrast and the
-   -0.02em tracking carry the weight; a bold cut would break the voice. */
-.display {
-  margin: 0;
-  font-family: var(--display-font);
-  font-size: clamp(3rem, 6.2vw, 5rem);
-  line-height: 1.2; letter-spacing: -0.02em; font-weight: 400;
-}
-.display em { font-style: italic; font-weight: 400; }
-.h2 {
-  margin: 0 0 clamp(40px, 5vw, 64px);
-  font-family: var(--display-font);
-  font-size: clamp(2rem, 3.6vw, 3rem);
-  line-height: 1.2; letter-spacing: -0.02em; font-weight: 400;
-}
-.lede {
-  margin: 32px 0 0; max-width: 56ch;
-  font-size: 20px; line-height: 1.35; letter-spacing: -0.02em;
-  color: var(--body);
-}
-.eyebrow { margin: 0 0 24px; color: var(--muted); }
-.section { padding-block: clamp(96px, 12vw, 200px); position: relative; z-index: 1; }
-
-/* ══ the page as one continuous space ══════════════════════════
-   A fixed tunnel behind everything, and each section flown to rather than
-   stacked: it arrives from the right, squares up to be read, then banks away
-   to the left as the next one comes in. */
-
-.world {
-  position: fixed; inset: 0; z-index: 0;
-  perspective: 900px; perspective-origin: 50% 44%;
-  pointer-events: none; overflow: hidden;
-  transform-style: preserve-3d;
-  opacity: 0.85;
-}
-
-/* JS writes the transform. The section is flat and untransformed while it is
-   in the reading band, so settled text composites crisply. Perspective is
-   applied per element rather than on a shared ancestor, because a transformed
-   ancestor would become the containing block for the corridor's sticky stage
-   and for the fixed nav. */
-[data-waypoint] {
-  transform-origin: 50% 50%;
-  backface-visibility: hidden;
-}
-
-/* ── hero ────────────────────────────────────────────────── */
-
-.hero {
-  position: relative;
-  min-height: 100dvh;
-  display: flex; align-items: center;
-  padding-top: 112px; padding-bottom: clamp(48px, 8vh, 88px);
-  overflow: hidden;
-  /* the atmospheric wash: coral into sky into mint, at low opacity and softly
-     diffused. This is where the pastels are allowed to live. */
-  background:
-    radial-gradient(48% 42% at 10% 6%, rgba(255, 148, 115, 0.30), transparent 70%),
-    radial-gradient(40% 36% at 58% 6%, rgba(236, 218, 152, 0.28), transparent 72%),
-    radial-gradient(54% 46% at 84% 66%, rgba(160, 181, 235, 0.34), transparent 72%),
-    radial-gradient(40% 38% at 34% 92%, rgba(167, 252, 205, 0.26), transparent 72%),
-    var(--paper);
-}
-.swarm-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-/* keeps the headline legible over the canvas without ending on a hard edge:
-   masked off below the copy so the world grid comes up to meet the corridor
-   instead of a seam running across the page */
-.hero-veil {
-  position: absolute; inset: 0;
-  background: linear-gradient(100deg, rgba(246, 243, 241, 0.96) 38%, rgba(246, 243, 241, 0.6) 58%, rgba(246, 243, 241, 0) 82%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 96%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 96%);
-}
-.hero-inner { position: relative; z-index: 2; }
-.cta-row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 40px; }
-
-/* entrance: one cascade on load, nothing loops */
-@media (prefers-reduced-motion: no-preference) {
-  .hero-inner > * {
-    opacity: 0;
-    animation: rise 1s var(--ease) forwards;
-  }
-  .hero-inner > .display { animation-delay: 0.1s; }
-  .hero-inner > .lede { animation-delay: 0.26s; }
-  .hero-inner > .cta-row { animation-delay: 0.4s; }
-}
-@keyframes rise {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: none; }
-}
-
-/* ══ the run: a 3D corridor of stations ═══════════════════════
-   The lane translates in Z toward the viewer. Stations, gate rings and
-   agent motes all sit at fixed Z inside it, so one transform moves the
-   whole world and everything parallaxes for free. */
-
-.journey { --steps: 8; height: calc(var(--steps) * 78svh + 62svh); position: relative; }
-/* No background of its own. Two adjacent full-bleed backgrounds can never be
-   made to meet cleanly and the seam showed on every boundary, so the stage is
-   transparent and the page-wide world shows straight through it. The corridor
-   is then the same room as the rest of the page, not a panel dropped into it. */
-.journey-stage {
-  position: sticky; top: 0; height: 100dvh; overflow: hidden;
-}
-
-/* The stage clips at its own edges, which sliced the rings and motes off in a
-   dead straight line across the page. This fades them out instead. The mask is
-   safe here because it groups the perspective container, not the 3D-positioned
-   children inside it, so the corridor's depth sorting is untouched. */
-.corridor {
-  position: absolute; inset: 0;
-  perspective: 900px;
-  perspective-origin: 50% 44%;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
-}
-
-.grid-plane {
-  position: absolute; left: 50%;
-  width: 3600px; margin-left: -1800px; height: 4600px;
-  background-image:
-    linear-gradient(to right, var(--line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-  background-size: 130px 130px;
-  background-position: 0 calc(var(--floor, 0) * 1px);
-}
-.grid-floor {
-  top: 62%;
-  transform-origin: 50% 0%;
-  transform: rotateX(90deg);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.34) 22%, transparent 54%);
-  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.34) 22%, transparent 54%);
-}
-/* mirrored: pivots on its own bottom edge so the plane lays back overhead,
-   and the mask fades toward its far end, which is now its local top */
-.grid-ceil {
-  bottom: 66%;
-  transform-origin: 50% 100%;
-  transform: rotateX(-90deg);
-  opacity: 0.55;
-  -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.3) 22%, transparent 52%);
-  mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.3) 22%, transparent 52%);
-}
-/* the walls close in as ash, so the tunnel feels enclosed without a vignette */
+/* the phase rail is the navigation. Not a wordmark bar with a button. */
 .rail {
-  position: absolute; top: 0; bottom: 0; width: 24vw; pointer-events: none;
+  position: fixed; z-index: var(--sc-z-chrome);
+  top: var(--bar-h); left: 0; bottom: 0; width: var(--rail-w);
+  border-right: 1px solid var(--line);
+  background: var(--sc-canvas);
+  display: flex; align-items: center;
+  padding-bottom: 180px;   /* the ledger is docked below it */
 }
-.rail-l { left: 0; background: linear-gradient(90deg, rgba(206, 202, 200, 0.4), transparent); }
-.rail-r { right: 0; background: linear-gradient(270deg, rgba(206, 202, 200, 0.4), transparent); }
-
-.lane {
-  position: absolute; inset: 0;
-  transform-style: preserve-3d;
-  transform: translateZ(calc(var(--cam, 0) * 1px)) rotateZ(calc(var(--roll, 0) * 1deg));
-  will-change: transform;
+.rail-list { list-style: none; margin: 0; padding: 0 0 0 14px; width: 100%; }
+.rail-list a {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 0; text-decoration: none;
+  color: var(--sc-ink-soft); font-size: 12px;
+  transition: color var(--sc-d-fast) var(--sc-ease-out);
 }
-
-/* gate rings: you pass through one per station, which is the single strongest
-   cue that the camera is travelling rather than the cards sliding */
-.ring {
-  position: absolute; left: 50%; top: 44%;
-  width: 1240px; height: 760px; margin: -380px 0 0 -620px;
-  border: 1px solid var(--line);
-  border-radius: 40px;
-  /* half a span nearer than its station, so you pass through the gate first
-     and the station arrives immediately behind it */
-  transform: translateZ(calc(var(--i) * var(--span) * -1 + 410px));
-  opacity: 0;
+.rail-list i {
+  width: 7px; height: 7px; border-radius: 50%; flex: none;
+  border: 1px solid var(--line-2);
+  transition: background var(--sc-d-base) var(--sc-ease-out), border-color var(--sc-d-base) var(--sc-ease-out);
 }
-.ring::before {
-  content: ""; position: absolute; inset: 16px;
-  border: 1px solid rgba(206, 202, 200, 0.5);
-  border-radius: 40px;
+.rail-list a:hover { color: var(--sc-ink); }
+.rail-list .done i { background: var(--line-2); border-color: var(--line-2); }
+.rail-list .now a { color: var(--sc-ink); }
+.rail-list .now i { background: var(--sc-accent); border-color: var(--sc-accent); }
+
+/* the ledger. Chrome, because it has to outlive the act that wrote to it. */
+.ledger {
+  position: fixed; z-index: var(--sc-z-chrome);
+  left: 0; bottom: 0; width: var(--rail-w);
+  background: var(--sc-canvas);
+  border-top: 1px solid var(--line); border-right: 1px solid var(--line);
+  padding: 12px 14px 16px;
 }
-
-/* agent motes: volume between the stations. JS writes the positions once and
-   only toggles visibility as they pass the camera. */
-.motes { position: absolute; inset: 0; transform-style: preserve-3d; }
-.motes i {
-  position: absolute; left: 50%; top: 44%;
-  width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px;
-  border-radius: 9999px; background: var(--sky);
-  transform: translate3d(var(--mx), var(--my), var(--mz));
+.ledger-h {
+  margin: 0 0 6px; font-size: 10.5px; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--sc-ink-soft);
 }
-
-/* .station only positions in 3D; .station-inner does the painting and the
-   fading. Splitting them keeps the transform off the element that composites. */
-.station {
-  position: absolute; left: 50%; top: 44%;
-  width: min(880px, 86vw);
-  transform: translate(-50%, -50%) translate3d(var(--x), var(--y), calc(var(--i) * var(--span) * -1));
+.ledger-list { list-style: none; margin: 0; padding: 0; font-size: 11.5px; }
+.ledger-list li {
+  display: flex; gap: 8px; padding: 2px 0;
+  color: var(--sc-ink-soft);
+  animation: led-in 260ms var(--sc-ease-out) both;
 }
-/* Opaque on purpose: a part-faded card is a translucent card, and two of them
-   overlapping means the far one reads straight through the near one's surface.
-   The fill sits a hair above the canvas so the card still separates from the
-   page without a shadow, which this system does not use. */
-.station-inner {
-  display: grid; grid-template-columns: minmax(0, 1fr) 300px;
-  align-items: center; gap: clamp(24px, 2.6vw, 40px);
-  padding: 40px;
-  border: 1px solid var(--line);
-  border-radius: 40px;
-  background: var(--surface);
-  opacity: 0;
+.ledger-list li span { flex: none; color: color-mix(in oklab, var(--sc-ink-soft) 70%, transparent); }
+.ledger-list li.hit { color: var(--sc-ink); }
+.ledger-list li.struck { text-decoration: line-through; opacity: 0.55; }
+.ledger-list li.fresh { color: var(--sc-accent); }
+@keyframes led-in { from { opacity: 0; transform: translateY(4px); } }
+
+/* ── shared surface parts ─────────────────────────────────────────── */
+
+
+/* A console fills its frame. Panes stretch the full height of the stage and
+   distribute their own contents, which is what stops them reading as three
+   cards floating in a dark field. */
+.stage {
+  padding: calc(var(--bar-h) + var(--sc-5)) var(--sc-6) var(--sc-6);
+  padding-left: calc(var(--rail-w) + var(--sc-6));
+  display: grid; gap: var(--sc-5);
+  grid-auto-rows: minmax(0, 1fr);
+  align-content: stretch;
 }
-/* stations alternate side and swap which column carries the diagram, so the
-   corridor never settles into a repeating slide */
-.station:nth-of-type(odd) { --x: -76px; --y: -28px; }
-.station:nth-of-type(even) { --x: 76px; --y: 28px; }
-.station:nth-of-type(even) .station-inner { grid-template-columns: 300px minmax(0, 1fr); }
-.station:nth-of-type(even) .station-card { order: 2; }
-.station:nth-of-type(even) .station-art { order: 1; }
-
-.station-n {
-  display: inline-flex; align-items: center; gap: 10px;
-  margin-bottom: 20px;
-  color: var(--muted);
+.pane {
+  background: var(--pane-bg);
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: var(--sc-5);
+  box-shadow: var(--sc-edge);
+  min-width: 0; min-height: 0;
+  display: flex; flex-direction: column;
 }
-.station-n::before {
-  content: ""; width: 16px; height: 1px; background: var(--line);
+.pane-head { display: flex; justify-content: space-between; gap: var(--sc-4); align-items: baseline; }
+.k {
+  margin: 0; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--sc-ink-soft);
 }
-.station h3 {
-  margin: 0 0 16px;
-  font-family: var(--display-font);
-  font-size: clamp(1.5rem, 2.3vw, 2rem);
-  line-height: 1.2; letter-spacing: -0.02em; font-weight: 400;
+.k-r { text-align: right; }
+.k-dim { color: color-mix(in oklab, var(--sc-ink-soft) 72%, transparent); text-transform: none; letter-spacing: 0; font-size: 12px; }
+.h2 {
+  font-family: var(--sc-font-display); font-weight: 600;
+  font-size: clamp(1.35rem, 1.05rem + 1.1vw, 2rem);
+  line-height: 1.12; letter-spacing: -0.025em;
+  margin: 0; text-wrap: balance; color: var(--sc-ink);
 }
-.station p { margin: 0; color: var(--body); font-size: 16px; line-height: 1.35; max-width: 46ch; }
+.sc-body { font-family: var(--sc-font-text); font-size: 15px; line-height: 1.6; max-width: 58ch; }
+code { font-family: var(--sc-font-mono); color: var(--sc-ink); }
 
-/* ── station diagrams ────────────────────────────────────────
-   Each one shows how its phase actually works. They draw themselves when the
-   station takes the frame and reset once it leaves, so re-scrolling replays.
-   These are illustration, which is the one place the pastels belong. */
+/* progressive rows: dim slot first, so a pinned stage is never empty */
+[data-at] { opacity: 0.3; transform: translateY(3px); transition: opacity 260ms var(--sc-ease-out), transform 260ms var(--sc-ease-out); }
+[data-at].is-on { opacity: 1; transform: none; }
 
-.station-art { width: 100%; }
-.sa { width: 100%; height: auto; display: block; font-family: var(--mono); }
+/* The table sits in the middle of its pane. Dense rows, header at the top,
+   note at the foot: the space goes to the boundaries, not between the rows. */
+.roster, .files, .checks { margin-block: auto; }
 
-.sa-wire path { fill: none; stroke: var(--sky); stroke-width: 1.7; }
-.sa-wire-faint path { stroke: var(--line); stroke-width: 1.4; }
-.sa-box rect { fill: var(--paper); stroke: var(--line); stroke-width: 1; }
-.sa-label, .sa-ask { font-size: 10.5px; letter-spacing: -0.033em; text-transform: uppercase; }
-.sa-label text, text.sa-label { fill: var(--muted); }
-.sa-ask text { fill: var(--body); }
-.sa-label-mid { text-anchor: middle; }
-.sa-label-end { text-anchor: end; }
-.sa-label-soft { fill: var(--muted); opacity: 0.7; }
-.sa-core { fill: var(--paper); stroke: var(--ink); stroke-width: 1.6; }
-.sa-dot { fill: var(--ink); }
-.sa-node circle { fill: var(--paper); stroke: var(--sky); stroke-width: 1.8; }
-.sa-node .sa-node-off { stroke: var(--line); }
-/* coral is the one place a fault is allowed to shout, and only inside a diagram */
-.sa-fault { fill: rgba(255, 148, 115, 0.35); stroke: var(--coral); stroke-width: 2; }
-.sa-claim { fill: var(--periwinkle); stroke: var(--sky); stroke-width: 1; }
-.sa-trunk { stroke: var(--line); stroke-width: 1.6; }
-.sa-sheet { fill: var(--paper); stroke: var(--line); stroke-width: 1; }
-.sa-bar rect { fill: #DED9D6; }
-.sa-bar .sa-bar-hit { fill: var(--sky); }
-.sa-scan { fill: var(--coral); opacity: 0; }
-.sa-check rect { fill: var(--paper); stroke: var(--line); stroke-width: 1; }
-.sa-tick path { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.sa-arrow { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+/* ── 1 · dispatch ─────────────────────────────────────────────────── */
 
-@media (prefers-reduced-motion: no-preference) {
-  /* pathLength="1" lets one dash rule drive every path regardless of length */
-  .sa-wire path, .sa-tick path {
-    stroke-dasharray: 1; stroke-dashoffset: 1;
-  }
-  .sa-box rect, .sa-check rect, .sa-node circle, .sa-claim, .sa-fault,
-  .sa-label text, text.sa-label, .sa-ask text, .sa-arrow, .sa-bar rect {
-    opacity: 0;
-  }
-
-  .station.is-live .sa-wire path,
-  .station.is-live .sa-tick path { animation: draw 0.9s var(--ease) forwards; }
-  .station.is-live .sa-wire path:nth-child(2),
-  .station.is-live .sa-tick path:nth-child(2) { animation-delay: 0.09s; }
-  .station.is-live .sa-wire path:nth-child(3),
-  .station.is-live .sa-tick path:nth-child(3) { animation-delay: 0.18s; }
-  .station.is-live .sa-wire path:nth-child(4),
-  .station.is-live .sa-tick path:nth-child(4) { animation-delay: 0.27s; }
-  .station.is-live .sa-wire path:nth-child(5) { animation-delay: 0.36s; }
-
-  .station.is-live .sa-box rect,
-  .station.is-live .sa-check rect,
-  .station.is-live .sa-node circle,
-  .station.is-live .sa-claim,
-  .station.is-live .sa-fault,
-  .station.is-live .sa-label text,
-  .station.is-live text.sa-label,
-  .station.is-live .sa-ask text,
-  .station.is-live .sa-arrow,
-  .station.is-live .sa-bar rect { animation: fadeIn 0.5s var(--ease) 0.2s forwards; }
-  .station.is-live .sa-ask text { animation-delay: 0.7s; }
-  .station.is-live .sa-fault { animation: fadeIn 0.5s var(--ease) 0.5s forwards; }
-
-  .station.is-live .sa-scan { animation: scan 2.4s var(--ease) 0.4s infinite; }
+.stage-dispatch { grid-template-columns: 1.15fr 1fr; }
+.goal {
+  font-family: var(--sc-font-mono); font-weight: 500;
+  font-size: clamp(1.05rem, 0.85rem + 1vw, 1.6rem);
+  line-height: 1.3; letter-spacing: -0.02em;
+  margin: 8px 0 14px; color: var(--sc-ink); text-wrap: balance;
 }
-
-@keyframes draw { to { stroke-dashoffset: 0; } }
-@keyframes fadeIn { to { opacity: 1; } }
-@keyframes scan {
-  0% { opacity: 0; transform: translateY(0); }
-  12% { opacity: 0.7; }
-  88% { opacity: 0.7; }
-  100% { opacity: 0; transform: translateY(178px); }
+.goal::after { content: "▍"; color: var(--sc-accent); margin-left: 3px; }
+.help {
+  font-family: var(--sc-font-text); font-size: 14px; line-height: 1.6;
+  color: var(--sc-ink-soft); margin: 0 0 var(--sc-5); max-width: 56ch;
 }
+.help b { color: var(--sc-ink); font-weight: 600; }
+.log, .roster, .files, .checks, .sweep, .vlog, .trace, .sources { list-style: none; margin: 0; padding: 0; }
+.log { margin-top: auto; }
+.log li { padding: 3px 0; color: var(--sc-ink-soft); font-size: 12px; }
+.log li::before { content: "› "; color: var(--sc-accent); }
 
-/* ── the run: heads-up display ───────────────────────────── */
-
-.journey-hud {
-  position: absolute; left: 0; right: 0; bottom: clamp(32px, 5vh, 56px);
-  max-width: var(--wrap); margin-inline: auto;
-  padding-inline: clamp(24px, 5vw, 64px);
-  z-index: 3; pointer-events: none;
+.roster { margin: 12px 0; }
+.roster li {
+  display: grid; grid-template-columns: 62px 1fr auto; gap: 10px; align-items: center;
+  padding: 5px 0; border-bottom: 1px solid var(--line);
 }
-.hud-note { margin: 0 0 20px; max-width: 44ch; color: var(--body); font-size: 14px; line-height: 1.35; }
-.hud-rail { display: flex; gap: 6px; width: min(420px, 60vw); }
-.hud-rail i {
-  flex: 1; height: 1px; background: var(--line);
-  transition: background 0.4s var(--ease);
-}
-.hud-rail i.on { background: var(--ink); }
-.hud-step { margin: 16px 0 0; color: var(--ink); }
+.ro-role { color: var(--sc-accent); font-size: 11px; letter-spacing: 0.04em; }
+.ro-task { color: var(--sc-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ro-tier { color: var(--sc-ink-soft); font-size: 11px; }
+.pane-foot { margin: auto 0 0; color: var(--sc-ink-soft); font-size: 12px; }
+#rosterN, #mapN, #checkN { color: var(--sc-ink); font-variant-numeric: tabular-nums; }
 
-/* ── reveal ──────────────────────────────────────────────── */
+/* ── 2 · ingest ───────────────────────────────────────────────────── */
 
-.reveal {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-  transition-delay: calc(var(--i, 0) * 80ms);
+.flow { padding-block: clamp(4rem, 8vw, 8rem); padding-left: var(--rail-w); }
+.ingest-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sc-8) var(--sc-7); align-items: start; }
+.ingest-copy .sc-body { color: var(--sc-ink-soft); margin-top: var(--sc-4); }
+.sources li {
+  display: grid; grid-template-columns: 100px 1fr; gap: 12px;
+  padding: 9px 0; border-top: 1px solid var(--line);
 }
-.reveal.is-in { opacity: 1; transform: none; }
+.sources li:last-child { border-bottom: 1px solid var(--line); }
+.src-n { color: var(--sc-accent); }
+.src-w { color: var(--sc-ink-soft); }
 
-/* ── the thesis ──────────────────────────────────────────── */
+/* ── 3 · map ──────────────────────────────────────────────────────── */
 
-.statement { padding-block: clamp(120px, 15vw, 216px); }
-.statement-line {
-  margin: 0; max-width: 22ch;
-  font-family: var(--display-font);
-  font-size: clamp(2.4rem, 5vw, 4rem);
-  line-height: 1.2; letter-spacing: -0.02em; font-weight: 400;
+.stage-map { grid-template-columns: 1fr 1fr; }
+.files li {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 6px 0; border-bottom: 1px solid var(--line);
 }
-.statement-line em { font-style: italic; font-weight: 400; }
-.statement-tail {
-  margin: 40px 0 0;
-  font-size: 20px; line-height: 1.35; letter-spacing: -0.02em;
-  color: var(--body);
+.files { margin-block: auto; padding-top: 10px; }
+.files li:last-child { border-bottom: 0; }
+.fi-w { color: var(--sc-ink-soft); font-size: 11.5px; }
+.fi-hub .fi-w { color: var(--sc-accent); }
+.hubnote { margin: auto 0 0; padding-top: 12px; color: var(--sc-ink-soft); font-size: 12px; }
+.hubnote b { color: var(--sc-ink); }
+.pane-dag { margin: 0; gap: 10px; }
+.dag { flex: 1 1 auto; min-height: 0; margin-block: 10px; }
+.dag { width: 100%; height: auto; }
+.dag-edge path {
+  fill: none; stroke: var(--sc-accent); stroke-width: 1.4;
+  stroke-dasharray: 1;
+  stroke-dashoffset: clamp(0, calc(1 - var(--sc-p, 0) * 1.9), 1);
 }
+.dag-node rect { fill: none; stroke: var(--line-2); stroke-width: 1; }
+.dag-t { fill: var(--sc-ink); font-family: var(--sc-font-mono); font-size: 11px; text-anchor: middle; }
+.dag-s { fill: var(--sc-ink-soft); font-family: var(--sc-font-mono); font-size: 9px; text-anchor: middle; }
+.dag-cap { margin: auto 0 0; color: var(--sc-ink-soft); font-size: 12px; }
 
-/* ── cards ───────────────────────────────────────────────── */
+/* ── 4 · diagnose ─────────────────────────────────────────────────── */
 
-/* stretch, so the two cards match height and their figure blocks share a baseline */
-.pair { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; gap: 24px; }
+.diag .k { margin-bottom: 10px; }
+.diag-h { max-width: 22ch; margin-bottom: var(--sc-5); }
+.trace { max-width: 62ch; }
+.trace li {
+  display: grid; grid-template-columns: 220px 1fr; gap: 14px;
+  padding: 8px 0; border-top: 1px solid var(--line); color: var(--sc-ink-soft);
+}
+.trace li:last-child { border-bottom: 1px solid var(--line); }
+.tr-f { color: var(--sc-ink); }
+.claim {
+  margin-top: var(--sc-6); max-width: 62ch;
+  border: 1px solid var(--line-2); border-radius: 10px; padding: var(--sc-5);
+  background: var(--pane-bg);
+}
+.claim-state { color: var(--sc-accent); }
+.claim-t {
+  font-family: var(--sc-font-text); font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.35rem);
+  line-height: 1.35; margin: 10px 0 12px; color: var(--sc-ink);
+}
+.claim-f { margin: 0; color: var(--sc-ink-soft); font-size: 12px; }
+body.is-refuted .claim { border-color: var(--line); }
+body.is-refuted .claim-t { text-decoration: line-through; opacity: 0.5; }
+body.is-refuted .claim-state::after { content: " → refuted"; }
 
-/* A hairline and a surface change carry every card in this page. No shadow. */
-.card, .tile {
-  border: 1px solid var(--line);
-  border-radius: 40px;
-  background: transparent;
-  transition: border-color 0.4s var(--ease), background 0.4s var(--ease);
-}
-.card { display: flex; flex-direction: column; overflow: hidden; }
-.card:hover, .tile:hover { background: var(--surface); border-color: #BDB8B5; }
+/* ── 5 · the peak ─────────────────────────────────────────────────── */
 
-/* pointer tilt: JS writes --rx / --ry, nothing else moves */
-.tilt {
-  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transform-style: preserve-3d;
-  transition: transform 0.5s var(--ease), border-color 0.4s var(--ease), background 0.4s var(--ease);
+.stage-refute { grid-template-columns: 1fr 1.25fr; grid-template-rows: auto minmax(0,1fr); }
+.pane-claim { display: flex; flex-direction: column; gap: 12px; align-items: start; }
+.tried {
+  margin: 0; font-family: var(--sc-font-text);
+  font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.5rem); line-height: 1.3; color: var(--sc-ink);
 }
-.tilt.is-tilting { transition: transform 0.12s linear, border-color 0.4s var(--ease), background 0.4s var(--ease); }
-.reveal.tilt { transform: perspective(1000px) translateY(20px); }
-.reveal.tilt.is-in { transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+body.is-refuted .tried { text-decoration: line-through; opacity: 0.45; }
+.challenge {
+  margin-top: auto; font: inherit; font-size: 12px;
+  background: none; color: var(--sc-ink);
+  border: 1px solid var(--line-2); border-radius: 6px;
+  padding: 10px 14px; min-height: 40px; cursor: pointer;
+  transition: background var(--sc-d-fast) var(--sc-ease-out), border-color var(--sc-d-fast) var(--sc-ease-out);
+}
+.challenge:hover { border-color: var(--sc-accent); color: var(--sc-accent); }
+.challenge:active { transform: translateY(1px); }
 
-/* the body sets the divider height for both cards, so the two hairlines in the
-   pair land on the same line however much sits below them */
-.card-body { padding: 40px 40px 32px; }
-/* card titles are headings, so they are the serif at 400 — not the mono */
-.card-body h3 {
-  margin: 0 0 16px;
-  font-family: var(--display-font);
-  font-size: 24px; line-height: 1.2; letter-spacing: -0.02em; font-weight: 400;
+.pane-verify { grid-row: span 2; }
+.vlog { margin-top: 12px; }
+.vlog li { padding: 7px 0; border-bottom: 1px solid var(--line); color: var(--sc-ink-soft); }
+.vlog li b { color: var(--sc-ink); }
+.vlog li::before { content: "· "; color: var(--sc-accent); }
+#vState { color: var(--sc-accent); }
+.verdict {
+  margin: 14px 0 0; padding: 12px 14px; border-radius: 8px;
+  font-family: var(--sc-font-display); font-weight: 650;
+  font-size: clamp(1.6rem, 1.1rem + 2vw, 2.6rem); line-height: 1;
+  letter-spacing: -0.03em; text-transform: uppercase;
+  background: var(--sc-accent); color: var(--sc-accent-ink);
 }
-.card-body p { margin: 0; color: var(--body); font-size: 16px; line-height: 1.35; max-width: 46ch; }
+.vnote { margin: auto 0 0; padding-top: 12px; color: var(--sc-ink-soft); font-size: 12.5px; }
+.pane-rewind { align-self: start; }
+.rewind-t { margin: 10px 0 10px; color: var(--sc-ink); font-size: 12.5px; }
+.rewind-t b { color: var(--sc-accent); }
+.rewind-f { margin: auto 0 0; color: var(--sc-ink-soft); font-size: 12.5px; }
 
-/* The numbers are the whole argument, so they are set as figures. Filled
-   progress tracks read as dashboard chrome on a landing page, and they were
-   also a second set of boxes inside an already-bordered card. */
-.figures {
-  margin: 0; padding: 0;
-  display: grid; grid-template-columns: 1fr 1fr;
-  border-top: 1px solid var(--line);
-}
-.figure { padding: 32px 40px; }
-.figure + .figure { border-left: 1px solid var(--line); }
-.figure dt { margin: 0 0 16px; color: var(--muted); }
-.figure dd { margin: 0; display: flex; align-items: baseline; gap: 8px; }
-.figure-n {
-  font-family: var(--display-font);
-  font-size: 40px; line-height: 1.2; letter-spacing: -0.02em; font-weight: 400;
-  font-variant-numeric: tabular-nums;
-}
-.figure dd i { font-style: normal; font-size: 12px; color: var(--muted); text-transform: uppercase; }
-.card-foot {
-  margin: 0; padding: 0 40px 40px;
-  font-size: 14px; line-height: 1.35; color: var(--muted);
-}
+/* ── 6 · fix ──────────────────────────────────────────────────────── */
 
-/* claim, handoff, verdict. Hairlines and type instead of nested boxes. */
-.proof {
-  margin: 0;
-  padding: 40px;
-  border-top: 1px solid var(--line);
+.stage-fix { display: flex; align-items: center; padding-inline: 0; }
+.rail-h { gap: var(--sc-5); padding-inline: var(--sc-6); padding-left: calc(var(--rail-w) + var(--sc-6)); align-items: stretch; width: max-content; height: min(74vh, 640px); }
+.wt-lead { width: 25rem; flex: none; align-self: center; padding-right: var(--sc-5); }
+.wt-lead .sc-body { color: var(--sc-ink-soft); margin-top: var(--sc-4); }
+.wt {
+  width: 22rem; flex: none;
+  background: var(--pane-bg); border: 1px solid var(--line); border-radius: 10px;
+  padding: var(--sc-5); box-shadow: var(--sc-edge);
+  display: flex; flex-direction: column; gap: 10px;
 }
-.proof-claim {
-  margin: 0;
-  font-family: var(--display-font); font-style: italic; font-weight: 400;
-  font-size: 24px; line-height: 1.2; letter-spacing: -0.02em; color: var(--ink);
-}
-.proof-link {
-  position: relative; display: flex; align-items: center;
-  min-height: 48px; margin: 12px 0 8px; padding-left: 24px;
-}
-.proof-link::before {
-  content: ""; position: absolute; left: 4px; top: 0; bottom: 0;
-  width: 1px; background: var(--line);
-}
-.proof-link i {
-  position: absolute; left: 1.5px; top: 9px;
-  width: 6px; height: 6px; border-radius: 9999px; background: var(--sky);
-  opacity: 0;
-}
-.is-in .proof-link i { animation: travel 2.2s var(--ease) 0.6s infinite; }
-@keyframes travel {
-  0% { opacity: 0; transform: translateY(0) }
-  18% { opacity: 1 }
-  76% { opacity: 1; transform: translateY(22px) }
-  100% { opacity: 0; transform: translateY(28px) }
-}
-.proof-link span { color: var(--muted); }
-.proof-verdict { margin: 0; display: flex; align-items: baseline; gap: 20px; font-size: 16px; }
-.proof-verdict b { font-weight: 500; color: var(--ink); }
-.proof-verdict s { color: var(--muted); opacity: 0.7; text-decoration-thickness: 1px; }
+.wt h3 { margin: 0; font-family: var(--sc-font-display); font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; }
+.wt-k { margin: 0; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sc-accent); }
+.wt-refused .wt-k { color: var(--sc-ink-soft); }
+.wt-b { margin: 0; color: var(--sc-ink-soft); font-size: 12.5px; }
+.wt-files { list-style: none; margin: 0; padding: 0; font-size: 12px; }
+.wt-files li { padding: 3px 0; border-bottom: 1px solid var(--line); color: var(--sc-ink); }
+.wt-files li.cl { color: var(--sc-accent); }
+.wt-files li.cl::after { content: "  ← owned by unit A"; color: var(--sc-ink-soft); font-size: 11px; }
+.orders { list-style: none; margin: 0; padding: 0; font-size: 12.5px; color: var(--sc-ink-soft); }
+.orders li { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.orders li::before { content: "✕ "; color: var(--sc-accent); }
+.wt-br { margin: auto 0 0; color: var(--sc-ink-soft); font-size: 11px; }
+.wt-refused { border-style: dashed; }
 
-/* ── bento ───────────────────────────────────────────────── */
+/* ── 7 · verify ───────────────────────────────────────────────────── */
 
-.bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-.tile { padding: 40px; }
-.tile h3 {
-  margin: 0 0 16px;
-  font-family: var(--display-font);
-  font-size: 24px; line-height: 1.2; letter-spacing: -0.02em; font-weight: 400;
+.stage-verify { grid-template-columns: 1.1fr 1fr; }
+.checks { margin-block: auto; padding-top: 12px; }
+.checks li {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 8px 0; border-bottom: 1px solid var(--line);
 }
-.tile p { margin: 0; color: var(--body); font-size: 16px; line-height: 1.35; max-width: 52ch; }
+.ck { color: var(--sc-ink-soft); font-size: 11.5px; }
+.is-on .ck, .checks li.is-on .ck { color: var(--sc-accent); }
+.checks li.is-on .ck::before { content: "✓ "; }
+.sweep { margin: 12px 0 0; }
+.sweep li { padding: 7px 0; border-bottom: 1px solid var(--line); color: var(--sc-ink-soft); }
+.sweep-t { margin: 12px 0 0; color: var(--sc-ink); }
+.exit { margin: auto 0 0; padding-top: 14px; color: var(--sc-ink-soft); font-size: 12.5px; }
+.exit b { color: var(--sc-accent); }
 
-/* copy and diagram sit side by side, so the branch art is not stretched to the
-   full tile width, which blows its type up past the body text around it */
-.tile-wide {
-  grid-column: span 12;
-  display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
-  align-items: center; gap: clamp(32px, 3vw, 64px);
-}
-.branch-art { width: 100%; height: auto; }
+/* ── 8 · ship ─────────────────────────────────────────────────────── */
 
-/* the one card that takes a coloured surface, so the eye lands somewhere */
-.tile-tinted {
-  grid-column: span 5;
-  background: var(--periwinkle); border-color: var(--periwinkle);
-}
-.tile-tinted:hover { background: #C4D2F2; border-color: #C4D2F2; }
-.tile-chips { grid-column: span 7; }
-.tile-last { grid-column: span 12; }
+.ship .h2 { max-width: 24ch; }
+.ship .sc-body { color: var(--sc-ink-soft); margin: var(--sc-4) 0 var(--sc-7); }
+.stack { width: 100%; max-width: 42rem; height: auto; }
+.st-main { stroke: var(--line-2); stroke-width: 1.4; }
+.st-b { fill: none; stroke: var(--sc-accent); stroke-width: 1.4; }
+.st-dot circle { fill: var(--sc-canvas); stroke: var(--sc-accent); stroke-width: 1.4; }
+.st-box rect { fill: var(--pane-bg); stroke: var(--line-2); }
+.st-t { fill: var(--sc-ink); font-family: var(--sc-font-mono); font-size: 11px; }
+.ship-f { margin: var(--sc-6) 0 0; color: var(--sc-ink-soft); font-size: 13px; }
 
-.ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
-.ticks li { position: relative; padding-left: 28px; color: var(--body); font-size: 16px; line-height: 1.35; }
-.ticks li::before {
-  content: ""; position: absolute; left: 3px; top: 7px;
-  width: 9px; height: 5px;
-  border-left: 1.4px solid var(--ink); border-bottom: 1.4px solid var(--ink);
-  transform: rotate(-45deg);
-}
+/* ── 9 · close: an actual input ───────────────────────────────────── */
 
-/* pipeline-style tags: parchment fill, ash hairline, full pill */
-.chips { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.chips li {
-  font-size: 14px; letter-spacing: -0.02em; text-transform: uppercase; color: var(--ink);
-  padding: 12px 20px; border: 1px solid var(--line); border-radius: 9999px;
-  background: var(--paper);
-}
-
-.tiers { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px 32px; }
-.tiers div { display: grid; gap: 8px; }
-.tiers dt { font-size: 16px; font-weight: 500; letter-spacing: -0.025em; }
-.tiers dd { margin: 0; font-size: 12px; letter-spacing: -0.033em; text-transform: uppercase; color: var(--muted); }
-
-/* ── install ─────────────────────────────────────────────── */
-
-.section-install { padding-bottom: clamp(96px, 10vw, 144px); }
-.install-wrap { max-width: 900px; }
-.install-wrap .h2 { margin-bottom: 40px; }
-
+.stage-close { grid-template-rows: 1fr auto; align-content: stretch; }
+.close-inner { align-self: center; width: 100%; max-width: 46rem; }
 .code {
-  border: 1px solid var(--line); border-radius: 40px;
-  background: var(--surface); overflow: hidden;
+  position: relative; margin: 10px 0 var(--sc-6);
+  background: var(--pane-bg); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px; overflow-x: auto;
 }
-.code-head {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding: 20px 24px 20px 40px; border-bottom: 1px solid var(--line);
-  color: var(--muted);
-}
-/* the ghost pill, at tag scale */
+.code pre { margin: 0; }
+.code code { font-size: 12.5px; line-height: 1.8; white-space: pre; }
+.cm { color: var(--sc-ink-soft); }
 .copy {
-  font: inherit; font-size: 12px; letter-spacing: -0.033em; text-transform: uppercase;
-  color: var(--ink); background: transparent; border: 1px solid var(--ink);
-  border-radius: 100px; padding: 10px 20px; cursor: pointer;
-  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+  position: absolute; top: 10px; right: 10px;
+  font: inherit; font-size: 11px; cursor: pointer;
+  background: var(--sc-canvas); color: var(--sc-ink-soft);
+  border: 1px solid var(--line); border-radius: 6px; padding: 7px 11px; min-height: 32px;
 }
-.copy:hover { background: var(--ink); color: var(--paper); }
-.copy.is-done { background: var(--ink); color: var(--paper); }
-
-.code pre {
-  margin: 0; padding: 32px 40px 36px; overflow-x: auto;
-  font-family: var(--mono); font-size: 14px; line-height: 1.9;
-  letter-spacing: -0.02em; color: var(--ink);
+.copy:hover { color: var(--sc-accent); border-color: var(--sc-accent); }
+.cmd-l { display: block; color: var(--sc-ink-soft); font-size: 12.5px; margin-bottom: 10px; }
+.cmd-row { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line-2); padding-bottom: 10px; }
+.cmd-p { color: var(--sc-accent); }
+.cmd-in {
+  flex: 1 1 auto; min-width: 0; font: inherit; font-size: 15px;
+  background: none; border: 0; color: var(--sc-ink); padding: 8px 0;
 }
-.code .c { color: var(--muted); }
+.cmd-in::placeholder { color: color-mix(in oklab, var(--sc-ink-soft) 70%, transparent); }
+.cmd-in:focus { outline: none; }
+.cmd-row:focus-within { border-color: var(--sc-accent); }
+.cmd-go {
+  flex: none; font: inherit; font-size: 12px; cursor: pointer;
+  background: var(--sc-accent); color: var(--sc-accent-ink);
+  border: 0; border-radius: 6px; padding: 10px 16px; min-height: 40px; font-weight: 600;
+}
+.cmd-go:active { transform: translateY(1px); }
+.cmd-out { margin: 12px 0 0; color: var(--sc-ink-soft); font-size: 12.5px; white-space: pre-wrap; word-break: break-word; }
+.cmd-out.ready { color: var(--sc-ink); }
+.foot {
+  display: flex; flex-wrap: wrap; gap: var(--sc-5);
+  border-top: 1px solid var(--line); padding-top: 14px;
+  color: var(--sc-ink-soft); font-size: 11.5px;
+}
+.foot a { color: var(--sc-ink-soft); text-underline-offset: 3px; }
+.foot a:hover { color: var(--sc-ink); }
 
-.install-note { margin: 56px 0 20px; color: var(--body); font-size: 16px; }
-.prompts { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.prompts li {
-  font-size: 14px; line-height: 1.5; letter-spacing: -0.02em; color: var(--body);
-  padding: 20px 32px; border: 1px solid var(--line);
-  border-radius: 9999px; background: transparent;
+/* ── narrow ───────────────────────────────────────────────────────── */
+
+@media (max-width: 1240px) { :root { --rail-w: 208px; } }
+
+@media (max-width: 1100px) {
+  .stage-dispatch, .stage-map, .stage-refute, .stage-verify, .ingest-wrap { grid-template-columns: 1fr; }
+  .stage-refute { grid-template-rows: auto auto auto; }
+  .pane-verify { grid-row: auto; }
 }
 
-/* ── footer ──────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  :root { --bar-h: 40px; --rail-w: 0px; }
+  body { font-size: 12.5px; }
+  .bar { gap: var(--sc-4); padding-inline: 12px; }
+  .rail { padding-bottom: 0; }
+  .bar-demo, .bar-repo { display: none; }
+  .bar-fields { gap: var(--sc-4); }
 
-.footer { border-top: 1px solid var(--line); padding-block: 40px; position: relative; z-index: 1; }
-.footer-inner {
-  display: flex; flex-wrap: wrap; gap: 12px 32px; align-items: center;
-  color: var(--muted);
-}
-.footer-inner a { margin-left: auto; transition: color 0.25s var(--ease); }
-.footer-inner a:hover { color: var(--ink); }
-
-/* ── responsive ──────────────────────────────────────────── */
-
-@media (max-width: 1180px) {
-  .station-inner { grid-template-columns: minmax(0, 1fr) 250px; }
-  .station:nth-of-type(even) .station-inner { grid-template-columns: 250px minmax(0, 1fr); }
-}
-
-@media (max-width: 1000px) {
-  .pair { grid-template-columns: 1fr; }
-  .br-lg { display: none; }
-  .hero-veil {
-    background: linear-gradient(180deg,
-      rgba(246, 243, 241, 0) 0%, rgba(246, 243, 241, 0.7) 32%, rgba(246, 243, 241, 0.96) 60%);
+  /* the rail becomes a bottom strip, still the navigation, still tappable */
+  .rail {
+    top: auto; bottom: 0; left: 0; right: 0; width: auto; height: 46px;
+    border-right: 0; border-top: 1px solid var(--line);
+    overflow-x: auto; overscroll-behavior-x: contain;
   }
-}
+  .rail-list { display: flex; gap: 4px; padding: 0 12px; width: max-content; }
+  .rail-list a { padding: 0 10px; height: 46px; }
 
-@media (max-width: 900px) {
-  .tile-tinted, .tile-chips { grid-column: span 12; }
-  .tile-wide { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 720px) {
-  .nav-links { display: none; }
-  .nav-cta { margin-left: auto; }
-  .hero { padding-top: 104px; }
-  .cta-row .btn { flex: 1 1 auto; justify-content: center; }
-  .tiers { grid-template-columns: 1fr; }
-  .card-body, .figure, .proof, .tile { padding: 28px; }
-  .card-foot { padding: 0 28px 28px; }
-  .code-head { padding: 20px 20px 20px 28px; }
-  .code pre { padding: 28px; }
-  .prompts li { border-radius: 32px; }
-}
-
-/* The corridor needs viewport height and a real pointer. Below that, and for
-   anyone who asked for less motion, the same stations stack into an ordinary
-   list. They are the same elements, not a second copy of the copy, so the
-   diagrams come along and there is only one place to edit a phase. */
-@media (max-width: 860px), (prefers-reduced-motion: reduce) {
-  .journey { height: auto; padding-block: clamp(96px, 12vw, 200px); }
-  .journey-stage { position: static; height: auto; background: none; overflow: visible; }
-  .world, .motes, .ring, .fog, .journey-hud { display: none; }
-
-  .corridor { position: static; perspective: none; mask-image: none; -webkit-mask-image: none; }
-  .lane {
-    position: static; transform: none; will-change: auto;
-    display: grid; gap: 24px;
-    max-width: var(--wrap); margin-inline: auto;
-    padding-inline: clamp(24px, 5vw, 64px);
+  .ledger {
+    right: 0; left: 0; bottom: 46px; width: auto;
+    border-right: 0; padding: 7px 12px;
   }
-  .station { position: static; width: auto; transform: none; }
-  .station-inner {
-    opacity: 1;
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding: clamp(28px, 6vw, 40px);
-    background: transparent;
+  .ledger-h { display: none; }
+  .ledger-list li:not(:last-child) { display: none; }
+
+  /* A phone frame holds less. Panes size to their content and the type steps
+     down, rather than being stretched to equal heights and clipped. */
+  .stage {
+    padding: calc(var(--bar-h) + 10px) 12px 92px; gap: 10px;
+    grid-auto-rows: auto; align-content: start;
   }
-  .station:nth-of-type(even) .station-inner { grid-template-columns: 1fr; }
-  .station:nth-of-type(even) .station-card,
-  .station:nth-of-type(even) .station-art { order: 0; }
-  .station-art { max-width: 340px; }
-  .station p { max-width: 60ch; }
+  .flow { padding-left: 0; }
+  .pane { padding: 12px; }
+  .bar-fields > .f-run, .bar-fields > .f-agents { display: none; }
+  .goal { font-size: 1.05rem; line-height: 1.25; margin: 6px 0 10px; }
+  .help { font-size: 12.5px; line-height: 1.5; margin-bottom: 10px; }
+  .log { margin-top: 10px; }
+  .log li { font-size: 11.5px; padding: 2px 0; }
+  .roster { margin: 8px 0 10px; }
+  .roster li { padding: 3px 0; grid-template-columns: 54px 1fr auto; gap: 8px; }
+  .ro-task { font-size: 12px; }
+  .pane-foot, .hubnote, .dag-cap, .vnote, .exit, .rewind-t, .rewind-f { font-size: 11px; }
+  .vnote, .hubnote, .exit { padding-top: 8px; }
+  .roster, .files, .checks { margin-block: 8px; }
+  .files li, .checks li, .vlog li, .sweep li, .trace li { padding: 3px 0; }
+  .vlog li { font-size: 11.5px; }
+  .tried { font-size: 1.05rem; }
+  .verdict { font-size: 1.45rem; padding: 7px 11px; margin-top: 8px; }
+  .challenge { margin-top: 10px; }
+  .claim-t { font-size: 1rem; }
+  .h2 { font-size: 1.25rem; }
+  .dag { max-height: 30vh; }
+  .stage-fix { padding-inline: 0; }
+  .rail-h { padding-inline: 14px; gap: 14px; height: min(66vh, 520px); }
+  .wt-lead { width: 18rem; }
+  .wt { width: 16.5rem; }
+  .trace li, .sources li { grid-template-columns: 1fr; gap: 2px; }
+  .flow { padding-block: clamp(3.5rem, 9vw, 5rem); }
+  .foot { padding-bottom: 4px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-  .reveal { opacity: 1; transform: none; }
-  .reveal.tilt, .reveal.tilt.is-in { transform: none; }
-  .hero-inner > * { opacity: 1; animation: none; }
-  .swarm-canvas { display: none; }
+  [data-at] { transform: none; }
+  .ledger-list li { animation: none; }
 }

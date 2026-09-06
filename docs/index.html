@@ -2,532 +2,372 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>swarm · autonomous multi-agent orchestration</title>
-<meta name="description" content="An agent skill that runs a fleet of sub-agents across your codebase: explore, diagnose, fix, review, verify. It does not stop until the work is proven.">
-<meta name="color-scheme" content="light">
-<meta name="theme-color" content="#F6F3F1">
-<meta property="og:title" content="swarm · autonomous multi-agent orchestration">
-<meta property="og:description" content="One goal in. A verified, production-ready result out.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>swarm · a run you can watch</title>
+<meta name="description" content="swarm is an agent skill. You hand it one broad goal; it runs a fleet of sub-agents that explore, diagnose, fix, review and verify, and it does not stop until the result is proven. This page replays one run.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0B0C0B">
+<meta property="og:title" content="swarm · a run you can watch">
+<meta property="og:description" content="One goal in. A fleet of sub-agents that check each other. Scroll the run.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23F6F3F1'/><circle cx='16' cy='16' r='9' fill='none' stroke='%23242424' stroke-width='2.4'/><circle cx='16' cy='16' r='2.5' fill='%23242424'/></svg>">
-<link rel="preload" href="fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230B0C0B'/><g fill='%23F5A524'><circle cx='16' cy='7' r='2.4'/><circle cx='7' cy='21' r='2.4'/><circle cx='25' cy='21' r='2.4'/></g><g stroke='%23F5A524' stroke-width='1.4' fill='none' opacity='.55'><path d='M16 9.4 9 19M16 9.4 23 19M9.4 21h13.2'/></g></svg>">
 <link rel="preload" href="fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="scrollcraft.css">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<a class="skip" href="#journey">Skip to content</a>
+<a class="skip" href="#a-dispatch">Skip to the run</a>
+<span data-sc-progress></span>
+<div class="sc-grain" aria-hidden="true"></div>
 
-<!-- the space the whole page sits inside. Fixed, so it never scrolls away, and
-     its grid drifts with scroll so every section reads as somewhere you flew to
-     rather than a block stacked under the last one. -->
-<div class="world" aria-hidden="true">
-  <div class="grid-plane grid-floor"></div>
-  <div class="grid-plane grid-ceil"></div>
-  <div class="rail rail-l"></div>
-  <div class="rail rail-r"></div>
-</div>
+<!-- ══ app chrome ══════════════════════════════════════════════════════
+     This page is the surface, not a brochure for it. The bar is a status
+     readout, the rail is the run's own phase list, and the strip at the
+     bottom is the ledger swarm keeps on disk. All three are driven by the
+     same run data the panels are. -->
 
-<header class="nav" id="nav">
-  <div class="nav-inner">
-    <a class="brand" href="#top" aria-label="swarm, home">
-      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-        <circle cx="16" cy="16" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/>
-        <circle cx="16" cy="16" r="2.6" fill="currentColor"/>
-      </svg>
-      <span>swarm</span>
-    </a>
-    <nav class="nav-links" aria-label="Primary">
-      <a href="#journey">The run</a>
-      <a href="#principles">Principles</a>
-      <a href="#craft">Craft</a>
-      <a href="https://github.com/SaarthurR/swarm">GitHub</a>
-    </nav>
-    <a class="btn btn-primary nav-cta" href="#install">Install</a>
+<header class="bar">
+  <div class="bar-id">
+    <svg class="bar-mark" viewBox="0 0 32 32" aria-hidden="true">
+      <g fill="currentColor"><circle cx="16" cy="7" r="2.4"/><circle cx="7" cy="21" r="2.4"/><circle cx="25" cy="21" r="2.4"/></g>
+      <g stroke="currentColor" stroke-width="1.4" fill="none" opacity=".5"><path d="M16 9.4 9 19M16 9.4 23 19M9.4 21h13.2"/></g>
+    </svg>
+    <span class="bar-name">swarm</span>
+    <span class="bar-demo" title="Nothing is executing in your browser. This is one recorded run, replayed by scroll.">sample run · replayed</span>
   </div>
+
+  <dl class="bar-fields">
+    <div class="f-run"><dt>run</dt><dd>7c2f19</dd></div>
+    <div><dt>phase</dt><dd id="fPhase">idle</dd></div>
+    <div class="f-agents"><dt>agents live</dt><dd id="fAgents">0</dd></div>
+    <div><dt>elapsed</dt><dd id="fElapsed">00:00</dd></div>
+  </dl>
+
+  <a class="bar-repo" href="https://github.com/SaarthurR/swarm">SaarthurR/swarm</a>
 </header>
 
-<main id="top">
+<nav class="rail" aria-label="Run phases">
+  <ol class="rail-list" id="railList">
+    <li><a href="#a-dispatch"><i aria-hidden="true"></i>dispatch</a></li>
+    <li><a href="#a-ingest"><i aria-hidden="true"></i>ingest</a></li>
+    <li><a href="#a-map"><i aria-hidden="true"></i>map</a></li>
+    <li><a href="#a-diagnose"><i aria-hidden="true"></i>diagnose</a></li>
+    <li><a href="#a-refute"><i aria-hidden="true"></i>cross-check</a></li>
+    <li><a href="#a-fix"><i aria-hidden="true"></i>fix</a></li>
+    <li><a href="#a-verify"><i aria-hidden="true"></i>verify</a></li>
+    <li><a href="#a-ship"><i aria-hidden="true"></i>ship</a></li>
+    <li><a href="#a-run"><i aria-hidden="true"></i>your run</a></li>
+  </ol>
+</nav>
 
-  <!-- ── hero ───────────────────────────────────────────────── -->
-  <section class="hero">
-    <canvas class="swarm-canvas" id="swarm" aria-hidden="true"></canvas>
-    <div class="hero-veil" aria-hidden="true"></div>
+<!-- the ledger swarm writes to .swarm/ledger.md. It is chrome because it
+     outlives every act, which is what makes the rewrite in act 5 visible
+     long after the line that caused it has scrolled away. -->
+<aside class="ledger" id="ledger" aria-live="polite">
+  <p class="ledger-h">.swarm/ledger.md</p>
+  <ol class="ledger-list" id="ledgerList"></ol>
+</aside>
 
-    <div class="wrap hero-inner">
-      <h1 class="display">One goal in.<br>A <em>verified</em> result out.</h1>
-      <p class="lede">A skill that runs a fleet of sub-agents across your codebase and does not stop until the work is proven.</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="#install">Install</a>
-        <a class="btn btn-ghost" href="https://github.com/SaarthurR/swarm">GitHub <span aria-hidden="true">→</span></a>
+<main>
+
+  <!-- ── 1 · dispatch · pin ─────────────────────────────────────────── -->
+  <section id="a-dispatch" class="act" data-run="dispatch" data-sc-act="pin" data-sc-span="2" data-sc-drift="#0B0C0B">
+    <div data-sc-stage class="stage stage-dispatch">
+      <div class="pane pane-goal">
+        <p class="k">goal</p>
+        <h1 class="goal">swarm: checkout drops orders under load. find out why, and fix it properly.</h1>
+        <p class="help"><b>swarm</b> is an agent skill for Claude Code and Cursor. It is an orchestrator: it reads almost no code itself, it runs sub-agents that do, and it keeps going until the work is verified. One goal in, a proven result out.</p>
+        <ul class="log">
+          <li data-at="0.04">read <code>.swarm/learnings.md</code> · 11 facts from the last run on this repo</li>
+          <li data-at="0.09">opened <code>.swarm/ledger.md</code> · run 7c2f19</li>
+          <li data-at="0.14">planned 9 sub-agents · dispatching in parallel</li>
+        </ul>
+      </div>
+
+      <div class="pane pane-roster">
+        <div class="pane-head"><p class="k">fleet</p><p class="k k-r"><span id="rosterN">0</span> of 9 live</p></div>
+        <ul class="roster" id="roster">
+          <li data-at="0.20"><span class="ro-role">recon</span><span class="ro-task">auth &amp; session</span><span class="ro-tier">fast</span></li>
+          <li data-at="0.23"><span class="ro-role">recon</span><span class="ro-task">checkout path</span><span class="ro-tier">fast</span></li>
+          <li data-at="0.26"><span class="ro-role">recon</span><span class="ro-task">job queue</span><span class="ro-tier">fast</span></li>
+          <li data-at="0.29"><span class="ro-role">recon</span><span class="ro-task">data layer</span><span class="ro-tier">fast</span></li>
+          <li data-at="0.32"><span class="ro-role">ingest</span><span class="ro-task">supabase schema</span><span class="ro-tier">cheap</span></li>
+          <li data-at="0.35"><span class="ro-role">ingest</span><span class="ro-task">vercel deploys</span><span class="ro-tier">cheap</span></li>
+          <li data-at="0.38"><span class="ro-role">ingest</span><span class="ro-task">runtime logs</span><span class="ro-tier">cheap</span></li>
+          <li data-at="0.41"><span class="ro-role">ingest</span><span class="ro-task">the reported thread</span><span class="ro-tier">cheap</span></li>
+          <li data-at="0.44"><span class="ro-role">synth</span><span class="ro-task">consolidate the maps</span><span class="ro-tier">thinking</span></li>
+        </ul>
+        <p class="pane-foot" data-at="0.5">Nine fresh contexts. None of them inherits this conversation, so none of them inherits its assumptions.</p>
       </div>
     </div>
   </section>
 
-  <!-- ── the run: a corridor of stations you fly through ────── -->
-  <section class="journey" id="journey">
-    <div class="journey-stage">
-
-      <div class="corridor" aria-hidden="true">
-        <div class="lane" id="lane">
-          <div class="motes" id="motes"></div>
-
-          <i class="ring" style="--i:0"></i>
-          <i class="ring" style="--i:1"></i>
-          <i class="ring" style="--i:2"></i>
-          <i class="ring" style="--i:3"></i>
-          <i class="ring" style="--i:4"></i>
-          <i class="ring" style="--i:5"></i>
-          <i class="ring" style="--i:6"></i>
-          <i class="ring" style="--i:7"></i>
-
-          <article class="station" style="--i:0">
-            <div class="station-inner">
-              <div class="station-card">
-                <span class="station-n">ingest</span>
-                <h3>Ingest the world this code lives in</h3>
-                <p>Prior learnings for this repo, then live state from every connected tool: schema, advisors, deploys, logs, the thread where it was reported.</p>
-              </div>
-              <div class="station-art">
-                <svg viewBox="0 0 320 220" class="sa">
-                  <g class="sa-wire">
-                    <path pathLength="1" d="M126 36 C 190 36, 200 92, 236 108"/>
-                    <path pathLength="1" d="M126 74 C 186 74, 198 98, 236 108"/>
-                    <path pathLength="1" d="M126 112 L 236 110"/>
-                    <path pathLength="1" d="M126 150 C 186 150, 198 122, 236 112"/>
-                    <path pathLength="1" d="M126 188 C 190 188, 200 128, 236 114"/>
-                  </g>
-                  <g class="sa-box">
-                    <rect x="14" y="24" width="112" height="24" rx="7"/>
-                    <rect x="14" y="62" width="112" height="24" rx="7"/>
-                    <rect x="14" y="100" width="112" height="24" rx="7"/>
-                    <rect x="14" y="138" width="112" height="24" rx="7"/>
-                    <rect x="14" y="176" width="112" height="24" rx="7"/>
-                  </g>
-                  <g class="sa-label">
-                    <text x="26" y="40">learnings</text>
-                    <text x="26" y="78">schema</text>
-                    <text x="26" y="116">deploys</text>
-                    <text x="26" y="154">logs</text>
-                    <text x="26" y="192">the thread</text>
-                  </g>
-                  <circle class="sa-core" cx="254" cy="110" r="19"/>
-                  <circle class="sa-dot" cx="254" cy="110" r="4.5"/>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <article class="station" style="--i:1">
-            <div class="station-inner">
-              <div class="station-card">
-                <span class="station-n">map</span>
-                <h3>Map the territory before touching it</h3>
-                <p>One agent per area writes a structured map. A synthesis agent ranks the problems and returns the dependency graph of the work.</p>
-              </div>
-              <div class="station-art">
-                <svg viewBox="0 0 320 220" class="sa">
-                  <g class="sa-wire">
-                    <path pathLength="1" d="M62 110 C 118 110, 128 34, 186 34"/>
-                    <path pathLength="1" d="M62 110 C 118 110, 128 72, 186 72"/>
-                    <path pathLength="1" d="M62 110 L 186 110"/>
-                    <path pathLength="1" d="M62 110 C 118 110, 128 148, 186 148"/>
-                    <path pathLength="1" d="M62 110 C 118 110, 128 186, 186 186"/>
-                  </g>
-                  <g class="sa-box">
-                    <rect x="186" y="22" width="120" height="24" rx="7"/>
-                    <rect x="186" y="60" width="120" height="24" rx="7"/>
-                    <rect x="186" y="98" width="120" height="24" rx="7"/>
-                    <rect x="186" y="136" width="120" height="24" rx="7"/>
-                    <rect x="186" y="174" width="120" height="24" rx="7"/>
-                  </g>
-                  <g class="sa-label">
-                    <text x="198" y="38">auth</text>
-                    <text x="198" y="76">checkout</text>
-                    <text x="198" y="114">jobs</text>
-                    <text x="198" y="152">data layer</text>
-                    <text x="198" y="190">build</text>
-                  </g>
-                  <circle class="sa-core" cx="42" cy="110" r="19"/>
-                  <circle class="sa-dot" cx="42" cy="110" r="4.5"/>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <article class="station" style="--i:2">
-            <div class="station-inner">
-              <div class="station-card">
-                <span class="station-n">diagnose</span>
-                <h3>Find the cause, then try to break it</h3>
-                <p>An investigator returns the exact failing path. A separate agent gets that conclusion as a hypothesis to disprove.</p>
-              </div>
-              <div class="station-art">
-                <svg viewBox="0 0 320 220" class="sa">
-                  <g class="sa-wire">
-                    <path pathLength="1" d="M34 52 L 104 96"/>
-                    <path pathLength="1" d="M104 96 L 158 58"/>
-                    <path pathLength="1" d="M158 58 L 212 124"/>
-                    <path pathLength="1" d="M212 124 L 268 168"/>
-                  </g>
-                  <g class="sa-wire sa-wire-faint">
-                    <path pathLength="1" d="M34 52 L 92 168"/>
-                    <path pathLength="1" d="M158 58 L 96 176"/>
-                    <path pathLength="1" d="M212 124 L 262 62"/>
-                  </g>
-                  <g class="sa-node">
-                    <circle cx="34" cy="52" r="6"/>
-                    <circle cx="104" cy="96" r="6"/>
-                    <circle cx="158" cy="58" r="6"/>
-                    <circle cx="212" cy="124" r="6"/>
-                    <circle cx="92" cy="168" r="5" class="sa-node-off"/>
-                    <circle cx="96" cy="176" r="5" class="sa-node-off"/>
-                    <circle cx="262" cy="62" r="5" class="sa-node-off"/>
-                  </g>
-                  <circle class="sa-fault" cx="268" cy="168" r="13"/>
-                  <circle class="sa-dot" cx="268" cy="168" r="5.5"/>
-                  <text class="sa-label sa-label-end" x="248" y="200">root cause</text>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <article class="station" style="--i:3">
-            <div class="station-inner">
-              <div class="station-card">
-                <span class="station-n">debate</span>
-                <h3>Argue about the fix before writing it</h3>
-                <p>Two independent critics look for the smaller fix, the sibling caller it breaks, the symptom it only papers over.</p>
-              </div>
-              <div class="station-art">
-                <svg viewBox="0 0 320 220" class="sa">
-                  <g class="sa-wire">
-                    <path pathLength="1" d="M56 48 C 96 48, 108 88, 118 104"/>
-                    <path pathLength="1" d="M264 172 C 224 172, 212 132, 202 116"/>
-                  </g>
-                  <rect class="sa-claim" x="106" y="88" width="108" height="44" rx="10"/>
-                  <text class="sa-label sa-label-mid" x="160" y="115">proposed fix</text>
-                  <circle class="sa-core" cx="46" cy="48" r="16"/>
-                  <text class="sa-label sa-label-mid" x="46" y="20">critic A</text>
-                  <circle class="sa-core" cx="274" cy="172" r="16"/>
-                  <text class="sa-label sa-label-mid" x="274" y="206">critic B</text>
-                  <g class="sa-ask">
-                    <text x="14" y="150">smaller fix?</text>
-                    <text x="182" y="66">breaks a sibling?</text>
-                  </g>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <article class="station" style="--i:4">
-            <div class="station-inner">
-              <div class="station-card">
-                <span class="station-n">fix</span>
-                <h3>Fix in parallel, isolated</h3>
-                <p>Each unit runs in its own git worktree and branch. The smallest change that actually holds, with a runnable check behind it.</p>
-              </div>
-              <div class="station-art">
-                <svg viewBox="0 0 320 220" class="sa">
-                  <line class="sa-trunk" x1="16" y1="192" x2="304" y2="192"/>
-                  <text class="sa-label" x="16" y="212">main</text>
-                  <g class="sa-wire">
-                    <path pathLength="1" d="M62 192 C 92 192, 92 140, 122 140 L 286 140"/>
-                    <path pathLength="1" d="M90 192 C 120 192, 120 90, 150 90 L 286 90"/>
-                    <path pathLength="1" d="M118 192 C 148 192, 148 40, 178 40 L 286 40"/>
-                  </g>
-                  <g class="sa-node">
-                    <circle cx="186" cy="140" r="5"/><circle cx="236" cy="140" r="5"/>
-                    <circle cx="206" cy="90" r="5"/><circle cx="252" cy="90" r="5"/>
-                    <circle cx="222" cy="40" r="5"/>
-                  </g>
-                  <g class="sa-label">
-                    <text x="122" y="130">worktree A</text>
-                    <text x="150" y="80">worktree B</text>
-                    <text x="178" y="30">worktree C</text>
-                  </g>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <article class="station" style="--i:5">
-            <div class="station-inner">
-              <div class="station-card">
-                <span class="station-n">review</span>
-                <h3>Review the diff, not the status line</h3>
-                <p>A reviewer that did not write the code reads the diff for correctness, root cause versus symptom, and broken siblings.</p>
-              </div>
-              <div class="station-art">
-                <svg viewBox="0 0 320 220" class="sa">
-                  <rect class="sa-sheet" x="14" y="18" width="196" height="184" rx="10"/>
-                  <g class="sa-bar">
-                    <rect x="32" y="38" width="132" height="8" rx="4"/>
-                    <rect x="32" y="60" width="98" height="8" rx="4"/>
-                    <rect x="32" y="82" width="150" height="8" rx="4" class="sa-bar-hit"/>
-                    <rect x="32" y="104" width="112" height="8" rx="4"/>
-                    <rect x="32" y="126" width="140" height="8" rx="4"/>
-                    <rect x="32" y="148" width="86" height="8" rx="4" class="sa-bar-hit"/>
-                    <rect x="32" y="170" width="124" height="8" rx="4"/>
-                  </g>
-                  <rect class="sa-scan" x="14" y="18" width="196" height="3" rx="2"/>
-                  <g class="sa-wire">
-                    <path pathLength="1" d="M210 110 L 250 110"/>
-                  </g>
-                  <circle class="sa-core" cx="272" cy="110" r="19"/>
-                  <circle class="sa-dot" cx="272" cy="110" r="4.5"/>
-                  <text class="sa-label sa-label-mid" x="272" y="150">did not</text>
-                  <text class="sa-label sa-label-mid" x="272" y="164">write it</text>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <article class="station" style="--i:6">
-            <div class="station-inner">
-              <div class="station-card">
-                <span class="station-n">verify</span>
-                <h3>Prove it, then go looking again</h3>
-                <p>Fresh build, tests, types, lint. Then new agents sweep for what the fixes exposed. Anything found reopens diagnosis.</p>
-              </div>
-              <div class="station-art">
-                <svg viewBox="0 0 320 220" class="sa">
-                  <g class="sa-check">
-                    <rect x="14" y="24" width="230" height="26" rx="8"/>
-                    <rect x="14" y="60" width="230" height="26" rx="8"/>
-                    <rect x="14" y="96" width="230" height="26" rx="8"/>
-                    <rect x="14" y="132" width="230" height="26" rx="8"/>
-                  </g>
-                  <g class="sa-label">
-                    <text x="28" y="41">build</text>
-                    <text x="28" y="77">tests</text>
-                    <text x="28" y="113">types</text>
-                    <text x="28" y="149">lint</text>
-                  </g>
-                  <g class="sa-tick">
-                    <path pathLength="1" d="M212 37 l 6 6 l 12 -13"/>
-                    <path pathLength="1" d="M212 73 l 6 6 l 12 -13"/>
-                    <path pathLength="1" d="M212 109 l 6 6 l 12 -13"/>
-                    <path pathLength="1" d="M212 145 l 6 6 l 12 -13"/>
-                  </g>
-                  <g class="sa-wire">
-                    <path pathLength="1" d="M270 30 C 300 30, 300 190, 150 190 L 40 190"/>
-                  </g>
-                  <path class="sa-arrow" d="M52 184 L 38 190 L 52 196"/>
-                  <text class="sa-label" x="70" y="208">then sweep again</text>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <article class="station" style="--i:7">
-            <div class="station-inner">
-              <div class="station-card">
-                <span class="station-n">ship</span>
-                <h3>Check the world moved, then ship</h3>
-                <p>Diff against latest main, compare against every open PR for collisions, run the safety scan, open the pull request with the evidence.</p>
-              </div>
-              <div class="station-art">
-                <svg viewBox="0 0 320 220" class="sa">
-                  <g class="sa-wire">
-                    <path pathLength="1" d="M20 44 L 108 44 C 148 44, 148 110, 188 110"/>
-                    <path pathLength="1" d="M20 110 L 188 110"/>
-                    <path pathLength="1" d="M20 176 L 108 176 C 148 176, 148 110, 188 110"/>
-                  </g>
-                  <g class="sa-node">
-                    <circle cx="20" cy="44" r="5"/>
-                    <circle cx="20" cy="110" r="5"/>
-                    <circle cx="20" cy="176" r="5"/>
-                  </g>
-                  <rect class="sa-claim" x="190" y="86" width="116" height="48" rx="10"/>
-                  <text class="sa-label sa-label-mid" x="248" y="107">pull request</text>
-                  <text class="sa-label sa-label-mid sa-label-soft" x="248" y="122">with the evidence</text>
-                  <text class="sa-label" x="20" y="26">no collisions</text>
-                  <text class="sa-label" x="20" y="204">safety scan clear</text>
-                </svg>
-              </div>
-            </div>
-          </article>
-        </div>
+  <!-- ── 2 · ingest · flow ──────────────────────────────────────────── -->
+  <section id="a-ingest" class="sc-section flow" data-run="ingest" data-sc-act="flow">
+    <div class="sc-wrap ingest-wrap">
+      <div class="ingest-copy" data-sc-in data-sc-stagger="60">
+        <h2 class="h2">It reads the world before it touches the code.</h2>
+        <p class="sc-body">Every tool you have connected is an instruction to go and look, not a passing mention. Each source goes to its own sub-agent, which writes a brief to a file and returns the path. The orchestrator holds paths, never payloads.</p>
       </div>
-
-
-      <div class="journey-hud">
-        <p class="hud-note">It leaves when a verification pass is all green and a fresh sweep finds nothing, in the same round.</p>
-        <div class="hud-rail" id="hudRail" aria-hidden="true">
-          <i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i>
-          <i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i>
-        </div>
-        <p class="hud-step" id="hudNow">ingest</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── the thesis ─────────────────────────────────────────── -->
-  <section class="section statement" data-waypoint>
-    <div class="wrap">
-      <p class="statement-line reveal">The strongest thing you can do is give an agent a way to <em>review its work</em>.</p>
-      <p class="statement-tail reveal" style="--i:1">That is what swarm is.</p>
-    </div>
-  </section>
-
-  <!-- ── principles ─────────────────────────────────────────── -->
-  <section class="section" id="principles" data-waypoint>
-    <div class="wrap">
-      <h2 class="h2 reveal">Two things kill a long autonomous run. <br class="br-lg">Both are designed out.</h2>
-
-      <div class="pair">
-        <article class="card tilt reveal" style="--i:0">
-          <div class="card-body">
-            <h3>The orchestrator holds paths, not payloads</h3>
-            <p>Sub-agents do the reading and hand back a finding plus a path to the evidence. Bulk never crosses back.</p>
-          </div>
-
-          <dl class="figures" aria-hidden="true">
-            <div class="figure">
-              <dt>Orchestrator context</dt>
-              <dd><span class="figure-n" data-count="12" data-suffix="%">0%</span></dd>
-            </div>
-            <div class="figure">
-              <dt>Read by its sub-agents</dt>
-              <dd><span class="figure-n" data-count="18400">0</span><i>lines</i></dd>
-            </div>
-          </dl>
-          <p class="card-foot">Sample recon round. What crosses back: three lines and a file path.</p>
-        </article>
-
-        <article class="card tilt reveal" style="--i:1">
-          <div class="card-body">
-            <h3>No claim survives on one agent's word</h3>
-            <p>Every root cause, fix and assumption goes to a second agent with fresh context, framed as something to disprove.</p>
-          </div>
-
-          <div class="proof" aria-hidden="true">
-            <p class="proof-claim">“nothing else calls this”</p>
-            <div class="proof-link"><i></i><span>handed to an independent agent</span></div>
-            <p class="proof-verdict"><b>confirmed</b><s>refuted</s></p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── craft ──────────────────────────────────────────────── -->
-  <section class="section" id="craft" data-waypoint>
-    <div class="wrap">
-      <h2 class="h2 reveal">Built for runs that last hours.</h2>
-
-      <div class="bento">
-        <article class="tile tile-wide tilt reveal" style="--i:0">
-          <div class="tile-copy">
-            <h3>Isolated while working. Stacked when shipping.</h3>
-            <p>Concurrent fixers never share a working tree. Ordered chains open as a stack, so every pull request shows only its own change.</p>
-          </div>
-
-          <svg class="branch-art" viewBox="0 0 580 232" aria-hidden="true"
-               font-family="'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace">
-            <line x1="14" y1="200" x2="566" y2="200" stroke="#CECAC8" stroke-width="1.6"/>
-            <text x="14" y="222" fill="#797776" font-size="11">MAIN</text>
-
-            <!-- branchB, independent -->
-            <path d="M56 200 C 84 200, 84 52, 112 52 L 352 52" fill="none" stroke="#CECAC8" stroke-width="1.6"/>
-            <text x="112" y="38" fill="#797776" font-size="11">WORKTREE B</text>
-            <circle cx="212" cy="52" r="4" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
-            <circle cx="292" cy="52" r="4" fill="#F6F3F1" stroke="#CECAC8" stroke-width="1.6"/>
-            <rect x="366" y="32" width="200" height="40" rx="20" fill="#F6F3F1" stroke="#CECAC8"/>
-            <text x="386" y="57" fill="#242424" font-size="11.5">PR 2 TO MAIN</text>
-
-            <!-- branchC, stacked on A -->
-            <path d="M244 148 C 272 148, 272 100, 300 100 L 352 100" fill="none" stroke="#A0B5EB" stroke-width="1.6"/>
-            <text x="258" y="86" fill="#4E4D4D" font-size="11">WORKTREE C</text>
-            <circle cx="330" cy="100" r="4" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
-            <rect x="366" y="80" width="200" height="46" rx="23" fill="#CFDAF5" stroke="#A0B5EB"/>
-            <text x="386" y="100" fill="#242424" font-size="11.5">PR 3 TO BRANCHA</text>
-            <text x="386" y="116" fill="#4E4D4D" font-size="10">STACKED, LANDS AFTER PR 1</text>
-
-            <!-- branchA, independent -->
-            <path d="M104 200 C 132 200, 132 148, 160 148 L 352 148" fill="none" stroke="#A0B5EB" stroke-width="1.6"/>
-            <text x="160" y="176" fill="#4E4D4D" font-size="11">WORKTREE A</text>
-            <circle cx="196" cy="148" r="4" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
-            <circle cx="244" cy="148" r="5.5" fill="#A0B5EB" stroke="#A0B5EB" stroke-width="1.6"/>
-            <circle cx="312" cy="148" r="4" fill="#F6F3F1" stroke="#A0B5EB" stroke-width="1.6"/>
-            <rect x="366" y="128" width="200" height="40" rx="20" fill="#F6F3F1" stroke="#CECAC8"/>
-            <text x="386" y="153" fill="#242424" font-size="11.5">PR 1 TO MAIN</text>
-          </svg>
-        </article>
-
-        <article class="tile tile-tinted tilt reveal" style="--i:1">
-          <h3>Standing safety orders</h3>
-          <ul class="ticks">
-            <li>Never force-push, never push to main, never merge</li>
-            <li>No destructive shell without a human gate</li>
-            <li>No secrets in commits, logs or returns</li>
-            <li>Anything that could cost money stops and asks</li>
-          </ul>
-        </article>
-
-        <article class="tile tile-chips tilt reveal" style="--i:2">
-          <h3>Survives compaction</h3>
-          <p>Durable state at the repo root, so a restart resumes instead of redoing finished work.</p>
-          <ul class="chips">
-            <li>ledger.md</li>
-            <li>learnings.md</li>
-            <li>events.jsonl</li>
-          </ul>
-        </article>
-
-        <article class="tile tile-last tilt reveal" style="--i:3">
-          <h3>Right model, right job</h3>
-          <dl class="tiers">
-            <div><dt>Mechanical lookups</dt><dd>cheapest tier</dd></div>
-            <div><dt>Implementation</dt><dd>fast tier</dd></div>
-            <div><dt>Design, review, verification</dt><dd>highest thinking</dd></div>
-          </dl>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── install ────────────────────────────────────────────── -->
-  <section class="section section-install" id="install" data-waypoint>
-    <div class="wrap install-wrap">
-      <p class="eyebrow reveal">Install</p>
-      <h2 class="h2 reveal" style="--i:1">Clone it into your skills directory.</h2>
-
-      <div class="code reveal" style="--i:2">
-        <div class="code-head">
-          <span>Cursor or Claude Code</span>
-          <button class="copy" type="button" data-copy="git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm&#10;ln -s ~/skills/swarm ~/.cursor/skills/swarm&#10;ln -s ~/skills/swarm ~/.claude/skills/swarm">Copy</button>
-        </div>
-        <pre><code><span class="c"># clone once, symlink to both hosts</span>
-git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm
-ln -s ~/skills/swarm ~/.cursor/skills/swarm
-ln -s ~/skills/swarm ~/.claude/skills/swarm</code></pre>
-      </div>
-
-      <p class="install-note reveal" style="--i:3">Then hand over the goal:</p>
-      <ul class="prompts reveal" style="--i:4">
-        <li>swarm, checkout drops orders under load. Find out why and fix it properly.</li>
-        <li>swarm this repo: make it production ready before Friday.</li>
-        <li>swarm, audit the auth layer. Use the Supabase MCP for schema and advisors.</li>
+      <ul class="sources" data-sc-in data-sc-stagger="50">
+        <li><span class="src-n">supabase</span><span class="src-w">tables, advisors, slow queries</span></li>
+        <li><span class="src-n">vercel</span><span class="src-w">env, last deploys, runtime errors</span></li>
+        <li><span class="src-n">render</span><span class="src-w">services, workers, queues</span></li>
+        <li><span class="src-n">slack</span><span class="src-w">the thread where it was reported</span></li>
+        <li><span class="src-n">docs</span><span class="src-w">the real API, not the remembered one</span></li>
+        <li><span class="src-n">.swarm/</span><span class="src-w">what the last run on this repo learned</span></li>
       </ul>
+    </div>
+  </section>
+
+  <!-- ── 3 · map · pin + reveal ─────────────────────────────────────── -->
+  <section id="a-map" class="act" data-run="map" data-sc-act="pin" data-sc-span="1.8" data-sc-drift="#0E100E">
+    <div data-sc-stage class="stage stage-map">
+      <div class="pane pane-files">
+        <div class="pane-head"><p class="k">areas mapped</p><p class="k k-r"><span id="mapN">0</span> of 6</p></div>
+        <ul class="files" id="files">
+          <li data-at="0.10"><span>app/checkout/</span><span class="fi-w">order write path</span></li>
+          <li data-at="0.16"><span>lib/db/pool.ts</span><span class="fi-w">connection pool</span></li>
+          <li data-at="0.22"><span>lib/queue/</span><span class="fi-w">retry and backoff</span></li>
+          <li data-at="0.28"><span>app/api/webhook/</span><span class="fi-w">payment callback</span></li>
+          <li data-at="0.34" class="fi-hub"><span>lib/types/index.ts</span><span class="fi-w">shared hub</span></li>
+          <li data-at="0.40" class="fi-hub"><span>db/migrations/</span><span class="fi-w">shared hub</span></li>
+        </ul>
+        <p class="hubnote" data-at="0.46">Two files every feature converges on. A hub gets <b>one owner</b> for the whole run, or it gets serialized. Two parallel fixers editing a hub is a silent overwrite, not a merge conflict.</p>
+      </div>
+
+      <figure class="pane pane-dag">
+        <p class="k">dependency map of the work</p>
+        <svg viewBox="0 0 340 250" class="dag" aria-label="Four work units. Two are independent, two are ordered behind them.">
+          <g class="dag-edge">
+            <path pathLength="1" d="M62 60 L 148 60"/>
+            <path pathLength="1" d="M62 122 L 148 122"/>
+            <path pathLength="1" d="M62 122 C 110 122, 110 186, 148 186"/>
+            <path pathLength="1" d="M234 60 C 268 60, 268 122, 234 122"/>
+          </g>
+          <g class="dag-node">
+            <rect x="10" y="42" width="52" height="36" rx="6"/>
+            <rect x="10" y="104" width="52" height="36" rx="6"/>
+            <rect x="148" y="42" width="86" height="36" rx="6"/>
+            <rect x="148" y="104" width="86" height="36" rx="6"/>
+            <rect x="148" y="168" width="86" height="36" rx="6"/>
+          </g>
+          <g class="dag-t">
+            <text x="36" y="64">goal</text>
+            <text x="36" y="126">recon</text>
+            <text x="191" y="64">unit A</text>
+            <text x="191" y="126">unit B</text>
+            <text x="191" y="188">unit C</text>
+          </g>
+          <g class="dag-s">
+            <text x="191" y="78">pool sizing</text>
+            <text x="191" y="140">after A</text>
+            <text x="191" y="202">independent</text>
+          </g>
+        </svg>
+        <figcaption class="dag-cap" data-at="0.55">Independent units run at the same time. Ordered ones wait. This graph also decides how the pull requests are stacked at the end.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ── 4 · diagnose · flow + reveal. The quietest act on the page, on
+         purpose: it is the calm the next one breaks. ─────────────────── -->
+  <section id="a-diagnose" class="sc-section flow diag" data-run="diagnose" data-sc-act="flow">
+    <div class="sc-wrap">
+      <p class="k" data-sc-in>investigator · fresh context · returned in 4m 11s</p>
+      <h2 class="h2 diag-h" data-sc-in>It comes back with a cause, and the exact path that proves it.</h2>
+
+      <ol class="trace" data-sc-in data-sc-stagger="70">
+        <li><span class="tr-f">app/checkout/submit.ts:88</span><span>opens a transaction per line item</span></li>
+        <li><span class="tr-f">lib/db/pool.ts:112</span><span>pool max is 10, no queue timeout</span></li>
+        <li><span class="tr-f">lib/queue/retry.ts:31</span><span>failed writes retry immediately, three times</span></li>
+        <li><span class="tr-f">vercel · runtime</span><span>1 in 40 requests times out above 60 rps</span></li>
+      </ol>
+
+      <div class="claim" id="claim0" data-sc-reveal="up" data-sc-reveal-at="0.1 0.45">
+        <p class="k">root cause · <span class="claim-state">unverified</span></p>
+        <p class="claim-t">The connection pool is exhausted under load, so checkout writes queue forever and the request times out.</p>
+        <p class="claim-f">One agent's confident answer is a hypothesis, not a fact. It does not graduate until a different agent has tried to kill it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5 · cross-check · pin · THE PEAK ───────────────────────────── -->
+  <section id="a-refute" class="act peak" data-run="refute" data-sc-act="pin" data-sc-span="3.4" data-sc-drift="#0B0C0B">
+    <div data-sc-stage class="stage stage-refute">
+
+      <div class="pane pane-claim">
+        <h2 class="k">the claim on trial</h2>
+        <p class="tried" id="tried">The connection pool is exhausted under load.</p>
+        <p class="k k-dim">handed to an agent that did not write it, framed as something to disprove</p>
+        <button class="challenge" type="button" id="challenge">Run the cross-check again</button>
+      </div>
+
+      <div class="pane pane-verify" id="verifyPane">
+        <div class="pane-head"><p class="k">verifier · fresh context</p><p class="k k-r" id="vState">idle</p></div>
+        <ul class="vlog" id="vlog">
+          <li data-at="0.10">reads the same evidence file, not the conclusion</li>
+          <li data-at="0.20">reproduces the timeout at 60 rps · confirmed</li>
+          <li data-at="0.30">raises pool max to 40 · <b>timeout persists</b></li>
+          <li data-at="0.40">pool never exceeds 6 of 10 in the failing window</li>
+          <li data-at="0.50">the retry loop re-enters before the first write commits</li>
+        </ul>
+        <p class="verdict" id="verdict" data-at="0.58">refuted</p>
+        <p class="vnote" data-at="0.64">The pool was a symptom. The cause is one directory over, in the retry that fires before the write it is retrying has finished.</p>
+      </div>
+
+      <div class="pane pane-rewind" data-at="0.74">
+        <p class="k">run state</p>
+        <p class="rewind-t">Fix cancelled. Phase stepped back to <b>diagnose</b>. The ledger line is struck, not deleted, so the next run can see what was already ruled out.</p>
+        <p class="rewind-f">This is the whole point of the skill. An answer that nothing argued with is not an answer yet.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 6 · fix · pan ──────────────────────────────────────────────── -->
+  <section id="a-fix" class="act" data-run="fix" data-sc-act="pan" data-sc-span="2.6" data-sc-drift="#0E100E">
+    <div data-sc-stage class="stage stage-fix">
+      <div class="rail-h" data-sc-pan="0.04">
+        <div class="wt-lead">
+          <h2 class="h2">Fixers work in their own worktree, or they do not work.</h2>
+          <p class="sc-body">Every fixer declares the files it intends to touch before it is allowed to write. Two overlapping declarations is a refusal at dispatch, not a lost commit on Thursday.</p>
+        </div>
+
+        <article class="wt" data-sc-tilt="4">
+          <p class="wt-k">unit A · running</p>
+          <h3>Commit before retry</h3>
+          <p class="wt-b">The real fix, from the cross-check. One await, in the shared retry path, where every caller routes through.</p>
+          <ul class="wt-files"><li>lib/queue/retry.ts</li><li>lib/queue/retry.test.ts</li></ul>
+          <p class="wt-br">worktree/a · branch fix/retry-order</p>
+        </article>
+
+        <article class="wt" data-sc-tilt="4">
+          <p class="wt-k">unit B · running</p>
+          <h3>Queue timeout on the pool</h3>
+          <p class="wt-b">Not the cause, still a real bug: a checkout waiting on a connection waits forever instead of failing loudly.</p>
+          <ul class="wt-files"><li>lib/db/pool.ts</li></ul>
+          <p class="wt-br">worktree/b · branch fix/pool-timeout</p>
+        </article>
+
+        <article class="wt wt-refused" data-sc-tilt="4">
+          <p class="wt-k">unit C · refused</p>
+          <h3>Dispatch blocked</h3>
+          <p class="wt-b">Declared <code>lib/types/index.ts</code>, which unit A already owns this round. A shared hub takes one owner. Unit C is serialized behind A instead of running beside it.</p>
+          <ul class="wt-files"><li class="cl">lib/types/index.ts</li><li>app/checkout/submit.ts</li></ul>
+          <p class="wt-br">queued · dispatches when A integrates</p>
+        </article>
+
+        <article class="wt" data-sc-tilt="4">
+          <p class="wt-k">standing orders</p>
+          <h3>What a fixer may never do</h3>
+          <ul class="orders">
+            <li>force-push, push to main, or merge</li>
+            <li>run a destructive command without a human gate</li>
+            <li>put a secret in a commit, a log, or a return</li>
+            <li>spend money without stopping to ask</li>
+          </ul>
+          <p class="wt-br">references/safety.md</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7 · verify · pin ───────────────────────────────────────────── -->
+  <section id="a-verify" class="act" data-run="verify" data-sc-act="pin" data-sc-span="2" data-sc-drift="#0B0C0B">
+    <div data-sc-stage class="stage stage-verify">
+      <div class="pane pane-checks">
+        <div class="pane-head"><p class="k">fresh output, re-run · not a cached log</p><p class="k k-r"><span id="checkN">0</span> of 6</p></div>
+        <ul class="checks" id="checks">
+          <li data-at="0.08"><span>pnpm build</span><span class="ck">pass</span></li>
+          <li data-at="0.14"><span>pnpm test</span><span class="ck">pass</span></li>
+          <li data-at="0.20"><span>tsc --noEmit</span><span class="ck">pass</span></li>
+          <li data-at="0.26"><span>eslint .</span><span class="ck">pass</span></li>
+          <li data-at="0.32"><span>load test · 60 rps</span><span class="ck">pass</span></li>
+          <li data-at="0.38"><span>reviewer · read the diff, not the status line</span><span class="ck">pass</span></li>
+        </ul>
+      </div>
+
+      <div class="pane pane-sweep">
+        <p class="k">then it goes looking again</p>
+        <p class="sweep-t" data-at="0.48">New agents, new context, hunting what the fixes just exposed.</p>
+        <ul class="sweep" id="sweep">
+          <li data-at="0.56">siblings of the changed function · clean</li>
+          <li data-at="0.64">callers of the retry path · clean</li>
+          <li data-at="0.72">edges the load test did not reach · clean</li>
+        </ul>
+        <p class="exit" data-at="0.82">It leaves only when the checks are green <b>and</b> a fresh sweep finds nothing, in the same round. Either one alone is not done.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 8 · ship · flow + reveal ───────────────────────────────────── -->
+  <section id="a-ship" class="sc-section flow ship" data-run="ship" data-sc-act="flow">
+    <div class="sc-wrap">
+      <h2 class="h2" data-sc-in>Dependent work ships as a stack, in merge order.</h2>
+      <p class="sc-body" data-sc-in>Before any of it opens, it diffs against the latest main and against every open pull request, hunting the conflicts that do not touch the same lines.</p>
+
+      <svg class="stack" viewBox="0 0 620 200" data-sc-reveal="left" data-sc-reveal-at="0.05 0.5" aria-label="Three pull requests. The first targets main, the second targets the first, the third targets the second.">
+        <line class="st-main" x1="14" y1="176" x2="606" y2="176"/>
+        <text class="st-t" x="14" y="194">main</text>
+        <path class="st-b" d="M70 176 C 110 176, 110 124, 150 124 L 380 124"/>
+        <path class="st-b" d="M210 124 C 250 124, 250 74, 290 74 L 380 74"/>
+        <path class="st-b" d="M330 74 C 370 74, 370 26, 410 26 L 440 26"/>
+        <g class="st-dot"><circle cx="210" cy="124" r="4"/><circle cx="330" cy="74" r="4"/></g>
+        <g class="st-box">
+          <rect x="386" y="106" width="190" height="36" rx="8"/>
+          <rect x="386" y="56" width="190" height="36" rx="8"/>
+          <rect x="446" y="8" width="130" height="36" rx="8"/>
+        </g>
+        <g class="st-t">
+          <text x="400" y="129">PR 1 · base main</text>
+          <text x="400" y="79">PR 2 · base PR 1</text>
+          <text x="460" y="31">PR 3 · base PR 2</text>
+        </g>
+      </svg>
+
+      <p class="ship-f" data-sc-in>Merge the bottom one and delete its branch. GitHub retargets the next. Merging is still yours, always.</p>
+    </div>
+  </section>
+
+  <!-- ── 9 · close · pin · an actual input ──────────────────────────── -->
+  <section id="a-run" class="act" data-run="close" data-sc-act="pin" data-sc-span="1.15" data-sc-drift="#0B0C0B">
+    <div data-sc-stage class="stage stage-close">
+      <div class="close-inner">
+        <p class="k" data-sc-cue="0 1 0 0">install</p>
+        <div class="code" data-sc-cue="0 1 0 0" data-sc-rise="0">
+          <pre><code><span class="cm"># clone once, link it into whichever host you use</span>
+git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm
+ln -s ~/skills/swarm ~/.claude/skills/swarm
+ln -s ~/skills/swarm ~/.cursor/skills/swarm</code></pre>
+          <button class="copy" type="button" id="copyBtn" data-copy="git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm&#10;ln -s ~/skills/swarm ~/.claude/skills/swarm&#10;ln -s ~/skills/swarm ~/.cursor/skills/swarm">Copy</button>
+        </div>
+
+        <form class="cmd" id="cmd" data-sc-cue="0 1 0 0" data-sc-rise="0">
+          <label class="cmd-l" for="goalIn">Then hand it a goal. Write yours here and it builds the line to paste.</label>
+          <div class="cmd-row">
+            <span class="cmd-p" aria-hidden="true">$</span>
+            <input class="cmd-in" id="goalIn" type="text" autocomplete="off" spellcheck="false"
+                   placeholder="swarm: make the billing service production ready">
+            <button class="cmd-go" type="submit">Build it</button>
+          </div>
+          <p class="cmd-out" id="cmdOut" role="status">Nothing runs in this browser. This composes the prompt you paste into Claude Code or Cursor.</p>
+        </form>
+      </div>
+
+      <footer class="foot">
+        <span>MIT licensed</span>
+        <a href="https://github.com/SaarthurR/swarm">github.com/SaarthurR/swarm</a>
+        <span>The run above is one recorded example, replayed by scroll.</span>
+      </footer>
     </div>
   </section>
 
 </main>
 
-<footer class="footer" data-waypoint>
-  <div class="wrap footer-inner">
-    <span>swarm</span>
-    <span>MIT licensed</span>
-    <a href="https://github.com/SaarthurR/swarm">github.com/SaarthurR/swarm</a>
-  </div>
-</footer>
-
-<script src="https://unpkg.com/lenis@1/dist/lenis.min.js"></script>
+<script src="scrollcraft.js"></script>
 <script src="main.js"></script>
 </body>
 </html>
