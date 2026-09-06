@@ -3,364 +3,201 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>swarm · a run you can watch</title>
-<meta name="description" content="swarm is an agent skill. You hand it one broad goal; it runs a fleet of sub-agents that explore, diagnose, fix, review and verify, and it does not stop until the result is proven. This page replays one run.">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#0B0C0B">
-<meta property="og:title" content="swarm · a run you can watch">
-<meta property="og:description" content="One goal in. A fleet of sub-agents that check each other. Scroll the run.">
+<title>swarm · one goal in, a verified result out</title>
+<meta name="description" content="swarm is an agent skill. It runs a fleet of sub-agents across your codebase and does not stop until the work is proven.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F6F3F1">
+<meta property="og:title" content="swarm · one goal in, a verified result out">
+<meta property="og:description" content="A fleet of sub-agents that argue with each other until the work is proven.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230B0C0B'/><g fill='%23F5A524'><circle cx='16' cy='7' r='2.4'/><circle cx='7' cy='21' r='2.4'/><circle cx='25' cy='21' r='2.4'/></g><g stroke='%23F5A524' stroke-width='1.4' fill='none' opacity='.55'><path d='M16 9.4 9 19M16 9.4 23 19M9.4 21h13.2'/></g></svg>">
-<link rel="preload" href="fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23F6F3F1'/><g fill='%232B59D1'><circle cx='16' cy='7' r='2.4'/><circle cx='7' cy='22' r='2.4'/><circle cx='25' cy='22' r='2.4'/></g><g stroke='%232B59D1' stroke-width='1.3' fill='none' opacity='.5'><path d='M16 9.4 8 20M16 9.4 24 20M9.4 22h13.2'/></g></svg>">
+<link rel="preload" href="fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="scrollcraft.css">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<a class="skip" href="#a-dispatch">Skip to the run</a>
+<a class="skip" href="#run">Skip to content</a>
 <span data-sc-progress></span>
-<div class="sc-grain" aria-hidden="true"></div>
 
-<!-- ══ app chrome ══════════════════════════════════════════════════════
-     This page is the surface, not a brochure for it. The bar is a status
-     readout, the rail is the run's own phase list, and the strip at the
-     bottom is the ledger swarm keeps on disk. All three are driven by the
-     same run data the panels are. -->
-
-<header class="bar">
-  <div class="bar-id">
-    <svg class="bar-mark" viewBox="0 0 32 32" aria-hidden="true">
-      <g fill="currentColor"><circle cx="16" cy="7" r="2.4"/><circle cx="7" cy="21" r="2.4"/><circle cx="25" cy="21" r="2.4"/></g>
-      <g stroke="currentColor" stroke-width="1.4" fill="none" opacity=".5"><path d="M16 9.4 9 19M16 9.4 23 19M9.4 21h13.2"/></g>
+<header class="nav">
+  <a class="brand" href="#top">
+    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+      <g fill="currentColor"><circle cx="16" cy="7" r="2.4"/><circle cx="7" cy="22" r="2.4"/><circle cx="25" cy="22" r="2.4"/></g>
+      <g stroke="currentColor" stroke-width="1.3" fill="none" opacity=".5"><path d="M16 9.4 8 20M16 9.4 24 20M9.4 22h13.2"/></g>
     </svg>
-    <span class="bar-name">swarm</span>
-    <span class="bar-demo" title="Nothing is executing in your browser. This is one recorded run, replayed by scroll.">sample run · replayed</span>
-  </div>
-
-  <dl class="bar-fields">
-    <div class="f-run"><dt>run</dt><dd>7c2f19</dd></div>
-    <div><dt>phase</dt><dd id="fPhase">idle</dd></div>
-    <div class="f-agents"><dt>agents live</dt><dd id="fAgents">0</dd></div>
-    <div><dt>elapsed</dt><dd id="fElapsed">00:00</dd></div>
-  </dl>
-
-  <a class="bar-repo" href="https://github.com/SaarthurR/swarm">SaarthurR/swarm</a>
+    <span>swarm</span>
+  </a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#run">The run</a>
+    <a href="https://github.com/SaarthurR/swarm">GitHub</a>
+  </nav>
+  <a class="btn btn-primary" href="#install">Install</a>
 </header>
 
-<nav class="rail" aria-label="Run phases">
-  <ol class="rail-list" id="railList">
-    <li><a href="#a-dispatch"><i aria-hidden="true"></i>dispatch</a></li>
-    <li><a href="#a-ingest"><i aria-hidden="true"></i>ingest</a></li>
-    <li><a href="#a-map"><i aria-hidden="true"></i>map</a></li>
-    <li><a href="#a-diagnose"><i aria-hidden="true"></i>diagnose</a></li>
-    <li><a href="#a-refute"><i aria-hidden="true"></i>cross-check</a></li>
-    <li><a href="#a-fix"><i aria-hidden="true"></i>fix</a></li>
-    <li><a href="#a-verify"><i aria-hidden="true"></i>verify</a></li>
-    <li><a href="#a-ship"><i aria-hidden="true"></i>ship</a></li>
-    <li><a href="#a-run"><i aria-hidden="true"></i>your run</a></li>
-  </ol>
-</nav>
+<main id="top">
 
-<!-- the ledger swarm writes to .swarm/ledger.md. It is chrome because it
-     outlives every act, which is what makes the rewrite in act 5 visible
-     long after the line that caused it has scrolled away. -->
-<aside class="ledger" id="ledger" aria-live="polite">
-  <p class="ledger-h">.swarm/ledger.md</p>
-  <ol class="ledger-list" id="ledgerList"></ol>
-</aside>
-
-<main>
-
-  <!-- ── 1 · dispatch · pin ─────────────────────────────────────────── -->
-  <section id="a-dispatch" class="act" data-run="dispatch" data-sc-act="pin" data-sc-span="2" data-sc-drift="#0B0C0B">
-    <div data-sc-stage class="stage stage-dispatch">
-      <div class="pane pane-goal">
-        <p class="k">goal</p>
-        <h1 class="goal">swarm: checkout drops orders under load. find out why, and fix it properly.</h1>
-        <p class="help"><b>swarm</b> is an agent skill for Claude Code and Cursor. It is an orchestrator: it reads almost no code itself, it runs sub-agents that do, and it keeps going until the work is verified. One goal in, a proven result out.</p>
-        <ul class="log">
-          <li data-at="0.04">read <code>.swarm/learnings.md</code> · 11 facts from the last run on this repo</li>
-          <li data-at="0.09">opened <code>.swarm/ledger.md</code> · run 7c2f19</li>
-          <li data-at="0.14">planned 9 sub-agents · dispatching in parallel</li>
-        </ul>
+  <!-- 1 · hero · flow -->
+  <section class="hero" data-sc-act="flow">
+    <div class="wash" aria-hidden="true"></div>
+    <div class="wrap hero-in">
+      <div class="hero-copy" data-sc-in data-sc-stagger="70">
+        <h1 class="display">One goal in.<br>A <em>verified</em> result out.</h1>
+        <p class="lede">swarm runs a fleet of sub-agents across your codebase and stops only when the work is proven.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#install">Install</a>
+          <a class="btn btn-ghost" href="https://github.com/SaarthurR/swarm">GitHub</a>
+        </div>
       </div>
 
-      <div class="pane pane-roster">
-        <div class="pane-head"><p class="k">fleet</p><p class="k k-r"><span id="rosterN">0</span> of 9 live</p></div>
-        <ul class="roster" id="roster">
-          <li data-at="0.20"><span class="ro-role">recon</span><span class="ro-task">auth &amp; session</span><span class="ro-tier">fast</span></li>
-          <li data-at="0.23"><span class="ro-role">recon</span><span class="ro-task">checkout path</span><span class="ro-tier">fast</span></li>
-          <li data-at="0.26"><span class="ro-role">recon</span><span class="ro-task">job queue</span><span class="ro-tier">fast</span></li>
-          <li data-at="0.29"><span class="ro-role">recon</span><span class="ro-task">data layer</span><span class="ro-tier">fast</span></li>
-          <li data-at="0.32"><span class="ro-role">ingest</span><span class="ro-task">supabase schema</span><span class="ro-tier">cheap</span></li>
-          <li data-at="0.35"><span class="ro-role">ingest</span><span class="ro-task">vercel deploys</span><span class="ro-tier">cheap</span></li>
-          <li data-at="0.38"><span class="ro-role">ingest</span><span class="ro-task">runtime logs</span><span class="ro-tier">cheap</span></li>
-          <li data-at="0.41"><span class="ro-role">ingest</span><span class="ro-task">the reported thread</span><span class="ro-tier">cheap</span></li>
-          <li data-at="0.44"><span class="ro-role">synth</span><span class="ro-task">consolidate the maps</span><span class="ro-tier">thinking</span></li>
-        </ul>
-        <p class="pane-foot" data-at="0.5">Nine fresh contexts. None of them inherits this conversation, so none of them inherits its assumptions.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── 2 · ingest · flow ──────────────────────────────────────────── -->
-  <section id="a-ingest" class="sc-section flow" data-run="ingest" data-sc-act="flow">
-    <div class="sc-wrap ingest-wrap">
-      <div class="ingest-copy" data-sc-in data-sc-stagger="60">
-        <h2 class="h2">It reads the world before it touches the code.</h2>
-        <p class="sc-body">Every tool you have connected is an instruction to go and look, not a passing mention. Each source goes to its own sub-agent, which writes a brief to a file and returns the path. The orchestrator holds paths, never payloads.</p>
-      </div>
-      <ul class="sources" data-sc-in data-sc-stagger="50">
-        <li><span class="src-n">supabase</span><span class="src-w">tables, advisors, slow queries</span></li>
-        <li><span class="src-n">vercel</span><span class="src-w">env, last deploys, runtime errors</span></li>
-        <li><span class="src-n">render</span><span class="src-w">services, workers, queues</span></li>
-        <li><span class="src-n">slack</span><span class="src-w">the thread where it was reported</span></li>
-        <li><span class="src-n">docs</span><span class="src-w">the real API, not the remembered one</span></li>
-        <li><span class="src-n">.swarm/</span><span class="src-w">what the last run on this repo learned</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ── 3 · map · pin + reveal ─────────────────────────────────────── -->
-  <section id="a-map" class="act" data-run="map" data-sc-act="pin" data-sc-span="1.8" data-sc-drift="#0E100E">
-    <div data-sc-stage class="stage stage-map">
-      <div class="pane pane-files">
-        <div class="pane-head"><p class="k">areas mapped</p><p class="k k-r"><span id="mapN">0</span> of 6</p></div>
-        <ul class="files" id="files">
-          <li data-at="0.10"><span>app/checkout/</span><span class="fi-w">order write path</span></li>
-          <li data-at="0.16"><span>lib/db/pool.ts</span><span class="fi-w">connection pool</span></li>
-          <li data-at="0.22"><span>lib/queue/</span><span class="fi-w">retry and backoff</span></li>
-          <li data-at="0.28"><span>app/api/webhook/</span><span class="fi-w">payment callback</span></li>
-          <li data-at="0.34" class="fi-hub"><span>lib/types/index.ts</span><span class="fi-w">shared hub</span></li>
-          <li data-at="0.40" class="fi-hub"><span>db/migrations/</span><span class="fi-w">shared hub</span></li>
-        </ul>
-        <p class="hubnote" data-at="0.46">Two files every feature converges on. A hub gets <b>one owner</b> for the whole run, or it gets serialized. Two parallel fixers editing a hub is a silent overwrite, not a merge conflict.</p>
-      </div>
-
-      <figure class="pane pane-dag">
-        <p class="k">dependency map of the work</p>
-        <svg viewBox="0 0 340 250" class="dag" aria-label="Four work units. Two are independent, two are ordered behind them.">
-          <g class="dag-edge">
-            <path pathLength="1" d="M62 60 L 148 60"/>
-            <path pathLength="1" d="M62 122 L 148 122"/>
-            <path pathLength="1" d="M62 122 C 110 122, 110 186, 148 186"/>
-            <path pathLength="1" d="M234 60 C 268 60, 268 122, 234 122"/>
+      <figure class="fan" data-sc-in>
+        <svg viewBox="0 0 420 300" aria-label="One goal fans out to nine sub-agents and comes back as one verified result.">
+          <g class="fan-w">
+            <path d="M74 150 C 140 150, 150 34, 214 34"/>
+            <path d="M74 150 C 140 150, 150 63, 214 63"/>
+            <path d="M74 150 C 140 150, 150 92, 214 92"/>
+            <path d="M74 150 C 140 150, 150 121, 214 121"/>
+            <path d="M74 150 L 214 150"/>
+            <path d="M74 150 C 140 150, 150 179, 214 179"/>
+            <path d="M74 150 C 140 150, 150 208, 214 208"/>
+            <path d="M74 150 C 140 150, 150 237, 214 237"/>
+            <path d="M74 150 C 140 150, 150 266, 214 266"/>
           </g>
-          <g class="dag-node">
-            <rect x="10" y="42" width="52" height="36" rx="6"/>
-            <rect x="10" y="104" width="52" height="36" rx="6"/>
-            <rect x="148" y="42" width="86" height="36" rx="6"/>
-            <rect x="148" y="104" width="86" height="36" rx="6"/>
-            <rect x="148" y="168" width="86" height="36" rx="6"/>
+          <g class="fan-w fan-w2">
+            <path d="M214 34 C 278 34, 288 150, 348 150"/>
+            <path d="M214 63 C 278 63, 288 150, 348 150"/>
+            <path d="M214 92 C 278 92, 288 150, 348 150"/>
+            <path d="M214 121 C 278 121, 288 150, 348 150"/>
+            <path d="M214 150 L 348 150"/>
+            <path d="M214 179 C 278 179, 288 150, 348 150"/>
+            <path d="M214 208 C 278 208, 288 150, 348 150"/>
+            <path d="M214 237 C 278 237, 288 150, 348 150"/>
+            <path d="M214 266 C 278 266, 288 150, 348 150"/>
           </g>
-          <g class="dag-t">
-            <text x="36" y="64">goal</text>
-            <text x="36" y="126">recon</text>
-            <text x="191" y="64">unit A</text>
-            <text x="191" y="126">unit B</text>
-            <text x="191" y="188">unit C</text>
+          <g class="fan-a">
+            <circle cx="214" cy="34" r="7"/><circle cx="214" cy="63" r="7"/>
+            <circle cx="214" cy="92" r="7"/><circle cx="214" cy="121" r="7"/>
+            <circle cx="214" cy="150" r="7"/><circle cx="214" cy="179" r="7"/>
+            <circle cx="214" cy="208" r="7"/><circle cx="214" cy="237" r="7"/>
+            <circle cx="214" cy="266" r="7"/>
           </g>
-          <g class="dag-s">
-            <text x="191" y="78">pool sizing</text>
-            <text x="191" y="140">after A</text>
-            <text x="191" y="202">independent</text>
-          </g>
+          <circle class="fan-goal" cx="60" cy="150" r="14"/>
+          <circle class="fan-out" cx="362" cy="150" r="14"/>
+          <path class="fan-tick" d="M356 150 l 4 5 l 9 -10"/>
+          <text class="fan-t" x="60" y="192">goal</text>
+          <text class="fan-t" x="214" y="292">sub-agents</text>
+          <text class="fan-t" x="362" y="192">proven</text>
         </svg>
-        <figcaption class="dag-cap" data-at="0.55">Independent units run at the same time. Ordered ones wait. This graph also decides how the pull requests are stacked at the end.</figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- ── 4 · diagnose · flow + reveal. The quietest act on the page, on
-         purpose: it is the calm the next one breaks. ─────────────────── -->
-  <section id="a-diagnose" class="sc-section flow diag" data-run="diagnose" data-sc-act="flow">
-    <div class="sc-wrap">
-      <p class="k" data-sc-in>investigator · fresh context · returned in 4m 11s</p>
-      <h2 class="h2 diag-h" data-sc-in>It comes back with a cause, and the exact path that proves it.</h2>
+  <!-- 2 · the run · pin -->
+  <section id="run" data-sc-act="pin" data-sc-span="3">
+    <div data-sc-stage class="stage steps">
+      <div class="wrap">
+        <p class="eyebrow" data-sc-cue="0 1 0 0">A run</p>
+        <h2 class="h2" data-sc-cue="0 1 0 0">Six phases, and it will not leave early.</h2>
 
-      <ol class="trace" data-sc-in data-sc-stagger="70">
-        <li><span class="tr-f">app/checkout/submit.ts:88</span><span>opens a transaction per line item</span></li>
-        <li><span class="tr-f">lib/db/pool.ts:112</span><span>pool max is 10, no queue timeout</span></li>
-        <li><span class="tr-f">lib/queue/retry.ts:31</span><span>failed writes retry immediately, three times</span></li>
-        <li><span class="tr-f">vercel · runtime</span><span>1 in 40 requests times out above 60 rps</span></li>
-      </ol>
-
-      <div class="claim" id="claim0" data-sc-reveal="up" data-sc-reveal-at="0.1 0.45">
-        <p class="k">root cause · <span class="claim-state">unverified</span></p>
-        <p class="claim-t">The connection pool is exhausted under load, so checkout writes queue forever and the request times out.</p>
-        <p class="claim-f">One agent's confident answer is a hypothesis, not a fact. It does not graduate until a different agent has tried to kill it.</p>
+        <ol class="step-list">
+          <li data-at="0.06"><span class="sn">01</span><h3>Read the world</h3><p>Your repo, your tools, what the last run learned.</p></li>
+          <li data-at="0.16"><span class="sn">02</span><h3>Map it</h3><p>One agent per area, then a graph of the work.</p></li>
+          <li data-at="0.28"><span class="sn">03</span><h3>Find the cause</h3><p>The exact failing path, with the evidence.</p></li>
+          <li data-at="0.42" class="st-hot"><span class="sn">04</span><h3>Break it</h3><p>A second agent tries to prove that wrong.</p></li>
+          <li data-at="0.56"><span class="sn">05</span><h3>Fix in isolation</h3><p>Every fixer in its own worktree and branch.</p></li>
+          <li data-at="0.70"><span class="sn">06</span><h3>Sweep again</h3><p>Checks green, then hunt for what is left.</p></li>
+        </ol>
       </div>
     </div>
   </section>
 
-  <!-- ── 5 · cross-check · pin · THE PEAK ───────────────────────────── -->
-  <section id="a-refute" class="act peak" data-run="refute" data-sc-act="pin" data-sc-span="3.4" data-sc-drift="#0B0C0B">
-    <div data-sc-stage class="stage stage-refute">
-
-      <div class="pane pane-claim">
-        <h2 class="k">the claim on trial</h2>
-        <p class="tried" id="tried">The connection pool is exhausted under load.</p>
-        <p class="k k-dim">handed to an agent that did not write it, framed as something to disprove</p>
-        <button class="challenge" type="button" id="challenge">Run the cross-check again</button>
-      </div>
-
-      <div class="pane pane-verify" id="verifyPane">
-        <div class="pane-head"><p class="k">verifier · fresh context</p><p class="k k-r" id="vState">idle</p></div>
-        <ul class="vlog" id="vlog">
-          <li data-at="0.10">reads the same evidence file, not the conclusion</li>
-          <li data-at="0.20">reproduces the timeout at 60 rps · confirmed</li>
-          <li data-at="0.30">raises pool max to 40 · <b>timeout persists</b></li>
-          <li data-at="0.40">pool never exceeds 6 of 10 in the failing window</li>
-          <li data-at="0.50">the retry loop re-enters before the first write commits</li>
-        </ul>
-        <p class="verdict" id="verdict" data-at="0.58">refuted</p>
-        <p class="vnote" data-at="0.64">The pool was a symptom. The cause is one directory over, in the retry that fires before the write it is retrying has finished.</p>
-      </div>
-
-      <div class="pane pane-rewind" data-at="0.74">
-        <p class="k">run state</p>
-        <p class="rewind-t">Fix cancelled. Phase stepped back to <b>diagnose</b>. The ledger line is struck, not deleted, so the next run can see what was already ruled out.</p>
-        <p class="rewind-f">This is the whole point of the skill. An answer that nothing argued with is not an answer yet.</p>
-      </div>
-
+  <!-- 3 · the quiet line · flow -->
+  <section class="statement" data-sc-act="flow">
+    <div class="wrap">
+      <p class="say" data-sc-in>Most agents stop when they <em>think</em> they are done.</p>
     </div>
   </section>
 
-  <!-- ── 6 · fix · pan ──────────────────────────────────────────────── -->
-  <section id="a-fix" class="act" data-run="fix" data-sc-act="pan" data-sc-span="2.6" data-sc-drift="#0E100E">
-    <div data-sc-stage class="stage stage-fix">
-      <div class="rail-h" data-sc-pan="0.04">
-        <div class="wt-lead">
-          <h2 class="h2">Fixers work in their own worktree, or they do not work.</h2>
-          <p class="sc-body">Every fixer declares the files it intends to touch before it is allowed to write. Two overlapping declarations is a refusal at dispatch, not a lost commit on Thursday.</p>
+  <!-- 4 · the cross-check · pin · the peak -->
+  <section id="check" data-sc-act="pin" data-sc-span="3.6">
+    <div data-sc-stage class="stage check">
+      <div class="wrap check-in">
+        <div class="check-copy">
+          <h2 class="h2" data-sc-cue="0 1 0 0">So this one argues<br><em>with itself</em>.</h2>
+          <p class="body" data-sc-cue="0 1 0 0">No answer counts until a second agent, fresh context, has tried to kill it.</p>
+          <button class="btn btn-ghost" type="button" id="again">Watch it again</button>
         </div>
 
-        <article class="wt" data-sc-tilt="4">
-          <p class="wt-k">unit A · running</p>
-          <h3>Commit before retry</h3>
-          <p class="wt-b">The real fix, from the cross-check. One await, in the shared retry path, where every caller routes through.</p>
-          <ul class="wt-files"><li>lib/queue/retry.ts</li><li>lib/queue/retry.test.ts</li></ul>
-          <p class="wt-br">worktree/a · branch fix/retry-order</p>
-        </article>
-
-        <article class="wt" data-sc-tilt="4">
-          <p class="wt-k">unit B · running</p>
-          <h3>Queue timeout on the pool</h3>
-          <p class="wt-b">Not the cause, still a real bug: a checkout waiting on a connection waits forever instead of failing loudly.</p>
-          <ul class="wt-files"><li>lib/db/pool.ts</li></ul>
-          <p class="wt-br">worktree/b · branch fix/pool-timeout</p>
-        </article>
-
-        <article class="wt wt-refused" data-sc-tilt="4">
-          <p class="wt-k">unit C · refused</p>
-          <h3>Dispatch blocked</h3>
-          <p class="wt-b">Declared <code>lib/types/index.ts</code>, which unit A already owns this round. A shared hub takes one owner. Unit C is serialized behind A instead of running beside it.</p>
-          <ul class="wt-files"><li class="cl">lib/types/index.ts</li><li>app/checkout/submit.ts</li></ul>
-          <p class="wt-br">queued · dispatches when A integrates</p>
-        </article>
-
-        <article class="wt" data-sc-tilt="4">
-          <p class="wt-k">standing orders</p>
-          <h3>What a fixer may never do</h3>
-          <ul class="orders">
-            <li>force-push, push to main, or merge</li>
-            <li>run a destructive command without a human gate</li>
-            <li>put a secret in a commit, a log, or a return</li>
-            <li>spend money without stopping to ask</li>
-          </ul>
-          <p class="wt-br">references/safety.md</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── 7 · verify · pin ───────────────────────────────────────────── -->
-  <section id="a-verify" class="act" data-run="verify" data-sc-act="pin" data-sc-span="2" data-sc-drift="#0B0C0B">
-    <div data-sc-stage class="stage stage-verify">
-      <div class="pane pane-checks">
-        <div class="pane-head"><p class="k">fresh output, re-run · not a cached log</p><p class="k k-r"><span id="checkN">0</span> of 6</p></div>
-        <ul class="checks" id="checks">
-          <li data-at="0.08"><span>pnpm build</span><span class="ck">pass</span></li>
-          <li data-at="0.14"><span>pnpm test</span><span class="ck">pass</span></li>
-          <li data-at="0.20"><span>tsc --noEmit</span><span class="ck">pass</span></li>
-          <li data-at="0.26"><span>eslint .</span><span class="ck">pass</span></li>
-          <li data-at="0.32"><span>load test · 60 rps</span><span class="ck">pass</span></li>
-          <li data-at="0.38"><span>reviewer · read the diff, not the status line</span><span class="ck">pass</span></li>
-        </ul>
-      </div>
-
-      <div class="pane pane-sweep">
-        <p class="k">then it goes looking again</p>
-        <p class="sweep-t" data-at="0.48">New agents, new context, hunting what the fixes just exposed.</p>
-        <ul class="sweep" id="sweep">
-          <li data-at="0.56">siblings of the changed function · clean</li>
-          <li data-at="0.64">callers of the retry path · clean</li>
-          <li data-at="0.72">edges the load test did not reach · clean</li>
-        </ul>
-        <p class="exit" data-at="0.82">It leaves only when the checks are green <b>and</b> a fresh sweep finds nothing, in the same round. Either one alone is not done.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── 8 · ship · flow + reveal ───────────────────────────────────── -->
-  <section id="a-ship" class="sc-section flow ship" data-run="ship" data-sc-act="flow">
-    <div class="sc-wrap">
-      <h2 class="h2" data-sc-in>Dependent work ships as a stack, in merge order.</h2>
-      <p class="sc-body" data-sc-in>Before any of it opens, it diffs against the latest main and against every open pull request, hunting the conflicts that do not touch the same lines.</p>
-
-      <svg class="stack" viewBox="0 0 620 200" data-sc-reveal="left" data-sc-reveal-at="0.05 0.5" aria-label="Three pull requests. The first targets main, the second targets the first, the third targets the second.">
-        <line class="st-main" x1="14" y1="176" x2="606" y2="176"/>
-        <text class="st-t" x="14" y="194">main</text>
-        <path class="st-b" d="M70 176 C 110 176, 110 124, 150 124 L 380 124"/>
-        <path class="st-b" d="M210 124 C 250 124, 250 74, 290 74 L 380 74"/>
-        <path class="st-b" d="M330 74 C 370 74, 370 26, 410 26 L 440 26"/>
-        <g class="st-dot"><circle cx="210" cy="124" r="4"/><circle cx="330" cy="74" r="4"/></g>
-        <g class="st-box">
-          <rect x="386" y="106" width="190" height="36" rx="8"/>
-          <rect x="386" y="56" width="190" height="36" rx="8"/>
-          <rect x="446" y="8" width="130" height="36" rx="8"/>
-        </g>
-        <g class="st-t">
-          <text x="400" y="129">PR 1 · base main</text>
-          <text x="400" y="79">PR 2 · base PR 1</text>
-          <text x="460" y="31">PR 3 · base PR 2</text>
-        </g>
-      </svg>
-
-      <p class="ship-f" data-sc-in>Merge the bottom one and delete its branch. GitHub retargets the next. Merging is still yours, always.</p>
-    </div>
-  </section>
-
-  <!-- ── 9 · close · pin · an actual input ──────────────────────────── -->
-  <section id="a-run" class="act" data-run="close" data-sc-act="pin" data-sc-span="1.15" data-sc-drift="#0B0C0B">
-    <div data-sc-stage class="stage stage-close">
-      <div class="close-inner">
-        <p class="k" data-sc-cue="0 1 0 0">install</p>
-        <div class="code" data-sc-cue="0 1 0 0" data-sc-rise="0">
-          <pre><code><span class="cm"># clone once, link it into whichever host you use</span>
-git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm
-ln -s ~/skills/swarm ~/.claude/skills/swarm
-ln -s ~/skills/swarm ~/.cursor/skills/swarm</code></pre>
-          <button class="copy" type="button" id="copyBtn" data-copy="git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm&#10;ln -s ~/skills/swarm ~/.claude/skills/swarm&#10;ln -s ~/skills/swarm ~/.cursor/skills/swarm">Copy</button>
-        </div>
-
-        <form class="cmd" id="cmd" data-sc-cue="0 1 0 0" data-sc-rise="0">
-          <label class="cmd-l" for="goalIn">Then hand it a goal. Write yours here and it builds the line to paste.</label>
-          <div class="cmd-row">
-            <span class="cmd-p" aria-hidden="true">$</span>
-            <input class="cmd-in" id="goalIn" type="text" autocomplete="off" spellcheck="false"
-                   placeholder="swarm: make the billing service production ready">
-            <button class="cmd-go" type="submit">Build it</button>
+        <div class="trial" id="trial">
+          <div class="row row-claim" data-at="0.08">
+            <p class="rk">root cause</p>
+            <p class="rt" id="claim">The connection pool is exhausted under load.</p>
           </div>
-          <p class="cmd-out" id="cmdOut" role="status">Nothing runs in this browser. This composes the prompt you paste into Claude Code or Cursor.</p>
-        </form>
+          <div class="row row-test" data-at="0.34">
+            <p class="rk">the second agent</p>
+            <p class="rt">Pool raised to 40. The timeout persists.</p>
+          </div>
+          <div class="row row-verdict" data-at="0.52">
+            <p class="rt" id="verdict">Refuted</p>
+          </div>
+          <div class="row row-real" data-at="0.68">
+            <p class="rk">actual cause</p>
+            <p class="rt">The retry fires before the write it is retrying commits.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · what holds it up · pan -->
+  <section data-sc-act="pan" data-sc-span="2.6">
+    <div data-sc-stage class="stage rail-stage">
+      <div class="rail" data-sc-pan="0.05">
+        <div class="rail-lead">
+          <h2 class="h2">Built for runs<br>that last hours.</h2>
+        </div>
+        <article class="card" data-sc-tilt="5">
+          <span class="chip chip-sky">Isolated</span>
+          <p>Parallel fixers never share a working tree. Each gets its own worktree and branch.</p>
+        </article>
+        <article class="card" data-sc-tilt="5">
+          <span class="chip chip-coral">Guarded</span>
+          <p>Never force-push, never push to main, never merge. Anything that costs money stops and asks.</p>
+        </article>
+        <article class="card" data-sc-tilt="5">
+          <span class="chip chip-mint">Stacked</span>
+          <p>Dependent work opens as a stack of pull requests, in merge order.</p>
+        </article>
+        <article class="card" data-sc-tilt="5">
+          <span class="chip chip-gold">Durable</span>
+          <p>A ledger on disk, so a restart resumes instead of redoing finished work.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · install · pin -->
+  <section id="install" data-sc-act="pin" data-sc-span="1.15">
+    <div data-sc-stage class="stage close">
+      <div class="wrap close-in">
+        <h2 class="h2" data-sc-cue="0 1 0 0">Clone it into your skills folder.</h2>
+
+        <div class="code" data-sc-cue="0 1 0 0" data-sc-rise="0">
+          <pre><code><span class="cm"># once, for Claude Code or Cursor</span>
+git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm
+ln -s ~/skills/swarm ~/.claude/skills/swarm</code></pre>
+          <button class="copy" type="button" id="copyBtn" data-copy="git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm&#10;ln -s ~/skills/swarm ~/.claude/skills/swarm">Copy</button>
+        </div>
+
+        <p class="then" data-sc-cue="0 1 0 0">Then hand it a goal.</p>
+        <p class="prompt" data-sc-cue="0 1 0 0">swarm: checkout drops orders under load. find out why and fix it properly.</p>
       </div>
 
       <footer class="foot">
+        <span>swarm</span>
         <span>MIT licensed</span>
         <a href="https://github.com/SaarthurR/swarm">github.com/SaarthurR/swarm</a>
-        <span>The run above is one recorded example, replayed by scroll.</span>
       </footer>
     </div>
   </section>
