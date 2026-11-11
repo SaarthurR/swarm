@@ -1,2 +1,5 @@
 .DS_Store
 .swarm/
+.agents/
+.claude/
+skills-lock.json

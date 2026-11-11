@@ -5,6 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Cursor-supported-4E4D4D?style=flat-square&labelColor=242424" alt="Cursor">
   <img src="https://img.shields.io/badge/Claude_Code-supported-4E4D4D?style=flat-square&labelColor=242424" alt="Claude Code">
+  <img src="https://img.shields.io/badge/Codex-supported-4E4D4D?style=flat-square&labelColor=242424" alt="Codex">
   <img src="https://img.shields.io/badge/phases-0→6-2B59D1?style=flat-square&labelColor=242424" alt="Phases 0 to 6">
   <img src="https://img.shields.io/badge/license-MIT-797776?style=flat-square&labelColor=242424" alt="MIT license">
 </p>
@@ -27,7 +28,7 @@ it fans out dozens of isolated sub-agents to explore, diagnose, fix, review, and
 cross-checks every conclusion with an independent agent, and does not return until the work
 is done and proven — or until it hits a decision only a human can make.
 
-Works in Cursor, Claude Code, and any agent host that supports skills + parallel sub-agents.
+Works in Claude Code, Codex, Cursor, and any agent host that supports skills + parallel sub-agents.
 
 ---
 
@@ -146,6 +147,9 @@ git clone https://github.com/SaarthurR/swarm.git ~/.cursor/skills/swarm
 
 # Claude Code
 git clone https://github.com/SaarthurR/swarm.git ~/.claude/skills/swarm
+
+# Codex
+git clone https://github.com/SaarthurR/swarm.git ~/.codex/skills/swarm
 ```
 
 Or clone once and symlink both:
@@ -154,6 +158,7 @@ Or clone once and symlink both:
 git clone https://github.com/SaarthurR/swarm.git ~/skills/swarm
 ln -s ~/skills/swarm ~/.cursor/skills/swarm
 ln -s ~/skills/swarm ~/.claude/skills/swarm
+ln -s ~/skills/swarm ~/.codex/skills/swarm
 ```
 
 ## Use
@@ -172,10 +177,10 @@ instruction to fully ingest that source, not a passing mention.
 ### Model tiers
 
 Sub-agent models are always set explicitly — an omitted model silently inherits the
-expensive session model. Mechanical lookups get the cheapest tier, implementation gets the
-fast implementation tier, and **every design, deliberation, review, and verification gate
-gets the highest-thinking tier**. The allowlist lives at the bottom of `SKILL.md`; update it
-as models change.
+expensive session model. Three tiers: the brain tier runs the orchestrator and every
+agent it discusses with (investigators, critics, reviewers, verifiers); workers only
+write code; scouts only read. A worker moves up a tier only after a failed review. The tier table
+lives in `SKILL.md`; update it as models change.
 
 ## Companion skills
 

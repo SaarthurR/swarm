@@ -12,6 +12,7 @@ description: >-
   (Supabase, Render, Vercel, Slack, etc.); writes code via the ponytail skill under
   hard safety guardrails; and does NOT stop until the result is verified
   production-ready.
+license: MIT
 ---
 
 # Swarm
@@ -28,7 +29,8 @@ the finished, verified product. Treat it as a goal that does not stop until met.
 ## Ground rules
 
 - **A "sub-agent" is a fresh, isolated-context worker** you spawn with the host's
-  parallel-agent mechanism (the Task tool). It never inherits your history — you
+  parallel-agent mechanism (the Agent tool in Claude Code,
+  `codex exec` in Codex, sub-agents in Cursor). It never inherits your history — you
   craft exactly the prompt it needs. Dispatch independent agents concurrently
   (batch the calls in one message) whenever their work doesn't depend on each
   other.
@@ -341,22 +343,36 @@ default and keep moving.
   (`references/state-and-memory.md`).
 
 **Model tiers.** Always set a sub-agent's model explicitly — an omitted model
-silently inherits your expensive session model. Match model to task type:
+silently inherits your expensive session model. Three tiers. Anything that
+*thinks* — plans, argues, judges — runs at tier 1. Anything that only *does* —
+writes code, reads files — runs below it, because those tiers are cheap and now
+smart enough for it.
 
-- **Mechanical / read-only lookups** → cheapest tier.
-- **Implementation (fixers, code edits)** → fast implementation tier.
-- **Design, deliberation, adjudication, and every review/verification gate** →
-  highest-thinking tier.
+| Tier | Job | Claude | GPT (via Codex, `codex exec -m <id>`) |
+|---|---|---|---|
+| **1 — Brain** | Orchestrator (you); every agent you discuss with: Phase 2 investigators, verifiers and adjudicators, Phase 2.5 critics, Phase 4 reviewers (per-fix and whole-branch), Phase 5 verifiers | Opus 5.5 `claude-opus-5-5` | GPT-6.1-Sol `gpt-6.1-sol` |
+| **2 — Workers** | Fixers and code edits only — they carry out a fix the brain tier already agreed on | Sonnet 5.5 `claude-sonnet-5-5` | GPT-5.6-Sol `gpt-5.6-sol` |
+| **3 — Scouts** | Phase 1 recon, read-only lookups, explore, log reading, mapping | Haiku 5.5 `claude-haiku-5-5` (or the `scout` agent) | GPT-6-Luna `gpt-6-luna` |
 
-**Never dispatch a GPT model.** No sub-agent runs on any GPT/OpenAI model, in any
-role, for any task. If a task seems to call for one, pick from the allowlist below
-instead.
+Rules:
 
-Current allowlist (update as models change — dispatch *only* from this set):
-**grok 4.5 high fast, opus 4.8, sonnet 5.** Use grok 4.5 high fast for
-implementation (fixers, code edits); a high-thinking model (opus 4.8 / sonnet 5)
-for design, deliberation, adjudication, review and verification; sonnet 5 for
-cheap mechanical lookups.
+- **Thinking goes up, doing goes down.** If an agent's answer changes *what* gets
+  built or *whether* it is accepted, it is tier 1. If it only executes a decided
+  plan or fetches facts, it is tier 2 or 3.
+- **Escalate a worker only on evidence:** a tier-2 fix that fails review once gets
+  one retry at tier 2 with the findings attached; a second failure goes to tier 1.
+  A scout whose report is vague or contradicts another gets re-asked at tier 2.
+- **Run the orchestrator at tier 1.** In Claude Code that is Opus 5.5; in Codex,
+  GPT-6.1-Sol (the default — `-m gpt-6.1-sol`). Don't use `gpt-6-astra`; it costs
+  too much for the gain.
+- **Cross-check across providers.** Discussions and reviews mix Opus and Sol —
+  a reviewer runs on the *other* provider from the fixer, and Phase 2 / 2.5
+  rounds put at least one agent from each side. Independent checks are only
+  worth something if they don't share one model's blind spots.
+- **Never dispatch a Fable model.** No sub-agent runs on any Fable model
+  (`claude-fable-5-1`, `claude-fable-5-2`, or later), in any role.
+- **Dispatch only from this table** (as of Nov 2026 — update as models change).
+  Everything else (`gpt-6-astra`, `gpt-reserve`, `gpt-6-sol`, other GPT-5.x) is out.
 
 ## Red flags — stop if you catch yourself
 
@@ -374,7 +390,7 @@ cheap mechanical lookups.
 - Presenting a workaround or "TODO: fix properly" when the real fix is reachable.
 - Leaving a dangling thread because closing it takes a few more minutes.
 - Asking the human something a sub-agent could answer.
-- Dispatching a sub-agent on a GPT model, or leaving its model unset.
+- Dispatching a sub-agent on a Fable model, or leaving its model unset.
 - Reading a huge file/log into your own context.
 - Provisioning something that might cost money without asking.
 - Letting a sub-agent run a destructive/force command or commit a secret.
